@@ -1,0 +1,43 @@
+.my-name{
+  font-family: Oxygen, sans-serif;
+  font-weight: 700;
+  font-size: 3rem;
+  color: $purple;
+  animation-delay: 1s;
+  animation-timing-function: ease-in-out;
+  word-wrap: break-word;
+  .finn{
+    
+  }
+  .space{
+    animation: dot-shrink .5s ease-in-out .5s reverse;
+    animation-fill-mode: forwards;
+    font-size: 0em;
+  }
+  .nav{
+
+  }
+  .name-dot{
+    animation: dot-shrink .5s ease-in-out .5s;
+    animation-fill-mode: forwards;
+    span{//Contains the fade down function
+      animation-delay: .5s;
+      animation-timing-function: ease-in-out;
+      animation-duration: 1s;
+    }
+  }
+  .in{
+  }
+}
+@keyframes dot-shrink{
+  0%{
+    // width: inherit;
+    opacity: 1;
+    font-size: 1em;
+  }
+  100%{
+    // width: 0px;
+    opacity: 0;
+    font-size: 0em;
+  }
+}

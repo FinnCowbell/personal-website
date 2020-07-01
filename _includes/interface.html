@@ -1,0 +1,21 @@
+{% assign p = include.project %}
+<div class="d-flex flex-column height-full anim-scale-in border rounded-1 px-5 py-2">
+  <h2 class="py-3 text-center" style="color:{{p.accent_color}}">{{p.name}}</h2>
+  <p class="description">{{p.description}}</p>
+  <div class="technologies flex-grow-1">
+  <h4 style="color:{{p.accent_color_2 || inherit}}">Built With...</h4>
+  <div class="d-flex flex-column">
+    {% for technology in p.technologies %}
+      <li>{{technology}}</li>
+    {% endfor %}
+  </div>
+  </div>
+  <div style="color:{{p.accent_color}}" class="interface d-flex flex-justify-between">
+    <a href="{{ site.url }}{{ site.baseurl | append:'/' }}">
+      {% octicon chevron-left height:16 class:"v-align-middle" fill:{{ icon_color }} aria-label:Home %}Menu
+    </a>
+    <a target="_blank" href="{{p.URL}}">Open New Tab {% octicon chevron-right height:16 class:"v-align-middle" fill:{{ icon_color }} aria-label:Open %}
+
+    </a>
+  </div>
+</div>

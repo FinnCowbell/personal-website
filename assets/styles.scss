@@ -9,6 +9,16 @@
   font-family: -apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial,sans-serif,Apple Color Emoji,Segoe UI Emoji,Segoe UI Symbol !important;
 }
 
+.flex-grow-1{
+  flex-grow: 1;
+}
+
+.height-fullvh{
+  height: 100vh;
+}
+
+
+
 .repo-language-color {
     filter: brightness(125%) !important;
     border-radius: 50%;
@@ -51,4 +61,53 @@
 
 .min-height-full {
   min-height: 100vh;
+}
+
+.position-sticky{
+  // Adding myself, because primer doesn't seem to be behaving.
+  position: sticky !important;
+}
+
+//Profile Pic
+@import 'profile';
+//Name
+$purple:#492a81;
+@import 'name';
+
+@import 'navbar';
+
+@import 'projects';
+
+#masthead{
+  z-index: 10;
+}
+
+//Project showcase pages:
+#showcase{
+  position: relative;
+  .interface{
+    position: absolute;
+    width: 100%;
+    top: 0;
+    left: 0;
+    z-index: 5;
+    background-color: rgb(0, 0, 0);
+    opacity: 1;
+    height: 25px;
+    overflow-y: hidden;
+    transition: .25s;
+    &:hover{
+      height: 100px;
+      opacity: 1;
+      background-color: rgba(0, 0, 0, .25);
+    }
+  }
+}
+iframe.project-page{
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  width: 100%;
+  border: none;
 }

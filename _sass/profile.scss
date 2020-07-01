@@ -1,0 +1,32 @@
+.profile-pic{
+  display: block;
+  margin: auto;
+  justify-self: center;
+  align-self: center;
+  transition: 1s;
+  transition-timing-function: linear;
+
+  .hex{
+    clip-path: url(#hexagon-clip);
+    -webkit-clip-path: url(#hexagon-clip);
+  }
+}
+.hex-svg{
+  position: fixed;
+  top: 0;
+  left: 0;
+  transform: scaleX(.01);
+}
+.hexagon-path{
+  transform-box: fill-box;
+  transform-origin: center;
+}
+.hexagon-clip{
+  transform: translate(10px,0px);
+}
+@media not all and (min-resolution:.001dpcm) {  //Safari 10+
+  path{
+    -webkit-transition: .001s; //Fixes safari issues;
+    transition: .001s;
+  }
+}

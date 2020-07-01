@@ -1,27 +1,25 @@
-<h2 {% if site.style == 'dark' %}class="text-white"{% endif %}>My Projects</h2>
-<p class="f4 mb-4 {% if site.style == 'dark' %}text-white{% else %}text-gray{% endif %}">GitHub repositories that I've built.</p>
-<div class="d-sm-flex flex-wrap gutter-condensed mb-4">
-  {% if site.projects.sort_by == 'stars' %}
-    {% assign sort_order = 'stargazers_count', 'last' %}
-  {% else %}
-    {% assign sort_order = 'pushed_at' %}
-  {% endif %}
-
-  {% if site.projects.exclude.archived && site.projects.exclude.forks %}
-    {% assign filtered_repos = site.github.public_repositories | where:'archived', false | where:'fork', false | sort: sort_order | reverse %}
-  {% elsif site.projects.exclude.archived %}
-    {% assign filtered_repos = site.github.public_repositories | where:'archived', false | sort: sort_order | reverse %}
-  {% elsif site.projects.exclude.forks %}
-    {% assign filtered_repos = site.github.public_repositories | where:'fork', false | sort: sort_order | reverse %}
-  {% else %}
-    {% assign filtered_repos = site.github.public_repositories | sort: sort_order | reverse %}
-  {% endif %}
-
-  {% for repository in filtered_repos | limit: site.projects.limit %}
-    {% unless site.projects.exclude.projects contains repository.name %}
-      <div class="col-sm-6 col-md-12 col-lg-6 col-xl-4 mb-3">
-        {% include repo-card.html %}
+<h1 {% if site.style == 'dark' %}class="text-white"{% endif %}>My Projects</h1>
+<p class="f4 mb-4 {% if site.style == 'dark' %}text-white{% else %}text-gray{% endif %}">
+  Here are some projects I've worked on that have shaped me as a developer!
+</p>
+<div class="projects-grid mx-auto my-4">
+  {% for project in site.projects %}
+    <!-- Styling to change the highlight color for each box.-->
+    
+    <div class="{{project.id}} project-card border {% if project.secret %}secret{% endif %}"{% if project.secret %}hidden{% endif %} style="color: {{project.accent_color}};">
+      <div class="card-img" style="background-image: url(assets/img/projects/{{project.id}}.png);"></div>
+        <div class="content px-3 py-6"> 
+          <h3>
+            {{project.name}}
+          </h3>
+          <div {% if project.accent_color_2 %} style="color: {{project.accent_color_2}} !important" {% endif %} class="py-1">
+            <p>{{project.short_desc}}</p>
+            <a class="mx-3" style="color: inherit; font-size: 16px" href="/projects/{{project.id}}">
+              {% octicon eye height:16 style:"fill:{{project.accent_color}}"%} View
+            </a>
+          </div>
+        </div>
       </div>
-    {% endunless %}
+
   {% endfor %}
 </div>

@@ -19,6 +19,15 @@
 {% endif %}
 
 <!doctype html>
+{{"<!-- 
+Hey! What are you doing in here?
+Since you're here, I'll let you know that this site was made with Github's 
+'personal site' repository. It uses Jekyll, Sass, and Github Pages.
+
+Anyways, if you want to see some more secrets here's a few ideas (that I may or may not have implemented):
+- Set your URL's speed to 88mph to time travel back to my first version of this site!
+- Input a well known cheat code to see something goofy 
+-->"}}
 <html class="min-height-full">
   <head>
     <meta charset="utf-8">
@@ -28,6 +37,11 @@
     <meta property="og:image" content="{{ user.avatar_url }}" />
     <meta property="og:description" content="{{ meta_description }}" />
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link href="https://fonts.googleapis.com/css2?family=Oxygen:wght@300;400;700&display=swap" rel="stylesheet">
     <link href="{{ "/assets/styles.css" | relative_url }}" rel="stylesheet" type="text/css">
+    <script src="https://cdn.jsdelivr.net/npm/lodash@4.17.15/lodash.min.js"></script>
+    <script src="{{ "/scripts/konami.js" | asset_url | asset_tag }}"></script>
+    <script src="{{ "/scripts/enhancements.js" | asset_url | asset_tag }}"></script>
   </head>
   <body class="bg-white min-height-full" {% if site.style == 'dark' %}style="background-color: #2f363d !important"{% endif %}>
+    {% include hexSVG.html %}

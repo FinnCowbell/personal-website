@@ -17,25 +17,145 @@ defaults:
       layout: "post"
 
 projects:
+  -
+    id: dd
+    name: Detective Dictator
+    short_desc: >
+      My version of the board game "Secret Hitler" -- entirely online! 
+    description: > 
+      My version of the board game "Secret Hitler" -- entirely online! 
+      I made this so I could play one of my favorite board games with my friends while social distancing.
+      It took about 2 weeks of focused development in May 2020 to make it fully playable, and gets
+      frequent visits from my friends and I.
+    accent_color:  "#e56344"
+    accent_color_2:  "#036c7c"
+    URL: https://detectivedictator.herokuapp.com
+    style: light
+    technologies:
+      - Node.js
+      - Socket.io
+      - Express.js
+      - Webpack
+      - React
+      - Sass
+  -
+    id: p4gtl
+    name: ¡Please 4get the Lyrics!
+    short_desc: >
+      A Phone-Controlled karaoke guessing game!
+    description: |
+      Our Team's 2nd-place submission at HackUMass 2019! We wanted to recreate kahoot-style gameplay but 
+      take it a step further. We created this Karaoke guessing game as a proof of concept at our frameworks and 
+      
+      Requires a Spotify account. To host a lobby, open the page externally.
+    accent_color: "#bd6d04"
+    accent_color_2: "#0d4ff5"
+    URL: https://p4gtl.herokuapp.com/
+    style: light
+    technologies:
+      - Node.js
+      - Socket.io
+      - Express.js
+      - Spotify API
+      - Karaoke files (.kar)
+      - Karapython
+  -
+    id: nextstep
+    name: The Next Step
+    accent_color: "#8c2629"
+    accent_color_2: "#8c2629"
+    URL: http://thefatdads.github.io
+    style: light
+    short_desc: >
+      A web-app providing resources and to opioid users and their families in Connecticut.
+    description: |
+      Our Team's Winning Submission to the 2018 Connecticut Technology Council College Tech Challenge!
+      It's a web-app providing resources and to opioid users and their families in Connecticut. It uses 
+      data.ct.gov's rest API to access data and display helpful locations on Google Maps.
+
+      Because Google now requires payment to use their maps API, some things may no longer show up correctly.
+    technologies:
+      - Bootstrap
+      - Google Maps API
+      - Socrata Open Data API
+  -
+    id: sov
+    name: Spirographs of Venus
+    short_desc: >
+      My winning math-visualization project at the 2018 Museum of Mathematics Hackathon!
+    description: >
+      My winning project at the 2018 Museum of Mathematics Hackathon! Made in 24 hours, this is a version that has been adapted and
+      optimized past that time limit for a single player, web experience. 
+      The original was created for the Momath "Math Floor": A large, touchscreen floor.
+
+      The project has been featured on the Museums instagram, and another web version was sent to Momath email 
+      subscribers in May of 2020! It makes me happy that so many people have been able to enjoy something I made.
+    accent_color: '#100030'
+    accent_color_2: '#957f00'
+    URL: https://finncowbell.github.io/spirographsOfVenus
+    style: light
+    technologies:
+      - P5.js
+      - Momath's Math Floor API
+  -
+    id: cabbage
+    name: Cannonball Cabbage
+    secret: true
+    accent_color: '#000'
+    accent_color_2: '#000'
+    short_desc: >
+      Wait, what the heck is this?
+    description: >
+      It seems you've found a hidden project!
+      Please do not ask why I made this, I do not have an answer for you.
+    URL: https://finncowbell.github.io/Cannonball-Cabbage/
+    technologies:
+      - Piskel
+      - Logic Pro X
+      - Boredom
+  -
+    id: saucy
+    name: Saucy The Sausage
+    secret: true
+    accent_color: '#000'
+    accent_color_2: '#000'
+    short_desc: >
+      Wait, what the heck is this?
+    description: |
+      My buddy Henry made this sprite in hopes of making a sidescrolling game.
+      I made this song as the title track for the game.
+      It never came to fruition, but I made this as a tribute. 
+    URL: https://finncowbell.github.io/saucy/
+    technologies:
+      - A Meat Grinder
+
+github_projects:
   sort_by: pushed
   # sort_by options:
   #   - pushed
   #   - stars
-  limit: 9
+  limit: 15
   exclude:
-    archived: false
-    forks: true
+    archived: true
+    forks: false
     projects:
-    # - repo-name
+    - DetectiveDictator
+    - spirographsOfVenus
+    - finnnavin2
+    - FinnNav.in
+    - Cannonball-Cabbage
+    - saucy
 
-# social_media:
+social_media:
   # behance: your_username
   # dribbble: your_username
   # facebook: your_username
   # hackerrank: your_username
   # instagram: your_username
   # keybase: your_username
-  # linkedin: your_username
+  email: thomasfnavin@gmail.com
+  linkedin: finnnavin
+  github: FinnCowbell
   # mastodon: your_username
   # medium: your_username
   # stackoverflow: your_user_id
@@ -43,16 +163,16 @@ projects:
   # twitter: your_username
   # unsplash: your_username
   # vk: your_username
-  # website: http://your_website_url
+  # website: http://finnnav.in
   # youtube: your_username
 
-topics:
-  - name: CSS
-    web_url: https://github.com/topics/css
-    image_url: https://raw.githubusercontent.com/github/explore/6c6508f34230f0ac0d49e847a326429eefbfc030/topics/css/css.png
+# topics:
+#   - name: CSS
+#     web_url: https://github.com/topics/css
+#     image_url: https://raw.githubusercontent.com/github/explore/6c6508f34230f0ac0d49e847a326429eefbfc030/topics/css/css.png
 
-  - name: Web design
+#   - name: Web design
 
-  - name: Sass
-    web_url: https://github.com/topics/sass
-    image_url: https://raw.githubusercontent.com/github/explore/6c6508f34230f0ac0d49e847a326429eefbfc030/topics/sass/sass.png
+#   - name: Sass
+#     web_url: https://github.com/topics/sass
+#     image_url: https://raw.githubusercontent.com/github/explore/6c6508f34230f0ac0d49e847a326429eefbfc030/topics/sass/sass.png

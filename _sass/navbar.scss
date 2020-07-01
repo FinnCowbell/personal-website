@@ -1,0 +1,19 @@
+#nav-bar{
+  position: fixed;
+  z-index: 99;
+  top: -100px;
+  left:0;
+  width: 100%;
+  max-height: 100px;
+  background-color: rgb(251, 251, 251);
+  transition: top .4s;
+  transition-timing-function: ease-in-out;
+  div{
+    max-height:100% !important;
+    margin: 0 !important;
+    img{
+      max-height: 100px !important;
+    }
+  }
+
+}
