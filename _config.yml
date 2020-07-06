@@ -43,11 +43,10 @@ projects:
     name: ¡Please 4get the Lyrics!
     short_desc: >
       A Phone-Controlled karaoke guessing game!
-    description: |
+    description: >
       Our Team's 2nd-place submission at HackUMass 2019! We wanted to recreate kahoot-style gameplay but 
-      take it a step further. We created this Karaoke guessing game as a proof of concept at our frameworks and 
-      
-      Requires a Spotify account. To host a lobby, open the page externally.
+      take it a step further. We created this Karaoke guessing game as a fun roof of concept of what can be done!
+      Hosting a lobby requires a Spotify account, and should be done in it's own window.
     accent_color: "#bd6d04"
     accent_color_2: "#0d4ff5"
     URL: https://p4gtl.herokuapp.com/
