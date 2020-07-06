@@ -6,23 +6,8 @@
 {% include profile.html %}
 {% include name.html color=include.project.accent_color_2 run_animation=include.run_animation%}
 
-
 {% if include.metadata %}
   <div class="d-flex flex-justify-center f4">
-    <!-- {% if user.name %}
-      <div class="{{ metadata_styles }}">
-        {% octicon mark-github height:20 fill:{{ icon_color }} aria-label:GitHub %}
-        <a href="https://github.com/{{ user.login }}" {% if site.style == 'dark' %}class="text-white"{% endif %}>
-          @{{ user.login }}
-        </a>
-      </div>
-    {% endif %} -->
-    <!-- {% if user.email %} -->
-      <div class="{{ metadata_styles }}">
-        <a href="mailto:thomasfnavin@Gmail.com" {% if site.style == 'dark' %}class="text-white"{% endif %}>
-        </a>
-      </div>
-    <!-- {% endif %} -->
     {% if user.location %}
       <div class="{{ metadata_styles }} {% if site.style == 'dark' %}text-white{% endif %}">
         {% octicon location height:20 class:"mr-2 v-align-middle" fill:{{ icon_color }} aria-label:Location %}
@@ -42,8 +27,8 @@
         {% endfor %}
       </div>
     {% endif %}
-    {% if user.hireable %}
+    <!-- {% if user.hireable %}
       <span title="Hire me" class="d-inline-block f5 rounded-2 text-white bg-green py-1 px-2">Available for hire</span>
-    {% endif %}
+    {% endif %} -->
   </div>
 {% endif %}

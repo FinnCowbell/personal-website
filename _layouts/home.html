@@ -1,9 +1,5 @@
 {% include header.html %}
-
-<div id="nav-bar" class="d-flex flex-justify-between flex-content-center d-md-none px-4 border border-black-fade-30">
-  {% include profile.html %}
-  {% include name.html color=include.project.accent_color %}
-</div>
+{% include navbar.html %}
 
 {% if site.layout == 'stacked' %}
   <div class="container-lg py-6 p-responsive text-center">
@@ -32,7 +28,7 @@
 {% else %}
   <div class="d-md-flex min-height-full {% unless site.style == 'dark' %}border-md-bottom{% endunless %}">
     <div class="d-flex flex-column flex-self-stretch {% if site.style == 'dark' %}bg-gray-dark{% else %}border-md-right border-gray-light bg-white{% endif %} col-md-5 col-lg-4 col-xl-3">
-      <div id="sidebar" class="height-fullvh d-flex flex-column top-0 position-sticky">
+      <div id="sidebar" class="d-flex flex-column top-0 position-sticky">
         <div id="masthead" class=" d-flex flex-1 flex-column flex-content-center px-4 px-md-6 px-lg-7 py-6">
           {% include masthead.html metadata=true run_animation=true %}
         </div>

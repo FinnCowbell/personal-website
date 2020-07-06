@@ -5,28 +5,51 @@
   align-self: center;
   transition: 1s;
   transition-timing-function: linear;
-
   .hex{
-    clip-path: url(#hexagon-clip);
+    // mask-border: url(#hexagon-clip);
     -webkit-clip-path: url(#hexagon-clip);
+    animation: agitate 10s linear 0s infinite;
   }
 }
 .hex-svg{
   position: fixed;
   top: 0;
   left: 0;
-  transform: scaleX(.01);
+  // transform: scale(.01, .01);
 }
 .hexagon-path{
+  //Transforms the clip path from the Center of the shape.
   transform-box: fill-box;
   transform-origin: center;
 }
 .hexagon-clip{
-  transform: translate(10px,0px);
+  width: 100%; 
 }
-@media not all and (min-resolution:.001dpcm) {  //Safari 10+
-  path{
-    -webkit-transition: .001s; //Fixes safari issues;
-    transition: .001s;
+
+#hex-svg-1 clipPath{
+  transform: translate(14px,0px);
+}
+#hex-svg-2 clipPath{
+  transform: translate(8px,0px);
+}
+/* This may seem like a strange inclusion.
+   Because WebKit tries to avoid redrawing the rotating hexagon SVG, the animation ends up looking choppy,
+   or not working at all. 
+   
+   CSS properties such as 'will-change' look to help fix this by hinting to the browser when redraws 
+   are required. However, there isn't a lot of support for animating parts of an SVG with this method
+   (or other Javascript ones I've seen).
+   
+   Forcing graphical redraws via an imperceptible animation such as this does the trick. 
+   
+   Spaghetti? Yes!
+   Solving problems and arriving at a deeper understanding of the underlying systems? Also Yes!
+*/
+@keyframes agitate{
+  0%{
+    padding: 0px;
+  }
+  100%{
+    padding: .1px;
   }
 }

@@ -10,12 +10,7 @@ function getVerticalLocation(item,trackFromBottom = true){
   } else{
     percentThrough = (itemLocation.top)/(window.innerHeight)
   }
-  if (percentThrough > 1){
-    return 1
-  } else if (percentThrough > 0){
-    return percentThrough
-  }
-  return 0
+  return percentThrough
 }
 
 function ScrollVelocity(){
@@ -41,34 +36,35 @@ function HexagonPinwheel(){
   this.rotation = 0
   this.speed= 0;
   this.accel = .1;
-  this.standBySpeed = .5
   this.deccel= .05;
+  //Once minspeed is arrived at, we move until we hit the next snapDegreeInterval
+  this.snapDegreeIntervals = 60;
+  this.minSpeed = .5
   this.maxSpeed = 5;
-  this.rotateHexagon= function(){
+  this.iteratePhysics= function(){
     this.rotation += this.speed;
     this.rotation = this.rotation % 360;
-    if(this.speed > this.standBySpeed){
+    if(this.speed > this.minSpeed){
         this.speed -= this.deccel;
-    } else if (this.speed < -this.standBySpeed){
+    } else if (this.speed < -this.minSpeed){
         this.speed += this.deccel;
     } else if(this.speed){
       this.trySnap();
     }
   }
   this.applySpeed= function(accel){
-    if(this.speed/accel <= 0){ //accel and speed Different signs
-      this.speed = 0;
-    }
     this.speed += accel;
   }
   this.trySnap = function(){
-    if(Math.floor(Math.abs(this.rotation)) % 60 == 0){
+    if(Math.floor(Math.abs(this.rotation)) % this.snapDegreeIntervals == 0){
       this.rotation = Math.floor(this.rotation);
       this.speed = 0;
     }
   }
   this.updateElement= function(){
-    this.svg.children[0].children[0].style.transform = `rotate(${this.rotation}deg)`
+    let clipPath = this.svg.children[0].children[0];
+    //update the rotation
+    clipPath.style.transform = `rotate(${this.rotation}deg)`
   }
   this.tick = function(){
     if(window.scrolled != 0){
@@ -79,45 +75,37 @@ function HexagonPinwheel(){
         this.speed = -this.maxSpeed;
       }
     }
-    this.rotateHexagon();
+    this.iteratePhysics();
     this.updateElement();
   }
-  return self;
 }
 
 function NavBar(){
-  this.navbar = document.getElementById('nav-bar') || false;
-  if(this.navbar == false){
-    return false
+  this.navbar = document.querySelector('#nav-bar');
+  if(!this.navbar){
+    return;
   }
   this.reference = document.getElementById('masthead');
   this.status = "closed"
   this.setStatus = function(newStatus){
-    if(newStatus != this.status){
       this.status = newStatus;
-      this.updatePosition();
-    }
   }
-  this.updatePosition = function(){
-    let rect = this.navbar.getBoundingClientRect();
-    if(this.status == "closed"){
-      this.navbar.style.top = `${-rect.height}px`
-    } else{
-      this.navbar.style.top = `${0}px`
-    }
+  this.closeNav = function(){
+    this.navbar.style.top = "-" + this.navbar.getBoundingClientRect().height + "px";
+  }
+  this.openNav = function(){
+    this.navbar.style.top = "0px"
   }
   this.tick = function(){
     let verticalLocation = getVerticalLocation(this.reference, true);
-    if(verticalLocation == 0){
+    if(verticalLocation <= 0 && this.status == "closed"){
       this.setStatus('open');
-    } else{
-      this.setStatus('closed');
+      this.openNav();
+    } else if(verticalLocation > 0 && this.status != "closed"){
+      this.setStatus('closed')
+      this.closeNav()
     }
   }
-}
-
-function realName(){
-  _.forEach(document.getElementsByClassName('finn'), (name)=>{name.innerHTML="Thomas"});
 }
 
 function showSecret(){
@@ -125,21 +113,22 @@ function showSecret(){
 }
 
 window.onload = function(){
-  let hex = HexagonPinwheel();
+  let hex = new HexagonPinwheel();
   let velocityHandler = new ScrollVelocity();
   let navBarHandler = new NavBar();
-  navBarHandler && navBarHandler.updatePosition();
-  window.scrolled = 0;
+  window.scrolled = 0;// Declaration
   document.addEventListener('scroll', function(e){
     //window.scrolled is set to a velocity.
     window.scrolled = velocityHandler.get()
   })
   setInterval(()=>{
     hex.tick();
-    navBarHandler && navBarHandler.tick();
+    navBarHandler.navbar && navBarHandler.tick();
     window.scrolled = 0;
   }, 1000/60);
-  hex.img.onclick = ()=> {hex.applySpeed(2)}
+  
+  let hexImages = document.getElementsByClassName('hex');
+  _.forEach(hexImages, (img)=>{img.onclick = ()=>{hex.applySpeed(2)}});
 
   let konami = new Konami();
   konami.activateFunction = showSecret;
