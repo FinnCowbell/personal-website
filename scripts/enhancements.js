@@ -80,33 +80,33 @@ function HexagonPinwheel(){
   }
 }
 
-function NavBar(){
-  this.navbar = document.querySelector('#nav-bar');
-  if(!this.navbar){
-    return;
-  }
-  this.reference = document.getElementById('masthead');
-  this.status = "closed"
-  this.setStatus = function(newStatus){
-      this.status = newStatus;
-  }
-  this.closeNav = function(){
-    this.navbar.style.top = "-" + this.navbar.getBoundingClientRect().height + "px";
-  }
-  this.openNav = function(){
-    this.navbar.style.top = "0px"
-  }
-  this.tick = function(){
-    let verticalLocation = getVerticalLocation(this.reference, true);
-    if(verticalLocation <= 0 && this.status == "closed"){
-      this.setStatus('open');
-      this.openNav();
-    } else if(verticalLocation > 0 && this.status != "closed"){
-      this.setStatus('closed')
-      this.closeNav()
-    }
-  }
-}
+// function NavBar(){
+//   this.navbar = document.querySelector('#nav-bar');
+//   if(!this.navbar){
+//     return;
+//   }
+//   this.reference = document.getElementById('masthead');
+//   this.status = "closed"
+//   this.setStatus = function(newStatus){
+//       this.status = newStatus;
+//   }
+//   this.closeNav = function(){
+//     this.navbar.style.top = "-" + this.navbar.getBoundingClientRect().height + "px";
+//   }
+//   this.openNav = function(){
+//     this.navbar.style.top = "0px"
+//   }
+//   this.tick = function(){
+//     let verticalLocation = getVerticalLocation(this.reference, true);
+//     if(verticalLocation <= 0 && this.status == "closed"){
+//       this.setStatus('open');
+//       this.openNav();
+//     } else if(verticalLocation > 0 && this.status != "closed"){
+//       this.setStatus('closed')
+//       this.closeNav()
+//     }
+//   }
+// }
 
 function showSecret(){
   _.forEach(document.getElementsByClassName('secret'),(s)=>{s.removeAttribute("hidden")});
@@ -115,7 +115,7 @@ function showSecret(){
 window.onload = function(){
   let hex = new HexagonPinwheel();
   let velocityHandler = new ScrollVelocity();
-  let navBarHandler = new NavBar();
+  // let navBarHandler = new NavBar();
   window.scrolled = 0;// Declaration
   document.addEventListener('scroll', function(e){
     //window.scrolled is set to a velocity.
@@ -123,7 +123,7 @@ window.onload = function(){
   })
   setInterval(()=>{
     hex.tick();
-    navBarHandler.navbar && navBarHandler.tick();
+    // navBarHandler.navbar && navBarHandler.tick();
     window.scrolled = 0;
   }, 1000/60);
   

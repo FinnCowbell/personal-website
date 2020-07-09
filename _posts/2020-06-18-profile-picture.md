@@ -2,10 +2,13 @@
 title: "What's Your Profile Picture?"
 published: false
 ---
-## TL;DR: I like this picture from when I acted
-
+# TL;DR: I like this picture from when I acted
 ___
-**Well I'm glad you asked.**
+.
+...
+.....
+.......
+**Well I'm glad you asked and are interested enough to keep reading.**
 
 That picture is me wearing a Burger King crown on stage during my High School's somewhat avant-garde production of "The Lark": A French play about Joan of Ark. 
 
