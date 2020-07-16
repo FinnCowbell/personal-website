@@ -63,7 +63,7 @@ projects:
     name: The Next Step
     accent_color: "#8c2629"
     accent_color_2: "#8c2629"
-    URL: http://thefatdads.github.io
+    URL: https://thefatdads.github.io
     style: light
     short_desc: >
       A web-app providing resources and to opioid users and their families in Connecticut.
