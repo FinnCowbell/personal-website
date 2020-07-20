@@ -5,29 +5,40 @@
   align-self: center;
   transition: 1s;
   transition-timing-function: linear;
-  .hex{
-    // mask-border: url(#hexagon-clip);
-    -webkit-clip-path: url(#hexagon-clip);
+  max-height: 200px;
+  max-width: 200px;
+  margin-top: 20px;
+  margin-bottom: 20px;
+  .profile-svg{
     animation: agitate 10s linear 0s infinite;
   }
+  .hexagon-path{
+    //Transforms the clip path from the Center of the shape.
+    transform-box: fill-box;
+    transform-origin: center;
+  }
+  .profile-img *{
+      //Transforms the clip path from the Center of the shape.
+      transform-box: fill-box;
+      transform-origin: center;
+  }
+  image{
+    -webkit-clip-path: url('#hexagon-clip');
+    clip-path: url("#hexagon-clip");
+  }
 }
+
 .hex-svg{
   position: fixed;
   top: 0;
   left: 0;
   // transform: scale(.01, .01);
 }
-.hexagon-path{
-  //Transforms the clip path from the Center of the shape.
-  transform-box: fill-box;
-  transform-origin: center;
-}
 .hexagon-clip{
   width: 100%; 
 }
-
 #hex-svg-1 clipPath{
-  transform: translate(14px,0px);
+  transform: translate(13.5px,0px);
 }
 #hex-svg-2 clipPath{
   transform: translate(8px,0px);

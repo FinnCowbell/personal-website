@@ -30,9 +30,7 @@ function isOnScreen(item){
 }
 
 function HexagonPinwheel(){
-  this.svg = document.getElementById('hex-svg-1');
-  this.img = document.getElementById('profile-img');
-  this.content = document.getElementById('content');
+  
   this.rotation = 0
   this.speed= 0;
   this.accel = .1;
@@ -62,9 +60,9 @@ function HexagonPinwheel(){
     }
   }
   this.updateElement= function(){
-    let clipPath = this.svg.children[0].children[0];
+    let path = document.querySelectorAll('.profile-pic .hexagon-path');
     //update the rotation
-    clipPath.style.transform = `rotate(${this.rotation}deg)`
+    path.forEach((p)=>p.style.transform=`rotate(${this.rotation}deg)`);
   }
   this.tick = function(){
     if(window.scrolled != 0){
@@ -127,7 +125,7 @@ window.onload = function(){
     window.scrolled = 0;
   }, 1000/60);
   
-  let hexImages = document.getElementsByClassName('hex');
+  let hexImages = document.querySelectorAll('.profile-svg');
   _.forEach(hexImages, (img)=>{img.onclick = ()=>{hex.applySpeed(2)}});
 
   let konami = new Konami();
