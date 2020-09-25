@@ -127,6 +127,10 @@ window.onload = function(){
   
   let hexImages = document.querySelectorAll('.profile-svg');
   _.forEach(hexImages, (img)=>{img.onclick = ()=>{hex.applySpeed(2)}});
+  
+  if(window.location.pathname == "/"){
+    hex.applySpeed(2);
+  }
 
   let konami = new Konami();
   konami.activateFunction = showSecret;
