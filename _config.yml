@@ -16,20 +16,44 @@ defaults:
     values:
       layout: "post"
 
+dyk:
+  - >
+    Welcome to my newly-revised website! If this is your first time seeing this slideshow, 
+    you'll likely get interrupted while reading this, 
+    as the slideshow passively scrolls automatically after five seconds.
+  - > 
+    I've had a personal website since 2017. This one is a customized fork of Github's 
+    personal-website repository. I recently redid the website using Tailwind CSS, so I can more easily 
+    adjust portions of the webiste.
+  - > 
+    I have a music minor. I enjoy listening to all types of music 
+    (Rap, R&B, New Wave, and Alternative Rock are some favorites though!) 
+    Sometimes I compose my own music for fun. 
+    I play percussion in UConn's Percussion Ensemble. I also play guitar in my free time!
+  - This Summer, I'm an intern at Pega!
+  - I love to rock climb. I've been climbing since I went to college. 
+  - > 
+    I'm a Microsoft Learn Beta Student Ambassador. In Spring 2021, I hosted a workshop at a 
+    Hackathon to help students collaboratively code in Microsoft VSCode using LiveShare.
+
 projects:
   -
     id: dd
     name: Detective Dictator
+    author: Me!
+    fullAuthor: Finn Navin
     short_desc: >
       My version of the board game "Secret Hitler" -- entirely online! 
     description: > 
       My version of the board game "Secret Hitler" -- entirely online! 
       I made this so I could play one of my favorite board games with my friends while social distancing.
       It took about 2 weeks of focused development in May 2020 to make it fully playable, and gets
-      frequent visits from my friends and I.
+      frequent visits from my friends and I. It is now hosted at SecretHitler.js.org, so I removed the original 
+      'Detective Dictator' branding.
     accent_color:  "#e56344"
     accent_color_2:  "#036c7c"
-    URL: https://detectivedictator.herokuapp.com
+    URL: https://secrethitler.js.org
+    URL2: https://github.com/FinnCowbell/DetectiveDictator
     style: light
     technologies:
       - Node.js
@@ -41,26 +65,31 @@ projects:
   -
     id: p4gtl
     name: ¡Please 4get the Lyrics!
+    author: The Huskiteers 
+    fullAuthor: Finn Navin, Christopher Vassallo, Jacob Dillon, Michael Taylor, Brandon Mino, and Xuan Chau
     short_desc: >
       A Phone-Controlled karaoke guessing game!
     description: >
       Our Team's 2nd-place submission at HackUMass 2019! We wanted to recreate kahoot-style gameplay but 
       take it a step further. We created this Karaoke guessing game as a fun roof of concept of what can be done!
-      Hosting a lobby requires a Spotify account, and should be done in it's own window.
+      Hosting a lobby requires a Spotify account, so if you want to host a game you should do it in a new window.
     accent_color: "#bd6d04"
     accent_color_2: "#0d4ff5"
     URL: https://p4gtl.herokuapp.com/
+    URL2: https://hackumass-vii-projects.hackumass.com/71.html
     style: light
     technologies:
       - Node.js
       - Socket.io
       - Express.js
-      - Spotify API
+      - The Spotify API
       - Karaoke files (.kar)
       - Karapython
   -
     id: nextstep
     name: The Next Step
+    author: The Fat Dads
+    fullAuthor: Finn Navin, Christopher Vassallo, and Jack Violet
     accent_color: "#8c2629"
     accent_color_2: "#8c2629"
     URL: https://thefatdads.github.io
@@ -80,6 +109,8 @@ projects:
   -
     id: sov
     name: Spirographs of Venus
+    author: Me!
+    fullAuthor: Finn Navin
     short_desc: >
       My winning math-visualization project at the 2018 Museum of Mathematics Hackathon!
     description: >
@@ -92,6 +123,7 @@ projects:
     accent_color: '#100030'
     accent_color_2: '#957f00'
     URL: https://finncowbell.github.io/spirographsOfVenus
+    URL2: http://hackathon.momath.org/showcase/
     style: light
     technologies:
       - P5.js
@@ -99,6 +131,8 @@ projects:
   -
     id: cabbage
     name: Cannonball Cabbage
+    author: Somebody
+    fullAuthor: Me
     secret: true
     accent_color: '#000'
     accent_color_2: '#000'
@@ -115,6 +149,8 @@ projects:
   -
     id: saucy
     name: Saucy The Sausage
+    author: Somebody
+    fullAuthor: Me
     secret: true
     accent_color: '#000'
     accent_color_2: '#000'

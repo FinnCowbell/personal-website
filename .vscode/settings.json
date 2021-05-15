@@ -1,0 +1,7 @@
+{
+  "git.ignoreLimitWarning": true,
+  "css.validate": true,
+  "editor.quickSuggestions": {"strings": true},
+  "tailwindCSS.validate": true,
+  "emmet.showAbbreviationSuggestions": false
+}

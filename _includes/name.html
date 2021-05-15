@@ -1,9 +1,10 @@
+{% assign classes = "'my-name text-6xl font-bold transition-transform duration-200 ease-in-out transform-gpu hover:scale-[1.025] text-center select-none'" %}
 {% if include.run_animation %}
-  <h1 style="color: {{include.color || inherit}}" class="my-name hover-grow text-center">
-    <span class="finn">Finn</span><span class="space"> </span><span class="navin">Nav<span class="name-dot d-inline-block"><span class="anim-fade-down d-inline-block">.</span></span><span class="in">in</span></span>
+  <h1 style="color: {{include.color || inherit}}" class={{ classes }}>
+    <span class="finn">Finn</span><span class="space "> </span><span class="navin whitespace-pre">Nav<span class="name-dot inline-block">.</span>in</span>
   </h1>
 {% else %}
-  <h1 style="color: {{include.color || inherit}}" class="my-name hover-grow text-center">
+  <h1 style="color: {{include.color || inherit}}" class={{classes}}>
     <span class="finn">Finn</span> <span class="navin">Navin</span>
     <!-- <span class="finn">Finn</span><span class=""> </span><span class="nav">Nav</span><span class="in">in</span> -->
   </h1>

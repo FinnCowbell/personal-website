@@ -1,0 +1,73 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer utilities{
+  .octicon{
+    @apply inline-block align-text-bottom;
+  }
+  .card-button-colors, .flickity-button{
+    @apply transition-colors duration-300 bg-gray-100 hover:bg-gray-200 border-gray-300;
+  }
+
+}
+/* @apply wasn't working, so I resorted to CSS to replace these properties */
+.flickity-prev-next-button {
+  border-style: solid;
+  border-width: 0px;
+  top: 0;
+  transform: unset;
+}
+.flickity-prev-next-button.previous{
+  left: 0;
+  border-bottom-width: 1px;
+  border-right-width: 1px;
+  border-radius: 0;
+  border-top-left-radius: .375rem;
+  border-bottom-right-radius: .375rem;
+}
+
+.flickity-prev-next-button.next{
+  right: 0;
+  border-radius: 0;
+  border-bottom-width: 1px;
+  border-left-width: 1px;
+  border-top-right-radius: .375rem;
+  border-bottom-left-radius: .375rem;
+}
+
+/* Can be changed to tailwind later if appropriate */
+.my-name{
+  font-family: Oxygen, sans-serif;
+  color: rebeccapurple;
+  animation-delay: 1s;
+  animation-timing-function: ease-in-out;
+  word-wrap: break-word;
+}
+.space{
+  animation: dot-shrink .5s ease-in-out 1s reverse;
+  animation-fill-mode: forwards;
+  font-size: 0em;
+}
+
+.name-dot{
+  animation: dot-shrink .5s ease-in-out 1s;
+  animation-fill-mode: forwards;
+}
+.name-dot span{
+  animation-delay: .5s;
+  animation-timing-function: ease-in-out;
+  animation-duration: 1s;
+}
+
+@keyframes dot-shrink{
+  0%{
+    width: inherit;
+    opacity: 1;
+    font-size: 1em;
+  }
+  100%{
+    opacity: 0;
+    font-size: 0em;
+  }
+}

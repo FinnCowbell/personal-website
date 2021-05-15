@@ -1,0 +1,41 @@
+<!-- <div class="absolute top-0 w-full flex flex-row">
+  <button class="w-10 h-5 py-5 flex items-center justify-items-center border card-button-colors rounded-br-md">
+    <p class="w-full text-center">
+      {% octicon chevron-left, height:24  class:" {{ icon_classes }}" %}
+    </p>
+  </button>
+  <div class="flex-grow"></div>
+  <button class="w-10 h-5 py-5 flex items-center justify-items-center border card-button-colors rounded-bl-md">
+    <p class="w-full text-center">
+      {% octicon chevron-right, height:24  class:"{{ icon_classes }}" %}
+    </p>
+  </button>
+</div> -->
+<div class="relative h-full w-full flex flex-col bg-gray-50">
+  <div class="main-carousel h-full w-full flex-1" data-flickity='{ "cellAlign": "left", "wrapAround": true, "autoPlay": 5000, "pageDots": false }'>
+  {% if include.project %}
+    {% include projectSlides.html project=include.project %}
+  {% else %}
+    <div class="carousel-cell h-full w-full bg-gray-50 pt-12">
+      <h2 class="text-2xl font-semibold text-center">Did you Know...</h2>
+    </div>
+    {% include homeSlides.html %}
+  {% endif %}
+  </div>
+  {% if include.project %}
+  <nav class="h-10 leading-10 flex flex-initial justify-items-stretch border-t border-gray-200 bg-gray-100">
+    <a class="text-center flex-1 card-button-colors" href="/">
+      {% octicon home, height:16  class:"{{ icon_classes }}" %} Home
+    </a>
+    <a class="text-center flex-1 card-button-colors border-l" target="_blank" href="{{ include.project.URL }}">
+      {% octicon copy, height:16  class:"{{ icon_classes }}" %} New Tab 
+    </a>
+    {% if include.project.URL2 %}
+      <a class="text-center flex-1 card-button-colors border-l" target="_blank" href="{{ include.project.URL2 }}">
+        {% octicon telescope, height:16  class:"{{ icon_classes }}" %} More Info
+      </a>
+    {% endif %}
+  </nav>
+  {% endif %}
+<!-- DYK Cards -->
+</div>

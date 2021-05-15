@@ -1,0 +1,39 @@
+<div class="carousel-cell h-full w-full bg-gray-50 pt-12">
+  <div class="flex flex-col justify-evenly max-w-sm h-full m-auto py-5 px-8">
+    <div>
+      <h2 class="text-2xl font-semibold" style="color:{{ include.project.accent_color}}">
+        Project: 
+      </h2>
+      <h2 class="text-3xl font-semibold text-center" style="color:{{ include.project.accent_color_2 }}">
+        {{ include.project.name }}
+      </h2>
+    </div>
+    <div>
+      <h2 class="text-2xl font-semibold" style="color:{{ include.project.accent_color}}">
+        By: {{ include.project.author }}
+      </h2>
+      <h3 class="text-normal">({{ include.project.fullAuthor }})</h3>
+    </div>
+  </div>
+</div>
+<div class="carousel-cell overflow-y-scroll h-full w-full bg-gray-50 pt-12">
+  <div class="m-auto h-full max-w-sm p-8">
+    <h2 class="text-3xl font-semibold text-center mb-4" style="color:{{ include.project.accent_color_2 }}">About<h2>
+    <p style="color:{{ include.project.accent_color }}">
+      {{ include.project.description }}
+    </p>
+  </div>
+</div>
+<div class="carousel-cell overflow-y-scroll h-full w-full bg-gray-50 pt-12">
+  <div class="m-auto h-full max-w-sm p-8">
+    <h2 class="text-3xl font-semibold text-center" style="color:{{ include.project.accent_color_2 }}">Built With...</h2>
+    <ul style="color:{{ include.project.accent_color }}">
+      {% for t in include.project.technologies %}
+        <li>- {{t}}</li>
+      {% endfor %}
+    </ul>
+    
+
+
+  </div>
+</div>
