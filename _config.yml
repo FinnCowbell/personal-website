@@ -18,10 +18,10 @@ defaults:
 dyk:
   - >
     Welcome to my newly-revised website! If this is your first time seeing this slideshow, 
-    you'll likely get interrupted while reading this, 
-    as the slideshow passively scrolls automatically after five seconds.
+    you might get interrupted while reading this, 
+    as the slideshow will scroll automatically after five seconds.
   - > 
-    Though I've been making 'website' collages of HTML embeds since elementary school,
+    Though I've been making websites since elementary school. I started out just making collages of HTML various embeds.
     I've had a bunch of different personal websites since 2017. This one is a customized fork of Github's 
     personal-website repository. I recently redid the website using Tailwind CSS, implementing dark mode
     and fine-tuning various aspects of the site.
@@ -37,7 +37,7 @@ dyk:
   - > 
     I'm a Microsoft Learn Beta Student Ambassador. I'm in the leagues for AI/ML and Green Tech. 
     In Spring 2021, I hosted a workshop at a 
-    Hackathon to help students collaboratively code in Microsoft VSCode using LiveShare.
+    Hackathon to help students collaboratively code in Microsoft VS Code using LiveShare.
   - This Summer, I'm an intern at Pega! More info on this to come. 
 
 projects:
