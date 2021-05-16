@@ -1,6 +1,10 @@
-<h2 {% if site.style == 'dark' %}class="text-white"{% endif %}>Other Github Projects</h2>
-<p class="f4 mb-4 {% if site.style == 'dark' %}text-white{% else %}text-gray{% endif %}">Projects that didn't earn their own page.</p>
-<div class="d-sm-flex flex-wrap gutter-condensed mb-4">
+<h2 class="text-xl font-semibold">
+  Other Github Projects
+</h2>
+<p class="mb-4">
+  Some of my smaller projects over the years.
+</p>
+<div class="mx-auto grid w-full grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 grid-flow-row gap-4">
   {% if site.github_projects.sort_by == 'stars' %}
     {% assign sort_order = 'stargazers_count', 'last' %}
   {% else %}
@@ -19,7 +23,7 @@
 
   {% for repository in filtered_repos | limit: site.github_projects.limit %}
     {% unless site.github_projects.exclude.projects contains repository.name %}
-      <div class="col-sm-6 col-md-12 col-lg-6 col-xl-4 mb-3">
+      <div>
         {% include repo-card.html %}
       </div>
     {% endunless %}

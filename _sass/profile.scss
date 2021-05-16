@@ -22,10 +22,6 @@
       transform-box: fill-box;
       transform-origin: center;
   }
-  image{
-    -webkit-clip-path: url('#hexagon-clip');
-    clip-path: url("#hexagon-clip");
-  }
 }
 
 .hex-svg{

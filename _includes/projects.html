@@ -1,25 +1,22 @@
-<h1 {% if site.style == 'dark' %}class="text-white"{% endif %}>My Projects</h1>
-<p class="f4 mb-4 {% if site.style == 'dark' %}text-white{% else %}text-gray{% endif %}">
+<h1 class="text-3xl font-semibold dark:text-white mb-1">My Projects</h1>
+<p class="text-lg mb-4 text-gray-600 dark:text-white">
   Here are some projects I've worked on that have shaped me as a developer!
 </p>
-<div class="projects-grid mx-auto my-4">
+<div class="projects-grid grid gap-5 sm:grid-cols-[repeat(auto-fill,minmax(300px,1fr))] mx-auto my-4">
   {% for project in site.projects %}
-    <!-- Styling to change the highlight color for each box.-->
-    
-    <div class="{{project.id}} project-card border {% if project.secret %}secret{% endif %}"{% if project.secret %}hidden{% endif %} style="color: {{project.accent_color}};">
-      <div class="card-img" style="background-image: url(assets/img/projects/{{project.id}}.png);"></div>
-        <div class="content px-3 py-6"> 
-          <h3>
-            {{project.name}}
-          </h3>
-          <div {% if project.accent_color_2 %} style="color: {{project.accent_color_2}} !important" {% endif %} class="py-1">
-            <p>{{project.short_desc}}</p>
-            <a class="mx-3" style="color: inherit; font-size: 16px" href="/projects/{{project.id}}">
-              {% octicon eye height:16 style:"fill:{{project.accent_color}}"%} View
-            </a>
-          </div>
+    <div class="{{project.id}} relative {% if project.secret %}secret{% endif %}"{% if project.secret %}hidden{% endif %} style="color: {{project.accent_color}};">
+      <div class="card-img absolute rounded-md top-0 left-0 w-full h-full bg-cover bg-center z-10" style="background-image: url(assets/img/projects/{{project.id}}.png);"></div>
+      <div class="w-full h-full bg-gradient-to-r from-white via-white dark:from-gray-900 dark:via-gray-900 to-transparent relative rounded-md border dark:border-color-gray-800  px-4 py-10 z-20"> 
+        <h3 class="text-xl font-semibold mb-2 filter dark:brightness-[1.5]">
+          {{project.name}}
+        </h3>
+        <div {% if project.accent_color_2 %} style="color: {{ project.accent_color_2 }}" {% endif %} class="py-1 filter dark:brightness-[1.5]">
+          <p class="text-sm w-1/2 mb-2 px-1">{{project.short_desc}}</p>
+          <a class="fill-current mx-3 font-semibold" href="/projects/{{project.id}}">
+            {% octicon eye height:16 color:"{{project.accent_color}}" class:"{{ icon_classes }}" %} View
+          </a>
         </div>
       </div>
-
+    </div>
   {% endfor %}
 </div>
