@@ -6,11 +6,11 @@
   {% for project in site.projects %}
     <div class="{{project.id}} relative {% if project.secret %}secret{% endif %}"{% if project.secret %}hidden{% endif %} style="color: {{project.accent_color}};">
       <div class="card-img absolute rounded-md top-0 left-0 w-full h-full bg-cover bg-center z-10" style="background-image: url(assets/img/projects/{{project.id}}.png);"></div>
-      <div class="w-full h-full bg-gradient-to-r from-white via-white dark:from-gray-200 dark:via-gray-200 to-transparent relative rounded-md border dark:border-color-gray-800  px-4 py-10 z-20"> 
-        <h3 class="text-xl font-semibold mb-2">
+      <div class="w-full h-full bg-gradient-to-r from-white via-white dark:from-gray-900 dark:via-gray-900 to-transparent relative rounded-md border dark:border-color-gray-800  px-4 py-10 z-20"> 
+        <h3 class="text-xl font-semibold mb-2 filter dark:brightness-[1.5]">
           {{project.name}}
         </h3>
-        <div {% if project.accent_color_2 %} style="color: {{ project.accent_color_2 }}" {% endif %} class="py-1">
+        <div {% if project.accent_color_2 %} style="color: {{ project.accent_color_2 }}" {% endif %} class="py-1 filter dark:brightness-[1.5]">
           <p class="text-sm w-1/2 mb-2 px-1">{{project.short_desc}}</p>
           <a class="fill-current mx-3 font-semibold" href="/projects/{{project.id}}">
             {% octicon eye height:16 color:"{{project.accent_color}}" class:"{{ icon_classes }}" %} View

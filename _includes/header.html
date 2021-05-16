@@ -10,20 +10,16 @@
   {% assign page_title = page.title %}
   {% assign meta_description = page.content | strip_html | strip_newlines | xml_escape | truncate: 300 %}
 {% else %}
-  {% assign page_title = user.name %}
+  {% assign page_title = "FinnNav.in" %}
   {% assign meta_description = user.bio | strip_html | strip_newlines | xml_escape | truncate: 300 %}
 {% endif %}
 
 <!doctype html>
 {{"<!-- 
-  Hey! What are you doing in here?
-  Since you're here, I'll let you know that this site was made with Github's 
-  'personal site' repository. It uses Jekyll, Sass, and Github Pages.
--->
+  Hey! What are you doing in here? The site not good enough for ya?
 
-<!--
   Anyways, if you're looking for secrets, a well-known game cheat code isn't a bad idea ;-) 
--->"}}
+-->}}
 <html class="min-height-full">
   <head>
     <link rel="apple-touch-icon" sizes="180x180" href="/assets/favicon/apple-touch-icon.png">
@@ -39,11 +35,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <link href="https://fonts.googleapis.com/css2?family=Oxygen:wght@300;400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://unpkg.com/flickity@2/dist/flickity.min.css">
-    <link href="{{ "/styles.css" | asset_url | asset_tag}}" rel="stylesheet" type="text/css">
-    <script src="https://cdn.jsdelivr.net/npm/lodash@4.17.15/lodash.min.js"></script>
-    <!-- Flickity -->
-    <script src="https://unpkg.com/flickity@2/dist/flickity.pkgd.min.js"></script>
-    <script src="{{ "/scripts/konami.js" | asset_url | asset_tag }}"></script>
-    <script src="{{ "/scripts/enhancements.js" | asset_url | asset_tag }}"></script>
+    <link href="{{ "/assets/styles.css" | asset_url | asset_tag}}" rel="stylesheet" type="text/css">
   </head>
-  <body class="bg-gray-50 dark:bg-gray-800 dark:text-white">
+  <body class="bg-gray-50 dark:bg-gray-900 dark:text-white">

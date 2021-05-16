@@ -7,11 +7,15 @@
     @apply inline-block align-text-bottom;
   }
   .card-button-colors, .flickity-button{
-    @apply transition-colors duration-300 bg-gray-100 hover:bg-gray-200 border-gray-300;
+    @apply transition-colors fill-current duration-300 text-gray-900 dark:text-white bg-gray-100 dark:bg-gray-900 hover:bg-gray-200 dark:hover:bg-gray-700 border-gray-300 ;
   }
 
 }
 /* @apply wasn't working, so I resorted to CSS to replace these properties */
+.flickity-viewport {
+  /* Fixes corner-clipping */
+  border-radius: .375rem;
+}
 .flickity-prev-next-button {
   border-style: solid;
   border-width: 0px;
@@ -39,7 +43,6 @@
 /* Can be changed to tailwind later if appropriate */
 .my-name{
   font-family: Oxygen, sans-serif;
-  color: rebeccapurple;
   animation-delay: 1s;
   animation-timing-function: ease-in-out;
   word-wrap: break-word;

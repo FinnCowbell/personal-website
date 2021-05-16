@@ -60,6 +60,10 @@ function HexagonPinwheel(path){
 function showSecret(){
   _.forEach(document.getElementsByClassName('secret'),(s)=>{s.removeAttribute("hidden")});
 }
+  
+var flkty = new Flickity( '.main-carousel', {
+  cellAlign: "left", wrapAround: true, autoPlay: 5000, pageDots: false
+});
 
 window.onload = function(){
   let hex = new HexagonPinwheel(document.querySelectorAll("#hexagon-clip #hexagon-path"));
@@ -75,12 +79,14 @@ window.onload = function(){
     // navBarHandler.navbar && navBarHandler.tick();
     window.scrolled = 0;
   }, 1000/60);
-  
-  let hexImages = document.querySelectorAll('#profile-pic');
-  _.forEach(hexImages, (img)=>{img.onclick = ()=>{hex.applySpeed(2)}});
+  // Making the caurosel buttons add velocity in their directions
+  flkty.prevButton.element.addEventListener('click', ()=>{hex.applySpeed(-2.4)});
+  flkty.nextButton.element.addEventListener('click', ()=>{hex.applySpeed(2.4)});
+  let hexActivators = document.querySelectorAll('#profile-pic');
+  _.forEach(hexActivators, (x)=>{x.addEventListener('click', ()=>{hex.applySpeed(2.4)})});
   
   if(window.location.pathname == "/"){
-    hex.applySpeed(2);
+    hex.applySpeed(2.4);
   }
 
   let konami = new Konami();
