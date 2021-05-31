@@ -1,5 +1,5 @@
-import { Konami } from './Konami.js';
-import { PinWheel } from './Pinwheel.js';
+import { Konami } from '/scripts/Konami.js';
+import { PinWheel } from '/scripts/Pinwheel.js';
 
 function ScrollVelocity(){
   this.st = window.pageYOffset || document.documentElement.scrollTop;
