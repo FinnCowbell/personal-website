@@ -648,6 +648,9 @@ video {
 .mt-1 {
 	margin-top: 0.25rem;
 }
+.mb-10 {
+	margin-bottom: 2.5rem;
+}
 .inline-block {
 	display: inline-block;
 }
@@ -678,11 +681,11 @@ video {
 .max-h-full {
 	max-height: 100%;
 }
-.w-screen {
-	width: 100vw;
-}
 .w-full {
 	width: 100%;
+}
+.w-screen {
+	width: 100vw;
 }
 .w-10 {
 	width: 2.5rem;
@@ -699,8 +702,8 @@ video {
 .max-w-sm {
 	max-width: 24rem;
 }
-.max-w-xs {
-	max-width: 20rem;
+.max-w-\[20vw\] {
+	max-width: 20vw;
 }
 .flex-auto {
 	flex: 1 1 auto;
@@ -726,16 +729,6 @@ video {
 	--tw-scale-x: 1;
 	--tw-scale-y: 1;
 	transform: translate3d(var(--tw-translate-x), var(--tw-translate-y), 0) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
-}
-.transform {
-	--tw-translate-x: 0;
-	--tw-translate-y: 0;
-	--tw-rotate: 0;
-	--tw-skew-x: 0;
-	--tw-skew-y: 0;
-	--tw-scale-x: 1;
-	--tw-scale-y: 1;
-	transform: translateX(var(--tw-translate-x)) translateY(var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
 }
 .cursor-pointer {
 	cursor: pointer;
@@ -943,8 +936,21 @@ video {
 	padding-left: 1.5rem;
 	padding-right: 1.5rem;
 }
+.py-12 {
+	padding-top: 3rem;
+	padding-bottom: 3rem;
+}
 .pt-12 {
 	padding-top: 3rem;
+}
+.pb-5 {
+	padding-bottom: 1.25rem;
+}
+.pt-6 {
+	padding-top: 1.5rem;
+}
+.pt-10 {
+	padding-top: 2.5rem;
 }
 .text-center {
 	text-align: center;
@@ -1119,6 +1125,12 @@ video {
   border-top-right-radius: .375rem;
   border-bottom-left-radius: .375rem;
 }
+.flickity .carousel-cell::-webkit-scrollbar{
+  display: none;
+}
+.flickity .carousel-cell{
+  scrollbar-width: none;
+}
 /* Can be changed to tailwind later if appropriate */
 .my-name{
   font-family: Oxygen, sans-serif;
@@ -1184,14 +1196,14 @@ video {
 		background-color: rgba(17, 24, 39, var(--tw-bg-opacity));
 	}
 
-	.dark\:bg-gray-800 {
-		--tw-bg-opacity: 1;
-		background-color: rgba(31, 41, 55, var(--tw-bg-opacity));
-	}
-
 	.dark\:bg-gray-200 {
 		--tw-bg-opacity: 1;
 		background-color: rgba(229, 231, 235, var(--tw-bg-opacity));
+	}
+
+	.dark\:bg-gray-800 {
+		--tw-bg-opacity: 1;
+		background-color: rgba(31, 41, 55, var(--tw-bg-opacity));
 	}
 
 	.dark\:from-gray-900 {
@@ -1277,6 +1289,10 @@ video {
 	}
 }
 @media (min-width: 1280px) {
+
+	.xl\:max-w-xs {
+		max-width: 20rem;
+	}
 
 	.xl\:grid-cols-3 {
 		grid-template-columns: repeat(3, minmax(0, 1fr));

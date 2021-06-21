@@ -40,6 +40,14 @@
   border-bottom-left-radius: .375rem;
 }
 
+.flickity .carousel-cell::-webkit-scrollbar{
+  display: none;
+}
+
+.flickity .carousel-cell{
+  scrollbar-width: none;
+}
+
 /* Can be changed to tailwind later if appropriate */
 .my-name{
   font-family: Oxygen, sans-serif;
