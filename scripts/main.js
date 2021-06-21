@@ -1,6 +1,8 @@
 import { Konami } from '/scripts/Konami.js';
 import { PinWheel } from '/scripts/Pinwheel.js';
 
+const isSafari = !!(window.safari)
+
 function ScrollVelocity(){
   this.st = window.pageYOffset || document.documentElement.scrollTop;
   this.lastScrollTop = -1;
@@ -24,17 +26,21 @@ function init(){
   var flkty = new Flickity( '.main-carousel', {
     cellAlign: "left", wrapAround: true, autoPlay: 5000, pageDots: false
   });
+  konami.run()
+  if (isSafari){
+    document.querySelector('#hex-svg').style.transform = 'translate(16px)';
+    document.querySelector('#hexagon-clip').style.transform = '';
+    return;
+  }
   window.scrolled = 0;// Declaration
   document.addEventListener('scroll', function(e){
     //window.scrolled is set to a velocity.
     window.scrolled = velocityHandler.get()
   })
-
   setInterval(()=>{
     hex.tick();
     window.scrolled = 0;
   }, 1000/60);
-
   // Making the caurosel buttons add velocity in their directions
   flkty.prevButton.element.addEventListener('click', ()=>{hex.applySpeed(-2.4)});
   flkty.nextButton.element.addEventListener('click', ()=>{hex.applySpeed(2.4)});
@@ -42,10 +48,9 @@ function init(){
   _.forEach(hexActivators, (x)=>{x.addEventListener('click', ()=>{hex.applySpeed(2.4)})});
   
   if(window.location.pathname == "/"){
+    // Give a little spin if we're on the main menu
     hex.applySpeed(2.4);
   }
-
-  konami.run()
 }
 // With the script placed after the body, we don't need document.onload
 init();

@@ -1,5 +1,7 @@
 {% assign metadata_styles = 'flex items-center mb-3' %}
-{% include profile.html %}
+<div id="profile-pic" class="justify-center align-center m-auto my-5 max-w-[20vw] xl:max-w-xs cursor-pointer">
+  {% include profile.svg %}
+</div>
 {% include name.html color=include.project.accent_color_2 run_animation=include.run_animation%}
 
 {% if include.metadata %}

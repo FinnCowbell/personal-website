@@ -1,0 +1,8 @@
+<svg id="hex-svg" viewBox="0 0 200 200" height="100%" width="100%" xmlns="http://www.w3.org/2000/svg" xlink="http://www.w3.org/1999/xlink" version="1.1">
+  <g>
+    <clipPath id="hexagon-clip" style="transform: translate(16px,0px);" clipPathUnits="objectBoundingBox">
+      <path id="hexagon-path" style="transform-box: fill-box; transform-origin: center;" d="M0.3897114317029974 0.024999999999999998Q0.4330127018922193 0 0.4763139720814412 0.025L0.8227241335952167 0.225Q0.8660254037844386 0.25 0.8660254037844386 0.3L0.8660254037844386 0.7Q0.8660254037844386 0.75 0.8227241335952167 0.775L0.4763139720814412 0.975Q0.4330127018922193 1 0.3897114317029974 0.975L0.04330127018922193 0.775Q0 0.75 0 0.7L0 0.3Q0 0.25 0.04330127018922194 0.225Z"></path>
+    </clipPath>
+  </g>
+  <image fill="url(#hexagon-path)" height="100%" width="100%" style='clip-path: url("#hexagon-clip")' href="{{ user.avatar_url }}"></image>
+</svg>
