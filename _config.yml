@@ -17,8 +17,8 @@ defaults:
 
 dyk:
   - >
-    Welcome to my newly-revised website! If this is your first time seeing this slideshow, 
-    you might get interrupted while reading this, 
+    Welcome to my website! If this is your first time seeing this slideshow, 
+    you might get interrupted while reading this
     as the slideshow will scroll automatically after five seconds.
   - > 
     Though I've been making websites since elementary school. I started out just making collages of HTML various embeds.
@@ -29,7 +29,7 @@ dyk:
     I have a music minor. I enjoy listening to all types of music, but
     Rap, R&B, New Wave, and Alternative Rock are some favorites! 
     Sometimes I compose my own music for fun. 
-    I play percussion in UConn's Percussion Ensemble. I also play guitar in my free time!
+    I play percussion in UConn's Percussion Ensemble, and play guitar in my freetime!
   - >
     When I'm not slouched over a computer solving problems, I like to rock climb. 
     I've been climbing since I went to college. I enjoy how puzzling some climbs can be, and I love
@@ -38,7 +38,10 @@ dyk:
     I'm a Microsoft Learn Beta Student Ambassador. I'm in the leagues for AI/ML and Green Tech. 
     In Spring 2021, I hosted a workshop at a 
     Hackathon to help students collaboratively code in Microsoft VS Code using LiveShare.
-  - This Summer, I'm an intern at Pega! More info on this to come. 
+  - >
+    This past Summer, I was an intern at Pega. I was a member of a scrum team in the UI Authoring squad. 
+    I squashed bugs, added and revised unit tests, and helped make features users can use to 
+    build the interface for their Pega Platform Applications.
 
 projects:
   -
