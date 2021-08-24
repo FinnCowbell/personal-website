@@ -1,4 +1,4 @@
-layout: sideb
+layout: sidebar
 
 plugins:
   - jekyll-octicons
