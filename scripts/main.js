@@ -24,8 +24,7 @@ function init(){
   let konami = new Konami(showSecrets);
   let hex = new PinWheel(document.querySelectorAll("#hexagon-clip #hexagon-path"));
   var flkty = new Flickity( '.main-carousel', {
-    cellAlign: "left", wrapAround: true, autoPlay: 5000, pageDots: false
-  });
+    cellAlign: "left", wrapAround: true, dragThreshold: 10, autoPlay: 5000, pageDots: false, setGallerySize: false  });
   konami.run()
   if (isSafari){
     document.querySelector('#hex-svg').style.transform = 'translate(16px)';
