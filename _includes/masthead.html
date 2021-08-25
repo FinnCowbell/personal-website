@@ -18,7 +18,7 @@
           <div>
             {% assign service_shortname = account[0] %}
             {% assign service = site.data.social_media[service_shortname] %}
-            <a class="tooltipped tooltipped-se group fill-current text-gray-500 dark:text-white" href="{{ service.profile_url_prefix }}{{ account[1] }}"  aria-label="{{ service.name }}: {{ account[1] }}">
+            <a class="socials tooltipped tooltipped-se group fill-current text-gray-500 dark:text-white" href="{{ service.profile_url_prefix }}{{ account[1] }}"  aria-label="{{ service.name }}: {{ account[1] }}">
               {{ service.icon_svg }}
               <div class="absolute transition-opacity opacity-0 group-hover:opacity-100 pointer-events-none delay-150">
                 <span class="absolute truncate z-50 text-sm rounded-md py-1 px-2 bg-gray-600 text-white dark:bg-gray-200 dark:text-black">

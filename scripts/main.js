@@ -55,9 +55,8 @@ function init(){
     hex.tick();
     window.scrolled = 0;
   }, 1000/60);
-  // Making the caurosel buttons add velocity in their directions (Genarlized now just in case 
-  let hexActivators = document.querySelectorAll('#profile-pic');
-  _.forEach(hexActivators, (x)=>{x.addEventListener('click', ()=>{hex.applySpeed(2.4)})});
+  _.forEach(document.querySelectorAll('.socials'), (x)=>{x.addEventListener('click',()=>{hex.applySpeed(10)} )});
+  _.forEach(document.querySelectorAll('#profile-pic'), (x)=>{x.addEventListener('click', ()=>{hex.applySpeed(2.4)})});
   
   if(window.location.pathname == "/"){
     // Give a little spin if we're on the main menu
