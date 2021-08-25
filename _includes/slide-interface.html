@@ -9,14 +9,14 @@
   {% if include.project %}
   <nav class="h-10 leading-10 flex flex-initial justify-items-stretch rounded-b-md border-t border-gray-200 bg-gray-100 dark:bg-gray-800">
     <a class="text-center flex-1 rounded-bl-md card-button-colors overflow-hidden" href="/">
-      {% octicon home, height:16  class:"{{ icon_classes }}" %} Home
+      Home
     </a>
     <a class="text-center flex-1 {% if include.project.URL2 %} {% else %} rounded-br-md {% endif %}card-button-colors border-l overflow-hidden" target="_blank" href="{{ include.project.URL }}">
-      {% octicon copy, height:16  class:"{{ icon_classes }}" %} New Tab 
+      New Tab 
     </a>
     {% if include.project.URL2 %}
       <a class="text-center rounded-br-md flex-1 card-button-colors border-l overflow-hidden" target="_blank" href="{{ include.project.URL2 }}">
-        {% octicon telescope, height:16  class:"{{ icon_classes }}" %} More Info
+      More Info
       </a>
     {% endif %}
   </nav>
