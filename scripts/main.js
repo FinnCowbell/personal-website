@@ -23,8 +23,23 @@ function init(){
   let velocityHandler = new ScrollVelocity();
   let konami = new Konami(showSecrets);
   let hex = new PinWheel(document.querySelectorAll("#hexagon-clip #hexagon-path"));
+  let prevIndex = 1;
   var flkty = new Flickity( '.main-carousel', {
-    cellAlign: "left", wrapAround: true, dragThreshold: 10, autoPlay: 5000, pageDots: false, setGallerySize: false  });
+    cellAlign: "left", 
+    wrapAround: true, 
+    dragThreshold: 10, 
+    autoPlay: 5000, 
+    pageDots: false, 
+    setGallerySize: false,
+    on: {
+      change: ( index ) => {
+        if(index-prevIndex == 1 || index-prevIndex < -1)
+          hex.applySpeed(2.4)
+        else 
+          hex.applySpeed(-2.4);
+        prevIndex = index;
+      }
+    }});
   konami.run()
   if (isSafari){
     document.querySelector('#hex-svg').style.transform = 'translate(16px)';
@@ -40,15 +55,15 @@ function init(){
     hex.tick();
     window.scrolled = 0;
   }, 1000/60);
-  // Making the caurosel buttons add velocity in their directions
-  flkty.prevButton.element.addEventListener('click', ()=>{hex.applySpeed(-2.4)});
-  flkty.nextButton.element.addEventListener('click', ()=>{hex.applySpeed(2.4)});
+  // Making the caurosel buttons add velocity in their directions (Genarlized now just in case 
   let hexActivators = document.querySelectorAll('#profile-pic');
   _.forEach(hexActivators, (x)=>{x.addEventListener('click', ()=>{hex.applySpeed(2.4)})});
   
   if(window.location.pathname == "/"){
     // Give a little spin if we're on the main menu
-    hex.applySpeed(2.4);
+    setTimeout(()=>{
+      hex.applySpeed(2.4);
+    },1000);
   }
 }
 // With the script placed after the body, we don't need document.onload
