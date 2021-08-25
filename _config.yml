@@ -18,21 +18,22 @@ defaults:
 dyk:
   - >
     Welcome to my website! If this is your first time seeing this slideshow, 
-    you might get interrupted while reading this
-    as the slideshow will scroll automatically after five seconds.
+    you might get interrupted as the slideshow scrolls automatically every 
+    five seconds until you click on it.
   - > 
-    Though I've been making websites since elementary school. I started out just making collages of HTML various embeds.
-    I've had a bunch of different personal websites since 2017. This one is a customized fork of Github's 
+    I've been making websites since elementary school. They started out as collages of various HTML embeds of games and websites.
+    I've had a personal websites since 2017. This one is a customized fork of Github's 
     personal-website repository. I recently redid the website using Tailwind CSS, implementing dark mode
     and fine-tuning various aspects of the site.
   - > 
-    I have a music minor. I enjoy listening to all types of music, but
+    I have a music minor. 
+    I play percussion in UConn's Percussion Ensemble, and play guitar in my freetime!
+    I enjoy all types of music, but
     Rap, R&B, New Wave, and Alternative Rock are some favorites! 
     Sometimes I compose my own music for fun. 
-    I play percussion in UConn's Percussion Ensemble, and play guitar in my freetime!
   - >
     When I'm not slouched over a computer solving problems, I like to rock climb. 
-    I've been climbing since I went to college. I enjoy how puzzling some climbs can be, and I love
+    I've been climbing for over 3 years. I enjoy how puzzling some climbs can be, and I love
     working to discover the solution. Conveniently, it also keeps me in shape!
   - > 
     I'm a Microsoft Learn Beta Student Ambassador. I'm in the leagues for AI/ML and Green Tech. 
