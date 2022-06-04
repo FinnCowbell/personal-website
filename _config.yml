@@ -20,29 +20,27 @@ dyk:
     Welcome to my website! If this is your first time seeing this slideshow, 
     you might get interrupted as the slideshow scrolls automatically every 
     five seconds until you click on it.
-  - > 
+  - >
+    I recently was offered a software engineering role at Microsoft, in New York City. 
+    It's an honor to become a part of such a widely respected company.
+    I'm also humbled by all the help I've recieved from teammates, friends, and family.
+  - >
     I've been making websites since elementary school. They started out as collages of various HTML embeds of games and websites.
-    I've had a personal websites since 2017. This one is a customized fork of Github's 
-    personal-website repository. I recently redid the website using Tailwind CSS, implementing dark mode
+    I've made personal websites since my coding career started in 2017. This one is a customized fork of Github's 
+    personal-website repository. Last year, I redid the website using Tailwind CSS, implementing dark mode
     and fine-tuning various aspects of the site.
   - > 
-    I have a music minor. 
-    I play percussion in UConn's Percussion Ensemble, and play guitar in my freetime!
-    I enjoy all types of music, but
-    Rap, R&B, New Wave, and Alternative Rock are some favorites! 
-    Sometimes I compose my own music for fun. 
+    At UConn, I earned a Music Minor.
+    In UConn's Percussion Ensemble, I had the opportunity to play a variety of instruments, including Marimba, Congas, Djembe, Tambourine, and hitting a kitchen whisk against a chair!
+    I also compose music for fun. 
   - >
     When I'm not slouched over a computer solving problems, I like to rock climb. 
     I've been climbing for over 3 years. I enjoy how puzzling some climbs can be, and I love
     working to discover the solution. Conveniently, it also keeps me in shape!
   - > 
-    I'm a Microsoft Learn Beta Student Ambassador. I'm in the leagues for AI/ML and Green Tech. 
-    In Spring 2021, I hosted a workshop at a 
-    Hackathon to help students collaboratively code in Microsoft VS Code using LiveShare.
-  - >
     This past Summer, I was an intern at Pega. I was a member of a scrum team in the UI Authoring squad. 
-    I squashed bugs, added and revised unit tests, and helped make features users can use to 
-    build the interface for their Pega Platform Applications.
+    I squashed bugs, added and revised unit tests, and helped implement features users can use to 
+    design interfaces for their Pega Platform Applications.
 
 projects:
   -
