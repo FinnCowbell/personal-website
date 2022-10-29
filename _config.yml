@@ -17,12 +17,8 @@ defaults:
 
 dyk:
   - >
-    Welcome to my website! If this is your first time seeing this slideshow, 
-    you might get interrupted as the slideshow scrolls automatically every 
-    five seconds until you click on it.
-  - >
-    I recently was offered a software engineering role at Microsoft, in New York City. 
-    It's an honor to become a part of such a widely respected company.
+    I currently work at Microsoft as a software engineer.
+    It's an honor to be able to grow my career at such a great company.
     I'm also humbled by all the help I've recieved from teammates, friends, and family.
   - >
     I've been making websites since elementary school. They started out as collages of various HTML embeds of games and websites.
@@ -30,17 +26,18 @@ dyk:
     personal-website repository. Last year, I redid the website using Tailwind CSS, implementing dark mode
     and fine-tuning various aspects of the site.
   - > 
-    At UConn, I earned a Music Minor.
-    In UConn's Percussion Ensemble, I had the opportunity to play a variety of instruments, including Marimba, Congas, Djembe, Tambourine, and hitting a kitchen whisk against a chair!
-    I also compose music for fun. 
+    At UConn, I earned a Music Minor, and participated in the Percussion Ensemble. I had the opportunity to play a variety of instruments, including Marimba, multi-percussion setups, and hitting a kitchen whisk against a chair!
+    I am always open to new musical opportunities. In the past, I have played in Jazz bands, rock bands. I also was invited back to my high school to play in a pit orchestra once.
   - >
     When I'm not slouched over a computer solving problems, I like to rock climb. 
-    I've been climbing for over 3 years. I enjoy how puzzling some climbs can be, and I love
+    I've been climbing for over 4 years. I enjoy how puzzling some climbs can be, and I love
     working to discover the solution. Conveniently, it also keeps me in shape!
+  - >
+    I'm on Duolingo! I have been keeping a streak doing French lessons since December 2021.
   - > 
     This past Summer, I was an intern at Pega. I was a member of a scrum team in the UI Authoring squad. 
     I squashed bugs, added and revised unit tests, and helped implement features users can use to 
-    design interfaces for their Pega Platform Applications.
+    design their UI for their Pega Platform Applications.
 
 projects:
   -

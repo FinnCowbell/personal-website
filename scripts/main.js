@@ -30,7 +30,7 @@ function init(){
     cellAlign: "left", 
     wrapAround: true, 
     dragThreshold: 10, 
-    autoPlay: 5000, 
+    autoPlay: 7000, 
     pageDots: false, 
     setGallerySize: false,
     on: {
