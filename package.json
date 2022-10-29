@@ -12,9 +12,9 @@
     "postcss-import": "^14.0.2",
     "tailwindcss": "^2.1.2"
   },
-  "scripts":{
+  "scripts": {
     "tailwind-dev": "NODE_ENV=development postcss ./assets/tailwind.css -o ./assets/styles.css -w",
     "tailwind-build": "NODE_ENV=production postcss ./assets/tailwind.css -o ./assets/styles.css"
-  }
-
+  },
+  "dependencies": {}
 }

@@ -784,6 +784,9 @@ video {
 .overflow-y-scroll {
 	overflow-y: scroll;
 }
+.overflow-auto {
+	overflow: auto;
+}
 .overflow-hidden {
 	overflow: hidden;
 }
@@ -1113,11 +1116,19 @@ video {
   border-top-right-radius: .375rem;
   border-bottom-left-radius: .375rem;
 }
-.flickity .carousel-cell::-webkit-scrollbar{
-  display: none;
+.carousel-cell::-webkit-scrollbar-track {
+  -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+  border-radius: 10px;
+  background-color: #F5F5F5;
 }
-.flickity .carousel-cell{
-  scrollbar-width: none;
+.carousel-cell::-webkit-scrollbar {
+  width: 5px;
+  background-color: #F5F5F5;
+}
+.carousel-cell::-webkit-scrollbar-thumb {
+  border-radius: 10px;
+  -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, .3);
+  background-color: #666666;
 }
 /* Can be changed to tailwind later if appropriate */
 .my-name{
@@ -1284,5 +1295,12 @@ video {
 
 	.xl\:grid-cols-3 {
 		grid-template-columns: repeat(3, minmax(0, 1fr));
+	}
+}
+@media (min-width: 1920px) {
+
+	.\33xl\:mx-24 {
+		margin-left: 6rem;
+		margin-right: 6rem;
 	}
 }

@@ -1,4 +1,4 @@
-<div class="carousel-cell w-full pt-12">
+<div class="carousel-cell overflow-auto h-full w-full pt-12">
   <div class="flex flex-col justify-evenly max-w-sm h-full m-auto py-5 px-8">
     <div>
       <h2 class="text-2xl font-semibold filter dark:brightness-[1.5]" style="color:{{ include.project.accent_color}}">
@@ -16,24 +16,21 @@
     </div>
   </div>
 </div>
-<div class="carousel-cell overflow-y-scroll h-full w-full  pt-12">
-  <div class="m-auto h-full max-w-sm px-8">
+<div class="carousel-cell overflow-auto h-full w-full pt-12">
+  <div class="m-auto max-w-sm px-8">
     <h2 class="text-3xl font-semibold text-center mb-4 filter dark:brightness-[1.5]" style="color:{{ include.project.accent_color_2 }}">About<h2>
     <p class="filter dark:brightness-[1.5]" style="color:{{ include.project.accent_color }}">
       {{ include.project.description }}
     </p>
   </div>
 </div>
-<div class="carousel-cell overflow-y-scroll h-full w-full  pt-12">
-  <div class="m-auto h-full max-w-sm py-5 px-8">
+<div class="carousel-cell overflow-auto h-full w-full pt-12">
+  <div class="m-auto max-w-sm py-5 px-8">
     <h2 class="text-3xl font-semibold text-center filter dark:brightness-[1.5]" style="color:{{ include.project.accent_color_2 }}">Built With...</h2>
     <ul class="filter dark:brightness-[1.5]" style="color:{{ include.project.accent_color }}">
       {% for t in include.project.technologies %}
         <li>- {{t}}</li>
       {% endfor %}
     </ul>
-    
-
-
   </div>
 </div>

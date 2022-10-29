@@ -14,15 +14,17 @@ function ScrollVelocity(){
   }
 }
 
-function showSecrets(){
-  _.forEach(document.getElementsByClassName('secret'),(s)=>{s.removeAttribute("hidden")});
-  document.querySelector('#masthead .finn').innerHTML = "Thomas";
-}
-
 function init(){
+  let pinwheelElements = document.querySelectorAll("#hexagon-clip #hexagon-path");
+  function showSecrets(){
+    _.forEach(document.getElementsByClassName('secret'),(s)=>{s.removeAttribute("hidden")});
+    const nameElement = document.querySelector('#masthead .finn')
+    nameElement.innerHTML = "Thomas";
+    pinwheelElements.push(nameElement);
+  }
   let velocityHandler = new ScrollVelocity();
   let konami = new Konami(showSecrets);
-  let hex = new PinWheel(document.querySelectorAll("#hexagon-clip #hexagon-path"));
+  let hex = new PinWheel(pinwheelElements);
   let prevIndex = 1;
   var flkty = new Flickity( '.main-carousel', {
     cellAlign: "left", 

@@ -1,6 +1,6 @@
 
 export class PinWheel{
-  "Accepts a list of elements that will be rotated, and handles the rotation physics."
+  //Accepts a list of elements that will be rotated, and handles the rotation physics.
   constructor(paths){
     this.paths = paths
     this.rotation = 0
