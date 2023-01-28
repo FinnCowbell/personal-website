@@ -13,17 +13,17 @@
       {% endunless %}
       {% include introduction.html %}
 
-      {% include projects.html %}
+      {% unless posts_total == 0 %}
+        {% include cards-posts.html %}
+      {% endunless %}
+      
+      {% include cards-projects.html %}
 
-      {% include github-projects.html %}
+      {% include cards-github.html %}
 
       {% if site.topics %}
         {% include interests.html %}
       {% endif %}
-
-      {% unless posts_total == 0 %}
-        {% include thoughts.html %}
-      {% endunless %}
     </div>
   </div>
 </div>

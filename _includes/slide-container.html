@@ -1,9 +1,9 @@
 <div class="relative h-full w-full flex flex-col bg-gray-50 dark:bg-gray-800 border border-gray-200 rounded-md">
   <div class="main-carousel h-full w-full flex-1">
     {% if include.project %}
-      {% include projectSlides.html project=include.project %}
+      {% include slides-project.html project=include.project %}
     {% else %}
-      {% include homeSlides.html %}
+      {% include slides-home.html %}
     {% endif %}
   </div>
   {% if include.project %}
@@ -21,5 +21,4 @@
     {% endif %}
   </nav>
   {% endif %}
-<!-- DYK Cards -->
 </div>

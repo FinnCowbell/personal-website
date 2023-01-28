@@ -14,7 +14,7 @@
 <div class="relative h-full w-full flex flex-col bg-gray-50 rounded-md">
   <div class="main-carousel h-full w-full flex-1 overflow-y-scroll" data-flickity='{ "cellAlign": "left", "wrapAround": true, "autoPlay": 5000, "pageDots": false }'>
   {% if include.project %}
-    {% include projectSlides.html project=include.project %}
+    {% include slides-project.html project=include.project %}
   {% else %}
     {% include homeSlides.html %}
   {% endif %}

@@ -1,8 +1,11 @@
+<!-- Optional param: project -->
+{% assign p = include.project %}
 {% assign metadata_styles = 'flex items-center mb-3' %}
+
 <div id="profile-pic" class="justify-center align-center m-auto my-5 xl:max-w-xs cursor-pointer">
-  {% include profile.svg %}
+  {% include masthead-profile.svg %}
 </div>
-{% include name.html project=include.project%}
+{% include masthead-name.html %}
 
 {% if include.metadata %}
   <div class="flex justify-center text-lg mt-2">
