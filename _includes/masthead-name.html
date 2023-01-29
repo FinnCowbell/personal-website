@@ -1,8 +1,7 @@
 {% assign classes = "my-name text-6xl font-bold transition-transform duration-200 ease-in-out transform-gpu hover:scale-[1.025] text-center select-none" %}
-{% if include.project %}
-  <h1 style="color: {{include.project.accent_color_2 || inherit}}" class="filter dark:brightness-[1.8] {{classes}}">
+{% if page.layout == "project" %}
+  <h1 style="color: {{page.accent_color_2 || inherit}}" class="filter dark:brightness-[1.8] {{classes}}">
     <span class="finn">Finn</span> <span class="navin">Navin</span>
-    <!-- <span class="finn">Finn</span><span class=""> </span><span class="nav">Nav</span><span class="in">in</span> -->
   </h1>
 {% else %}
 <h1 class="text-purple-900 dark:text-purple-400 {{ classes }}">

@@ -13,22 +13,22 @@
 </div> -->
 <div class="relative h-full w-full flex flex-col bg-gray-50 rounded-md">
   <div class="main-carousel h-full w-full flex-1 overflow-y-scroll" data-flickity='{ "cellAlign": "left", "wrapAround": true, "autoPlay": 5000, "pageDots": false }'>
-  {% if include.project %}
-    {% include slides-project.html project=include.project %}
+  {% if page.layout == "project" %}
+    {% include slides-project.html %}
   {% else %}
     {% include homeSlides.html %}
   {% endif %}
   </div>
-  {% if include.project %}
+  {% if page.layout == "project" %}
   <nav class="h-10 leading-10 flex flex-initial justify-items-stretch border-t border-gray-200 bg-gray-100">
     <a class="text-center flex-1 card-button-colors" href="/">
       {% octicon home, height:16  class:"{{ icon_classes }}" %} Home
     </a>
-    <a class="text-center flex-1 card-button-colors border-l" target="_blank" href="{{ include.project.URL }}">
+    <a class="text-center flex-1 card-button-colors border-l" target="_blank" href="{{ page.URL }}">
       {% octicon copy, height:16  class:"{{ icon_classes }}" %} New Tab 
     </a>
-    {% if include.project.URL2 %}
-      <a class="text-center flex-1 card-button-colors border-l" target="_blank" href="{{ include.project.URL2 }}">
+    {% if page.URL2 %}
+      <a class="text-center flex-1 card-button-colors border-l" target="_blank" href="{{ page.URL2 }}">
         {% octicon telescope, height:16  class:"{{ icon_classes }}" %} More Info
       </a>
     {% endif %}

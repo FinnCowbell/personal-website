@@ -1,5 +1,14 @@
 layout: home
 
+collections_dir: content
+
+collections:
+  projects:
+    permalink: /:collection/:name/
+    layout: "project"
+    sort_by: date
+    output: true # Make permalinks/publish as pages
+
 plugins:
   - jekyll-octicons
   - jekyll-github-metadata
@@ -14,6 +23,12 @@ defaults:
       type: "posts"
     values:
       layout: "post"
+  -
+    scope:
+      path: ""
+      type: "project"
+    values:
+      layout: "project"
 
 dyk:
   - >
@@ -35,133 +50,9 @@ dyk:
   - >
     I'm on Duolingo! I have been keeping a streak doing French lessons since December 2021.
   - > 
-    This past Summer, I was an intern at Pega. I was a member of a scrum team in the UI Authoring squad. 
+    This past Summer, I was an intern at Pegasystems. I was a member of a scrum team in the UI Authoring squad. 
     I squashed bugs, added and revised unit tests, and helped implement features users can use to 
     design their UI for their Pega Platform Applications.
-
-projects:
-  -
-    id: dd
-    name: Detective Dictator
-    author: Me!
-    fullAuthor: Finn Navin
-    short_desc: >
-      My version of the board game "Secret Hitler" -- entirely online! 
-    description: > 
-      My version of the board game "Secret Hitler" -- entirely online! 
-      I made this so I could play one of my favorite board games with my friends while social distancing.
-      It took about 2 weeks of focused development in May 2020 to make it fully playable, and gets
-      frequent visits from my friends and I. It is now hosted at SecretHitler.js.org, so I removed the original 
-      'Detective Dictator' branding.
-    accent_color:  "#e56344"
-    accent_color_2:  "#036c7c"
-    URL: https://secrethitler.js.org
-    URL2: https://github.com/FinnCowbell/DetectiveDictator
-    technologies:
-      - Node.js
-      - Socket.io
-      - Express.js
-      - Webpack
-      - React
-      - Sass
-  -
-    id: p4gtl
-    name: ¡Please 4get the Lyrics!
-    author: The Huskiteers 
-    fullAuthor: Finn Navin, Christopher Vassallo, Jacob Dillon, Michael Taylor, Brandon Mino, and Xuan Chau
-    short_desc: >
-      A Phone-Controlled karaoke guessing game!
-    description: >
-      Our Team's 2nd-place submission at HackUMass 2019! We wanted to recreate kahoot-style gameplay but 
-      take it a step further. We created this Karaoke guessing game as a fun roof of concept of what can be done!
-      Hosting a lobby requires a Spotify account, so if you want to host a game you should do it in a new window.
-    accent_color: "#bd6d04"
-    accent_color_2: "#0d4ff5"
-    URL: https://p4gtl.herokuapp.com/
-    URL2: https://hackumass-vii-projects.hackumass.com/71.html
-    technologies:
-      - Node.js
-      - Socket.io
-      - Express.js
-      - The Spotify API
-      - Karaoke files (.kar)
-      - Karapython
-  -
-    id: nextstep
-    name: The Next Step
-    author: The Fat Dads
-    fullAuthor: Finn Navin, Christopher Vassallo, and Jack Violet
-    accent_color: "#8c2629"
-    accent_color_2: "#8c2629"
-    URL: https://thefatdads.github.io
-    short_desc: >
-      A web-app providing resources and to opioid users and their families in Connecticut.
-    description: |
-      Our Team's Winning Submission to the 2018 Connecticut Technology Council College Tech Challenge!
-      It's a web-app providing resources and to opioid users and their families in Connecticut. It uses 
-      data.ct.gov's rest API to access data and display helpful locations on Google Maps.
-
-      Because Google now requires payment to use their maps API, some things may no longer show up correctly.
-    technologies:
-      - Bootstrap
-      - Google Maps API
-      - Socrata Open Data API
-  -
-    id: sov
-    name: Spirographs of Venus
-    author: Me!
-    fullAuthor: Finn Navin
-    short_desc: >
-      My winning math-visualization project at the 2018 Museum of Mathematics Hackathon!
-    description: >
-      My winning project at the 2018 Museum of Mathematics Hackathon! Made in 24 hours, this is a version that has been adapted and
-      optimized past that time limit for a single player, web experience. 
-      The original was created for the Momath "Math Floor": A large, touchscreen floor.
-
-      The project has been featured on the Museums instagram, and another web version was sent to Momath email 
-      subscribers in May of 2020! It makes me happy that so many people have been able to enjoy something I made.
-    accent_color: '#4a2e82'
-    accent_color_2: '#957f00'
-    URL: https://finncowbell.github.io/spirographsOfVenus
-    URL2: http://hackathon.momath.org/showcase/
-    technologies:
-      - P5.js
-      - Momath's Math Floor API
-  -
-    id: cabbage
-    name: Cannonball Cabbage
-    author: Somebody
-    fullAuthor: Me
-    secret: true
-    accent_color: '#000'
-    accent_color_2: '#000'
-    short_desc: >
-      Wait, what the heck is this?
-    description: >
-      It seems you've found a hidden project!
-      Please do not ask why I made this, I do not have an answer for you.
-    URL: https://finncowbell.github.io/Cannonball-Cabbage/
-    technologies:
-      - Piskel
-      - Logic Pro X
-      - Boredom
-  -
-    id: saucy
-    name: Saucy The Sausage
-    author: Somebody
-    fullAuthor: Me
-    secret: true
-    accent_color: '#000'
-    accent_color_2: '#000'
-    short_desc: >
-      Wait, what the heck is this?
-    description: |
-      My buddy Henry made this sprite in hopes of making a sidescrolling game.
-      I made this song as the title track for the game.
-      It never came to fruition, but I made this as a tribute. 
-    URL: https://finncowbell.github.io/saucy/
-    technologies:
-      - Do you really want to know how the sausage gets made?
 
 github_projects:
   sort_by: pushed

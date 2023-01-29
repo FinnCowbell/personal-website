@@ -3,7 +3,7 @@
   Below are some personal projects and winning hackathon submissions that have helped me grow.
 </p>
 <div class="projects-grid grid gap-5 sm:grid-cols-[repeat(auto-fill,minmax(300px,1fr))] mx-auto my-4">
-  {% for project in site.projects %}
-    {% include card-project.html project=project %}
+  {% for project in site.projects reversed %}
+    {% include card-project.html %}
   {% endfor %}
 </div>

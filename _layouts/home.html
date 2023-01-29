@@ -1,26 +1,18 @@
 {% include header.html %}
 
 <div class="flex flex-col sm:flex-row w-full">
-  
   {% include sidebar.html %}
-
   <div id='content' class="3xl:mx-24 mx-auto max-w-4xl flex-auto"">
     <div class="px-5 py-10">
-      {% unless content == ""  %}
-        <div class="f4 mb-6">
-          {{ content }}
-        </div>
-      {% endunless %}
       {% include introduction.html %}
-
+    
       {% unless posts_total == 0 %}
         {% include cards-posts.html %}
       {% endunless %}
-      
       {% include cards-projects.html %}
-
+      
       {% include cards-github.html %}
-
+      
       {% if site.topics %}
         {% include interests.html %}
       {% endif %}

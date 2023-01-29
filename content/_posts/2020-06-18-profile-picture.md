@@ -1,6 +1,8 @@
 ---
 title: "What's Your Profile Picture?"
 published: false
+accent_color: gray
+accent_color_2: gray
 ---
 # TL;DR: I like this picture from when I acted
 ___

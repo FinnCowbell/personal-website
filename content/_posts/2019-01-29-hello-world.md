@@ -1,6 +1,8 @@
 ---
 title: "Welcome to Jekyll!"
 published: false
+accent_color: gray
+accent_color_2: gray
 ---
 
 **Hello world**, this is my first Jekyll blog post.

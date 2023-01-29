@@ -1,21 +1,21 @@
 <div class="relative h-full w-full flex flex-col bg-gray-50 dark:bg-gray-800 border border-gray-200 rounded-md">
   <div class="main-carousel h-full w-full flex-1">
-    {% if include.project %}
-      {% include slides-project.html project=include.project %}
+    {% if page.layout == "project" %}
+      {% include slides-project.html %}
     {% else %}
       {% include slides-home.html %}
     {% endif %}
   </div>
-  {% if include.project %}
+  {% if page.layout == "project" %}
   <nav class="h-10 leading-10 flex flex-initial justify-items-stretch rounded-b-md border-t border-gray-200 bg-gray-100 dark:bg-gray-800">
     <a class="text-center flex-1 rounded-bl-md card-button-colors overflow-hidden" href="/">
       Home
     </a>
-    <a class="text-center flex-1 {% if include.project.URL2 %} {% else %} rounded-br-md {% endif %}card-button-colors border-l overflow-hidden" target="_blank" href="{{ include.project.URL }}">
+    <a class="text-center flex-1 {% if page.URL2 %} {% else %} rounded-br-md {% endif %}card-button-colors border-l overflow-hidden" target="_blank" href="{{ page.URL }}">
       New Tab 
     </a>
-    {% if include.project.URL2 %}
-      <a class="text-center rounded-br-md flex-1 card-button-colors border-l overflow-hidden" target="_blank" href="{{ include.project.URL2 }}">
+    {% if page.URL2 %}
+      <a class="text-center rounded-br-md flex-1 card-button-colors border-l overflow-hidden" target="_blank" href="{{ page.URL2 }}">
       More Info
       </a>
     {% endif %}

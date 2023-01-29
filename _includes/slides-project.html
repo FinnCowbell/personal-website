@@ -1,35 +1,34 @@
-{% assign p = include.project %}
 <div class="carousel-cell overflow-auto h-full w-full pt-12">
   <div class="flex flex-col justify-evenly max-w-sm h-full m-auto py-5 px-8">
     <div>
-      <h2 class="text-2xl font-semibold filter dark:brightness-[1.5]" style="color:{{ p.accent_color}}">
+      <h2 class="text-2xl font-semibold filter dark:brightness-[1.5]" style="color:{{ page.accent_color}}">
         Project: 
       </h2>
-      <h2 class="text-3xl font-semibold text-center filter dark:brightness-[1.5]" style="color:{{ p.accent_color_2 }}">
-        {{ p.name }}
+      <h2 class="text-3xl font-semibold text-center filter dark:brightness-[1.5]" style="color:{{ page.accent_color_2 }}">
+        {{ page.name }}
       </h2>
     </div>
     <div>
-      <h2 class="text-2xl font-semibold filter dark:brightness-[1.5]" style="color:{{ p.accent_color}}">
-        Created By: {{ p.author }}
+      <h2 class="text-2xl font-semibold filter dark:brightness-[1.5]" style="color:{{ page.accent_color}}">
+        Created By: {{ page.author }}
       </h2>
-      <h3 class="text-normal">({{ p.fullAuthor }})</h3>
+      <h3 class="text-normal">({{ page.fullAuthor }})</h3>
     </div>
   </div>
 </div>
 <div class="carousel-cell overflow-auto h-full w-full pt-12">
   <div class="m-auto max-w-sm px-8">
-    <h2 class="text-3xl font-semibold text-center mb-4 filter dark:brightness-[1.5]" style="color:{{ p.accent_color_2 }}">About<h2>
-    <p class="filter dark:brightness-[1.5]" style="color:{{ p.accent_color }}">
-      {{ p.description }}
+    <h2 class="text-3xl font-semibold text-center mb-4 filter dark:brightness-[1.5]" style="color:{{ page.accent_color_2 }}">About<h2>
+    <p class="filter dark:brightness-[1.5]" style="color:{{ page.accent_color }}">
+      {{ page.description }}
     </p>
   </div>
 </div>
 <div class="carousel-cell overflow-auto h-full w-full pt-12">
   <div class="m-auto max-w-sm py-5 px-8">
-    <h2 class="text-3xl font-semibold text-center filter dark:brightness-[1.5]" style="color:{{ p.accent_color_2 }}">Built With...</h2>
-    <ul class="filter dark:brightness-[1.5]" style="color:{{ p.accent_color }}">
-      {% for t in p.technologies %}
+    <h2 class="text-3xl font-semibold text-center filter dark:brightness-[1.5]" style="color:{{ page.accent_color_2 }}">Built With...</h2>
+    <ul class="filter dark:brightness-[1.5]" style="color:{{ page.accent_color }}">
+      {% for t in page.technologies %}
         <li>- {{t}}</li>
       {% endfor %}
     </ul>

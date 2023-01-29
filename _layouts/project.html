@@ -1,0 +1,10 @@
+{% include header.html %}
+
+<div class="flex flex-col sm:flex-row w-full">
+  {% include sidebar.html %}
+  <div id="showcase" class="flex-auto w-screen h-screen  border-t-1 md:border-t-0 bg-gray-light">
+    <iframe class="project-page w-full h-full" src="{{ page.URL }}"></iframe>
+  </div>
+</div>
+
+{% include footer.html %}
