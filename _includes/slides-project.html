@@ -12,7 +12,9 @@
       <h2 class="text-2xl font-semibold filter dark:brightness-[1.5]" style="color:{{ page.accent_color}}">
         Created By: {{ page.author }}
       </h2>
-      <h3 class="text-normal">({{ page.fullAuthor }})</h3>
+      <h3 class="text-normal">
+        {% if page.full_author %} ({{ page.full_author }}) {% endif %}
+      </h3>
     </div>
   </div>
 </div>
