@@ -6,19 +6,22 @@
       {% include slides-home.html %}
     {% endif %}
   </div>
-  {% if page.layout == "project" %}
+  {% if page.layout != "home" %}
   <nav class="h-10 leading-10 flex flex-initial justify-items-stretch rounded-b-md border-t border-gray-200 bg-gray-100 dark:bg-gray-800">
-    <a class="text-center flex-1 rounded-bl-md card-button-colors overflow-hidden" href="/">
-      {% octicon home height:16 class:"{{ icon_classes }}" %} Home
+    <a class="slide-button slide-button-colors" href="/">
+      {% octicon home height:16 class:"{{ icon_classes }}" %} home
     </a>
-    <a class="text-center flex-1 {% if page.project_url_2 %} {% else %} rounded-br-md {% endif %}card-button-colors border-l overflow-hidden" target="_blank" href="{{ page.project_url }}">
-      {% octicon duplicate height:16 class:"{{ icon_classes }}" %} New Tab 
+    {% if page.project_url %}
+    <a class="slide-button slide-button-colors" target="_blank" href="{{ page.project_url }}">
+      {% octicon duplicate height:16 class:"{{ icon_classes }}" %} new tab 
     </a>
+    {% endif %}
     {% if page.project_url_2 %}
-      <a class="text-center rounded-br-md flex-1 card-button-colors border-l overflow-hidden" target="_blank" href="{{ page.project_url_2 }}">
-        {% octicon telescope height:16 class:"{{ icon_classes }}" %} More Info
+      <a class="slide-button slide-button-colors" target="_blank" href="{{ page.project_url_2 }}">
+        {% octicon telescope height:16 class:"{{ icon_classes }}" %} more info
       </a>
     {% endif %}
   </nav>
   {% endif %}
+  
 </div>

@@ -7,12 +7,18 @@
   .octicon{
     @apply inline-block align-text-bottom;
   }
-  .card-button-colors, .flickity-button{
+  .slide-button-colors, .flickity-button{
     @apply transition-colors fill-current duration-300 text-gray-900 dark:text-white bg-gray-100 dark:bg-gray-900 hover:bg-gray-200 dark:hover:bg-gray-700 border-gray-300 ;
   }
-
+  .slide-button{
+    @apply text-center flex-1 border-r first:rounded-bl-md last:rounded-br-md last:border-r-0 overflow-hidden; 
+  }
 }
-/* @apply wasn't working, so I resorted to CSS to replace these properties */
+h1, h2, h3, h4, h5 {
+  @apply font-header;
+}
+
+/* @apply wasn't working, so I resorted to CSS for these properties */
 .flickity-viewport {
   /* Fixes corner-clipping */
   border-radius: .375rem;
@@ -89,10 +95,33 @@
   }
 }
 
+/* Markdown syntax complies to raw elements w/ no classes */
 .article {
-  h1, h2, h3, h4,
+  h1 {
+    @apply text-5xl;
+  }
+  h2 {
+    @apply text-4xl;
+  }
+  h3 {
+    @apply text-3xl;
+  }
+  h4 {
+    @apply text-2xl;
+  }
+
+  h1, h2, h3, h4 {
+    @apply font-light;
+  }
+
+  h1, h2, h3, h4, p,
   .highlight {
     margin-bottom: 16px;
+    overflow-x: clip;
+  }
+
+  p {
+    @apply max-w-xl leading-snug text-lg;
   }
 
   blockquote {

@@ -7,6 +7,10 @@ module.exports = {
   ],
   darkMode: 'media', // or 'media' or 'class'
   theme: {
+    fontFamily: {
+      'header': ['Oxygen', 'sans-serif'],
+      'sans': ['Open Sans', 'sans-serif'],
+    },
     extend: {
       screens: {
         '3xl': '1920px',

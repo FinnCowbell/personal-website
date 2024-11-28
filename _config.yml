@@ -1,20 +1,17 @@
-layout: home
+plugins:
+  - jekyll-octicons
+  - jekyll-github-metadata
+  - jemoji
 
 collections_dir: content
-
 collections:
   projects:
     permalink: /:collection/:name/
     layout: "project"
     sort_by: date
     output: true # Make permalinks/publish as pages
-
-plugins:
-  - jekyll-octicons
-  - jekyll-github-metadata
-  - jemoji
-
-permalink: /:title/
+  posts:
+    permalink: /:title/
 
 defaults:
   -
@@ -32,27 +29,17 @@ defaults:
 
 dyk:
   - >
-    I currently work at Microsoft as a software engineer.
-    It's an honor to be able to grow my career at such a great company.
-    I'm also humbled by all the help I've recieved from teammates, friends, and family.
+    i work at microsoft
   - >
-    I've been making websites since elementary school. They started out as collages of various HTML embeds of games and websites.
-    I've made personal websites since my coding career started in 2017. This one is a customized fork of Github's 
-    personal-website repository. Last year, I redid the website using Tailwind CSS, implementing dark mode
-    and fine-tuning various aspects of the site.
+    i like making websites
   - > 
-    At UConn, I earned a Music Minor, and participated in the Percussion Ensemble. I had the opportunity to play a variety of instruments, including Marimba, multi-percussion setups, and hitting a kitchen whisk against a chair!
-    I am always open to new musical opportunities. In the past, I have played in Jazz bands, rock bands. I also was invited back to my high school to play in a pit orchestra once.
+    sometimes i write music
   - >
-    When I'm not slouched over a computer solving problems, I like to rock climb. 
-    I've been climbing for over 4 years. I enjoy how puzzling some climbs can be, and I love
-    working to discover the solution. Conveniently, it also keeps me in shape!
-  - >
-    I'm on Duolingo! I have been keeping a streak doing French lessons since December 2021.
+    i like to rock climb
   - > 
-    This past Summer, I was an intern at Pegasystems. I was a member of a scrum team in the UI Authoring squad. 
-    I squashed bugs, added and revised unit tests, and helped implement features users can use to 
-    design their UI for their Pega Platform Applications.
+    i live in new york
+  - > 
+    
 
 github_projects:
   sort_by: pushed

@@ -10,5 +10,5 @@ if (greetingElement) {
     // Adding Days
     const greetings = ["Hello!", "Ahoy!", "Howdy!", dayGreeting, timeGreeting];
     const randomPick = Math.floor(Math.random() * greetings.length);
-    greetingElement.innerHTML = greetings[randomPick];
+    greetingElement.innerHTML = greetings[randomPick].toLowerCase();
 }

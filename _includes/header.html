@@ -2,8 +2,6 @@
 
 {% assign content = page.content %}
 
-{% assign posts_total = site.posts | size %}
-
 {% assign user = site.github.owner %}
 
 {% if page.path contains '_posts' %}
@@ -15,11 +13,6 @@
 {% endif %}
 
 <!doctype html>
-{{"<!-- 
-  'ay! What are you doin' in 'ere? Tire-kickin' my site?
-
-  If you're looking for secrets, try a cheat code...
--->}}
 <html class="min-height-full">
   <head>
     <link rel="apple-touch-icon" sizes="180x180" href="/assets/favicon/apple-touch-icon.png">
