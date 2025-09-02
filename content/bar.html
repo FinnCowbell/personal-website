@@ -90,6 +90,23 @@ permalink: /bar
     /* High contrast toggle (hidden but accessible) */
     .contrast-toggle { position:absolute; left:-9999px; top:-9999px; }
     .contrast-toggle:focus + .bar-shell { outline:3px dashed #000; }
+    /* === Shiny stepwise scan effect for Bliss icon === */
+    .shiny-scan { position:relative; display:inline-block; }
+    .shiny-scan::after {
+      content:"";
+      position:absolute; inset:0;
+      background:
+        repeating-linear-gradient(-60deg,
+          rgba(255,255,255,0) 0 18px,
+          rgba(255,255,255,0.85) 18px 24px,
+          rgba(255,255,255,0) 24px 48px);
+      mix-blend-mode:screen;
+      animation:blissShine 2.2s steps(11) infinite;
+      pointer-events:none;
+    }
+    @keyframes blissShine { to { background-position:160px 0; } }
+    /* High contrast prefers reduced motion: freeze frame */
+    @media (prefers-reduced-motion: reduce) { .shiny-scan::after { animation:none; } }
   </style>
 </head>
 <body>
@@ -97,7 +114,7 @@ permalink: /bar
   <div class="bar-shell" role="main">
     <div class="bevel-box">
       <header class="bar-header">
-        <h1>FinnBar <span class="flash" title="Animated for retro effect">*</span></h1>
+        <h1>FinnBar v1.0<span class="flash" title="Animated for retro effect">*</span></h1>
         <div class="tagline">Established 1995 (On The Web)</div>
         <div class="rule" aria-hidden="true"></div>
   <!-- Navigation removed -->
@@ -107,7 +124,7 @@ permalink: /bar
       <div class="sections">
         <!-- Cocktail 1 -->
         <section class="drink-group" aria-labelledby="java-heading">
-          <h2 id="java-heading"><img src="assets/img/java-runtime.gif" class="heading-icon-img" alt="" aria-hidden="true"> The Java Runtime <span class="alt-inline">(Espresso Martini)</span></h2>
+          <h2 id="java-heading"><img src="/assets/img/java.gif" class="heading-icon-img" alt="" aria-hidden="true"> The Java Runtime <span class="alt-inline">(Espresso Martini)</span></h2>
           <ul class="ingredients">
             <li>Vodka</li>
             <li>Bourbon-based House Coffee Liquor</li>
@@ -116,7 +133,7 @@ permalink: /bar
         </section>
         <!-- Cocktail 2 -->
         <section class="drink-group" aria-labelledby="bliss-heading">
-          <h2 id="bliss-heading"><img src="assets/img/bliss.png" class="heading-icon-img" alt="" aria-hidden="true"> Bliss <span class="alt-inline">(Aperol Spritz)</span></h2>
+          <h2 id="bliss-heading"><img src="/assets/img/bliss.png" class="heading-icon-img shiny-scan" alt="" aria-hidden="true"> Bliss <span class="alt-inline">(Aperol Spritz)</span></h2>
           <ul class="ingredients">
             <li>Aperol</li>
             <li>Prosecco</li>
@@ -126,7 +143,7 @@ permalink: /bar
         </section>
         <!-- Cocktail 3 -->
         <section class="drink-group" aria-labelledby="sweets-heading">
-          <h2 id="sweets-heading"><img src="assets/img/sweet.png" class="heading-icon-img" alt="" aria-hidden="true"> Sweets to the Sweet</h2>
+          <h2 id="sweets-heading"><img src="/assets/img/sweet.png" class="heading-icon-img" alt="" aria-hidden="true"> Sweets to the Sweet</h2>
           <ul class="ingredients">
             <li>Elderflower Liquor</li>
             <li>Gin</li>
@@ -135,7 +152,7 @@ permalink: /bar
         </section>
         <!-- Cocktail 4 Placeholder -->
         <section class="drink-group" aria-labelledby="cucumber-heading">
-          <h2 id="cucumber-heading"><img src="assets/img/cucumber.png" class="heading-icon-img" alt="" aria-hidden="true"> &nbsp;</h2>
+          <h2 id="cucumber-heading"><img src="/assets/img/cucumber.png" class="heading-icon-img" alt="" aria-hidden="true"> &nbsp;</h2>
           <!-- Reserved for Cucumber Refresher (left empty as requested) -->
         </section>
       </div>
