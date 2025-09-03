@@ -84,6 +84,8 @@ permalink: /bar
     }
     .hit-counter:before, .hit-counter:after { content:""; display:inline-block; width:4px; }
     @media (max-width:520px){ .hit-counter { font-size:16px; padding:5px 10px; letter-spacing:1px; } }
+  .visitor-badge { display:inline-block; padding:4px; background:#000; border:3px outset #444; box-shadow:inset 2px 2px 0 #888, inset -2px -2px 0 #111, 2px 2px 0 #000; }
+  .visitor-badge img { display:block; image-rendering:pixelated; }
     /* Mobile tweaks */
     @media (max-width:520px) {
       header.bar-header h1 { font-size:34px; }
@@ -162,9 +164,10 @@ permalink: /bar
         </section>
       </div>
     </div>
-    <footer>&copy; 2025 FinnBar. All Rights Reserved.<br>
-      <small>Visitors:</small>
-      <span class="hit-counter" aria-label="Site visitor counter" title="Classic hit counter">000123</span>
+    <footer><br>
+      <div class="visitor-badge" aria-label="Visitor graphic" title="Visitor badge">
+        <img src="/assets/img/visitor.gif" alt="Visitor" width="88" height="31">
+      </div>
     </footer>
   </div>
 </body>
