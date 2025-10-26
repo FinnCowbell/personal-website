@@ -64,4 +64,30 @@ document.addEventListener("DOMContentLoaded", function () {
   // Initialize
   checkExistingResult();
   rollButton.addEventListener("click", rollForTrickOrTreat);
+
+  // Pumpkin Boi explosion functionality
+  const pumpkinBoi = document.querySelector(".pumpkin-bois");
+  let hasExploded = false;
+
+  pumpkinBoi.addEventListener("click", function () {
+    if (hasExploded) return; // Prevent multiple clicks
+    hasExploded = true;
+
+    // Play explosion sound
+    const explosionAudio = new Audio("/assets/img/halloween/explosion.mp3");
+    explosionAudio.play().catch(function (error) {
+      console.log("Explosion audio playback failed:", error);
+    });
+
+    // Replace with Naar.gif
+    pumpkinBoi.src = "/assets/img/halloween/Naar.gif";
+
+    // Delete the entire pumpkin-bois-layer after the gif finishes
+    setTimeout(function () {
+      const pumpkinLayer = document.querySelector(".pumpkin-bois-layer");
+      if (pumpkinLayer) {
+        pumpkinLayer.remove();
+      }
+    }, 800);
+  });
 });

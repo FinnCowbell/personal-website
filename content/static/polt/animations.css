@@ -11,6 +11,7 @@
 
 .logo {
   filter: drop-shadow(0 0 5px var(--festive-bg));
+
   &:hover {
     animation: wiggle3d 1s ease-in-out;
   }
@@ -28,18 +29,25 @@
   animation: jitter 0.5s linear infinite;
 }
 
+.vampire-bat:hover {
+  animation: dart 3s cubic-bezier(1, 0.06, 0, 1.01) infinite;
+}
+
 @keyframes sprint {
   0% {
     transform: translateX(0px);
   }
+
   25% {
     transform: translateX(100vw);
     visibility: hidden;
   }
+
   26% {
     visibility: visible;
     transform: translateX(-100vw);
   }
+
   100% {
     transform: translateX(0);
   }
@@ -49,10 +57,12 @@
   0% {
     transform: rotate(0deg) scale(1);
   }
+
   50% {
     transform: rotate(180deg) scale(10);
     /* center div in viewport*/
   }
+
   100% {
     transform: rotate(360deg) scale(1);
   }
@@ -60,48 +70,47 @@
 
 @keyframes wiggle3d {
   0% {
-    transform: rotateX(0deg) rotateY(0deg) rotateZ(0deg) translateX(0px)
-      translateY(0px);
+    transform: rotateX(0deg) rotateY(0deg) rotateZ(0deg) translateX(0px) translateY(0px);
   }
+
   10% {
-    transform: rotateX(15deg) rotateY(-20deg) rotateZ(12deg) translateX(-8px)
-      translateY(-6px);
+    transform: rotateX(15deg) rotateY(-20deg) rotateZ(12deg) translateX(-8px) translateY(-6px);
   }
+
   20% {
-    transform: rotateX(-12deg) rotateY(18deg) rotateZ(-15deg) translateX(10px)
-      translateY(7px);
+    transform: rotateX(-12deg) rotateY(18deg) rotateZ(-15deg) translateX(10px) translateY(7px);
   }
+
   30% {
-    transform: rotateX(22deg) rotateY(-16deg) rotateZ(8deg) translateX(-6px)
-      translateY(-9px);
+    transform: rotateX(22deg) rotateY(-16deg) rotateZ(8deg) translateX(-6px) translateY(-9px);
   }
+
   40% {
-    transform: rotateX(-18deg) rotateY(25deg) rotateZ(-20deg) translateX(12px)
-      translateY(5px);
+    transform: rotateX(-18deg) rotateY(25deg) rotateZ(-20deg) translateX(12px) translateY(5px);
   }
+
   50% {
-    transform: rotateX(14deg) rotateY(-22deg) rotateZ(18deg) translateX(-10px)
-      translateY(-8px);
+    transform: rotateX(14deg) rotateY(-22deg) rotateZ(18deg) translateX(-10px) translateY(-8px);
   }
+
   60% {
-    transform: rotateX(-25deg) rotateY(12deg) rotateZ(-10deg) translateX(8px)
-      translateY(11px);
+    transform: rotateX(-25deg) rotateY(12deg) rotateZ(-10deg) translateX(8px) translateY(11px);
   }
+
   70% {
-    transform: rotateX(20deg) rotateY(-14deg) rotateZ(25deg) translateX(-12px)
-      translateY(-4px);
+    transform: rotateX(20deg) rotateY(-14deg) rotateZ(25deg) translateX(-12px) translateY(-4px);
   }
+
   80% {
-    transform: rotateX(-8deg) rotateY(28deg) rotateZ(-12deg) translateX(6px)
-      translateY(9px);
+    transform: rotateX(-8deg) rotateY(28deg) rotateZ(-12deg) translateX(6px) translateY(9px);
   }
+
   90% {
-    transform: rotateX(16deg) rotateY(-18deg) rotateZ(14deg) translateX(-9px)
-      translateY(-7px);
+    transform: rotateX(16deg) rotateY(-18deg) rotateZ(14deg) translateX(-9px) translateY(-7px);
   }
+
   100% {
-    transform: rotateX(0deg) rotateY(0deg) rotateZ(0deg) translateX(0px)
-      translateY(0px);
+    transform: rotateX(0deg) rotateY(0deg) rotateZ(0deg) translateX(0px) translateY(0px);
   }
 }
 
@@ -110,15 +119,18 @@
     filter: sepia(0.5);
     opacity: 0.5;
   }
+
   to {
     filter: sepia(1);
     opacity: 1;
   }
 }
+
 @keyframes static {
   from {
     background-position: 1024px 4096px, 0 3072px;
   }
+
   to {
     background-position: 0 0, 1024px 0;
   }
@@ -128,43 +140,203 @@
   from {
     filter: hue-rotate(0deg);
   }
+
   to {
     filter: hue-rotate(360deg);
   }
 }
 
 @keyframes jitter {
-  0% { transform: translate(0px, 0px); }
-  5% { transform: translate(-5px, 3px); }
-  10% { transform: translate(4px, -2px); }
-  15% { transform: translate(-3px, 5px); }
-  20% { transform: translate(5px, 1px); }
-  25% { transform: translate(-1px, -5px); }
-  30% { transform: translate(-4px, -2px); }
-  35% { transform: translate(3px, 4px); }
-  40% { transform: translate(-2px, -5px); }
-  45% { transform: translate(5px, 2px); }
-  50% { transform: translate(-1px, 5px); }
-  55% { transform: translate(-5px, -1px); }
-  60% { transform: translate(2px, -4px); }
-  65% { transform: translate(-4px, 3px); }
-  70% { transform: translate(5px, -5px); }
-  75% { transform: translate(-2px, 4px); }
-  80% { transform: translate(-5px, -3px); }
-  85% { transform: translate(3px, 5px); }
-  90% { transform: translate(-4px, -1px); }
-  95% { transform: translate(5px, -4px); }
-  100% { transform: translate(0px, 0px); }
+  0% {
+    transform: translate(0px, 0px);
+  }
+
+  5% {
+    transform: translate(-5px, 3px);
+  }
+
+  10% {
+    transform: translate(4px, -2px);
+  }
+
+  15% {
+    transform: translate(-3px, 5px);
+  }
+
+  20% {
+    transform: translate(5px, 1px);
+  }
+
+  25% {
+    transform: translate(-1px, -5px);
+  }
+
+  30% {
+    transform: translate(-4px, -2px);
+  }
+
+  35% {
+    transform: translate(3px, 4px);
+  }
+
+  40% {
+    transform: translate(-2px, -5px);
+  }
+
+  45% {
+    transform: translate(5px, 2px);
+  }
+
+  50% {
+    transform: translate(-1px, 5px);
+  }
+
+  55% {
+    transform: translate(-5px, -1px);
+  }
+
+  60% {
+    transform: translate(2px, -4px);
+  }
+
+  65% {
+    transform: translate(-4px, 3px);
+  }
+
+  70% {
+    transform: translate(5px, -5px);
+  }
+
+  75% {
+    transform: translate(-2px, 4px);
+  }
+
+  80% {
+    transform: translate(-5px, -3px);
+  }
+
+  85% {
+    transform: translate(3px, 5px);
+  }
+
+  90% {
+    transform: translate(-4px, -1px);
+  }
+
+  95% {
+    transform: translate(5px, -4px);
+  }
+
+  100% {
+    transform: translate(0px, 0px);
+  }
+}
+
+@keyframes dart {
+  0% {
+    transform: translateX(0px) translateY(0px) rotate(0deg);
+  }
+
+  25% {
+    transform: translateX(-100px) translateY(-100px) rotate(25deg);
+  }
+
+  40% {
+    transform: translateX(20x) translateY(250px) rotate(-25deg);
+  }
+
+  60% {
+    transform: translateX(-250px) translateY(-200px) rotate(-15deg);
+  }
+
+  80% {
+    transform: translateX(-10vw) translateY(35vh) rotate(45deg);
+  }
+
+  100% {
+    transform: translateX(0px) translateY(0px) rotate(0deg);
+  }
 }
 
 
 .static-noise {
-  background: 
-    repeating-radial-gradient(#000 0 0.0001%,#fff 0 0.0002%) 50% 0/2500px 2500px,
-    repeating-conic-gradient(#000 0 0.0001%,#fff 0 0.0002%) 60% 60%/2500px 2500px;
+  background:
+    repeating-radial-gradient(#000 0 0.0001%, #fff 0 0.0002%) 50% 0/2500px 2500px,
+    repeating-conic-gradient(#000 0 0.0001%, #fff 0 0.0002%) 60% 60%/2500px 2500px;
   background-blend-mode: difference;
   animation: b .2s infinite alternate;
 }
-@keyframes b{
-  100% {background-position: 50% 0, 60% 50%}
+
+@keyframes b {
+  100% {
+    background-position: 50% 0, 60% 50%
+  }
+}
+
+
+/* Pumpkin Bois */
+
+.pumpkin-bois {
+  pointer-events: all;
+  position: fixed;
+  bottom: 0;
+  filter: drop-shadow(0px 0px 1px white);
+  animation-timing-function: linear;
+  animation-name: marquee;
+  animation-duration: 7s;
+  animation-iteration-count: infinite;
+  animation-direction: alternate;
+  animation-delay: 7s;
+  visibility: hidden;
+}
+
+@keyframes marquee {
+  0% {
+    visibility: visible;
+    left: -25vw;
+  }
+
+  100% {
+    visibility: visible;
+    left: 125vw;
+  }
+}
+
+.pumpkin-bois-layer {
+  animation-delay: 5s;
+  animation: pumpkin-wobble 35s steps(1, end) infinite;
+}
+
+/* pretty much random */
+@keyframes pumpkin-wobble {
+
+  0%,
+  20% {
+    transform: rotate(15deg);
+    top: 30vh;
+  }
+
+  20%,
+  40% {
+    transform: rotate(-20deg);
+    top: 60vh;
+  }
+
+  40%,
+  60% {
+    transform: rotate(25deg);
+    top: 10vh;
+  }
+
+  60%,
+  80% {
+    transform: rotate(-18deg);
+    top: 80vh;
+  }
+
+  80%,
+  100% {
+    transform: rotate(22deg);
+    top: 45vh;
+  }
 }

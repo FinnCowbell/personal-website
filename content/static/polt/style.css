@@ -35,20 +35,26 @@ ol {
   padding: 0 0 0 20px;
 }
 
+.visible-overflow {
+  overflow: visible !important
+}
+
 .gothic {
   font-family: var(--fancy-header);
 }
+
 .scratchy {
   font-size: 1.5em;
   font-family: "Rubik Glitch", "Courier New", Courier, monospace;
-  background: url('/assets/img/halloween/static.gif');
-  background-size: 50px 50px;
+  background: url(/assets/img/halloween/static.gif);
+  background-size: 25px;
   background-repeat: repeat;
   background-clip: text;
   -webkit-background-clip: text;
   color: transparent;
-  filter: drop-shadow(0 0 3px #ffffff);
+  filter: brightness(0.65) drop-shadow(0 0 3px #ffffff);
   line-height: 1.25;
+  letter-spacing: 1.25px;
   font-weight: 100;
 }
 
@@ -63,15 +69,19 @@ a {
 /* Single header */
 header {
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   justify-content: space-between;
   gap: 8px;
+  max-width: 600px;
+  margin: 0 auto;
 }
 
 .logo {
+  flex: 0 0 25%;
   min-width: 0;
   height: auto;
-  width: auto;
+  width: 100%;
+  object-fit: contain;
 }
 
 .container {
@@ -92,16 +102,17 @@ header {
 .split-drink-area {
   display: flex;
   flex-direction: row;
-  align-items: stretch;
-  max-width: 500px;
+  align-items: center;
+  max-width: 600px;
   justify-content: center;
   gap: 8px;
-  margin: 8px;
+  margin: 8px auto;
   margin-top: 32px;
   flex-basis: 1 auto;
 
   /* For zombie animation */
   overflow: hidden;
+
   & .container {
     flex: 1 1 0;
     border-radius: 10px;
@@ -109,6 +120,10 @@ header {
 
   & img {
     min-width: 0;
+    max-width: 100%;
+    height: auto;
+    object-fit: contain;
+    align-self: center;
   }
 }
 
@@ -125,17 +140,29 @@ header {
   flex-direction: column;
   text-wrap-mode: nowrap;
   padding: 8px 12px;
+  flex: 1 1 auto;
+  container-type: inline-size;
+
+  & .scratchy {
+    font-size: clamp(12px, 7cqi, 24px);
+    text-wrap-mode: wrap;
+  }
 }
 
 .header-divider {
   display: flex;
   justify-content: space-between;
-  margin: 12px 8px;
+  align-items: center;
+  margin: 12px auto;
+  max-width: 600px;
+  gap: 8px;
+
   & h2 {
-    flex: 1;
+    flex: 0 1 auto;
     text-align: center;
     color: var(--text-2);
   }
+
   & img:last-child {
     transform: scaleX(-1);
   }
@@ -145,6 +172,7 @@ header {
   display: flex;
   align-items: center;
   gap: 8px;
+
   & img {
     height: 48px;
     width: auto;
@@ -179,6 +207,8 @@ footer {
   display: flex;
   align-items: center;
   justify-content: center;
+  max-width: 600px;
+  margin: 0 auto;
 }
 
 /* Image customization */
@@ -191,10 +221,16 @@ footer {
   opacity: 0.2;
   transition: all 0.3s ease-in-out;
   filter: drop-shadow(0 0 0px red);
+
+  position: absolute;
+  bottom: -64px;
+  left: 0px;
+
   &:hover {
     filter: drop-shadow(0 0 5px red);
     opacity: 1;
   }
+
   & img {
     width: inherit;
   }
@@ -205,7 +241,8 @@ footer {
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin: 32px 8px 16px 8px;
+  margin: 32px auto 16px auto;
+  max-width: 600px;
   gap: 16px;
 }
 
@@ -228,8 +265,13 @@ footer {
 }
 
 @keyframes spin {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 .result-display {
@@ -243,12 +285,14 @@ footer {
 }
 
 .result-display.trick {
-  border-color: #8b0000; /* Dark red for trick */
+  border-color: #8b0000;
+  /* Dark red for trick */
   background-color: #2a0a0a;
 }
 
 .result-display.treat {
-  border-color: #228b22; /* Forest green for treat */
+  border-color: #228b22;
+  /* Forest green for treat */
   background-color: #0a2a0a;
 }
 
@@ -259,5 +303,16 @@ footer {
 
 
 .result-display.treat p {
-  color: #90ee90; /* Light green for treat text */
+  color: #90ee90;
+  /* Light green for treat text */
+}
+
+
+.pumpkin-bois-layer {
+  width: 150vw;
+  position: fixed;
+  top: 0;
+  left: 0;
+  pointer-events: none;
+  z-index: 1000;
 }
