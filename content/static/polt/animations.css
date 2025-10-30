@@ -12,25 +12,30 @@
 .logo {
   filter: drop-shadow(0 0 5px var(--festive-bg));
 
-  &:hover {
+  &:focus {
     animation: wiggle3d 1s ease-in-out;
+    outline: none;
   }
 }
 
-.bat:hover {
+.bat:focus {
   animation: jumpscare 0.5s linear;
+  outline: none;
 }
 
-.zombie:hover {
+.zombie:focus {
   animation: sprint 2s ease-in-out;
+  outline: none;
 }
 
-.skeleton-dancing:hover {
+.skeleton-dancing:focus {
   animation: jitter 0.5s linear infinite;
+  outline: none;
 }
 
-.vampire-bat:hover {
+.vampire-bat:focus {
   animation: dart 3s cubic-bezier(1, 0.06, 0, 1.01) infinite;
+  outline: none;
 }
 
 @keyframes sprint {

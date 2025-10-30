@@ -8,7 +8,7 @@ html {
   --festive-bg-2: #e54901a7;
   --festive-text: rgb(255, 181, 131);
   --festive-border: #ff7c03;
-  --font-family: "Courier New", Courier, monospace;
+  --font-family: "Baskerville", "Times New Roman", Times, serif;
   --header-font: "Fontdiner Swanky", "Papyrus", "Fantasy", sans-serif;
   --fancy-header: "Jacquard 24", "Cursive", sans-serif;
 }
@@ -46,8 +46,8 @@ ol {
 .scratchy {
   font-size: 1.5em;
   font-family: "Rubik Glitch", "Courier New", Courier, monospace;
-  background: url(/assets/img/halloween/static.gif);
-  background-size: 25px;
+  background: url('/assets/img/halloween/static.gif');
+  background-size: 50px 50px;
   background-repeat: repeat;
   background-clip: text;
   -webkit-background-clip: text;
@@ -92,11 +92,21 @@ header {
   border-radius: 3px;
   display: flex;
   flex-direction: column;
+  padding: 4px 4px 8px 4px;
 }
 
 .drink-header {
   margin: 4px;
   text-align: center;
+}
+
+.container h4 {
+  font-size: 0.8em;
+  text-align: right;
+  transform: rotate(-3deg);
+  margin: -8px 8px 0 0;
+  color: var(--festive-text);
+  font-style: italic;
 }
 
 .split-drink-area {
@@ -226,9 +236,10 @@ footer {
   bottom: -64px;
   left: 0px;
 
-  &:hover {
+  &:focus {
     filter: drop-shadow(0 0 5px red);
     opacity: 1;
+    outline: none;
   }
 
   & img {
@@ -265,13 +276,8 @@ footer {
 }
 
 @keyframes spin {
-  from {
-    transform: rotate(0deg);
-  }
-
-  to {
-    transform: rotate(360deg);
-  }
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
 }
 
 .result-display {
@@ -300,7 +306,6 @@ footer {
   font-size: 1.4em;
   margin: 0;
 }
-
 
 .result-display.treat p {
   color: #90ee90;
