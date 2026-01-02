@@ -1,0 +1,460 @@
+---
+permalink: /player
+---
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>Music Player</title>
+    <meta name="description" content="Retro Walkman Music Player">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <link rel="icon" href="/assets/favicon/favicon.ico">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DotGothic16&display=swap" rel="stylesheet">
+    <style>
+        /* === Base Styles === */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #f5f5f0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        }
+
+        /* === Player Container === */
+        .player-wrapper {
+            position: relative;
+            display: inline-block;
+        }
+
+        .player-image {
+            display: block;
+            max-width: 90vw;
+            max-height: 85vh;
+            width: auto;
+            height: auto;
+        }
+
+        /* === Screen Overlay === */
+        .screen-overlay {
+            position: absolute;
+            top: 22%;
+            left: 22.7%;
+            width: 24%;
+            height: 49%;
+            padding: 1% 1.5%;
+
+            background: rgba(0, 0, 0, 0.75);
+
+            font-family: "DotGothic16", sans-serif;
+            font-weight: 400;
+            font-style: normal;
+
+
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+
+            container-type: inline-size;
+        }
+
+        .song-title {
+            color: #fff;
+            font-size: 11.5cqi;
+            text-transform: uppercase;
+            /* letter-spacing: 0.1em; */
+            white-space: pre;
+        }
+
+        .song-description {
+            color: #fff;
+            font-size: 11.5cqi;
+            margin-top: -4%;
+            white-space: pre;
+        }
+
+        .play-status {
+            color: #fff;
+            font-size: 1.7cqi;
+            margin-top: .4%;
+            display: flex;
+            align-items: center;
+            gap: 1.5%;
+        }
+
+        .play-icon {
+            width: 12.5%;
+            font-size: 10.5cqi;
+        }
+
+        .track-number {
+            font-size: 10cqi;
+        }
+
+        /* === Control Buttons === */
+        .controls {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+        }
+
+        .control-btn {
+            position: absolute;
+            width: 8%;
+            height: 8%;
+
+            background: transparent;
+            border: 2px solid transparent;
+            border-radius: 50%;
+
+            color: transparent;
+
+            cursor: pointer;
+            pointer-events: auto;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .control-btn.prev-btn {
+            left: 59.1%;
+            top: 65.7%;
+            width: 17%;
+            height: 27%;
+            background: url('/assets/img/prev.png') no-repeat center center;
+            background-size: contain;
+            border: none;
+            border-radius: 0;
+            z-index: 2
+        }
+
+        .control-btn.play-btn {
+            left: 58.1%;
+            top: 15.7%;
+            width: 19.7%;
+            height: 68%;
+        }
+
+        .control-btn.next-btn {
+            left: 59.4%;
+            top: 9.9%;
+            width: 16.8%;
+            height: 22.9%;
+            background: url('/assets/img/next.png') no-repeat center center;
+            background-size: contain;
+            border: none;
+            border-radius: 0;
+            z-index: 2;
+        }
+
+        .control-btn.play-btn.playing {
+            border: 1cqi solid #ff333354;
+            box-shadow: 0 0 10px #ff333354, 0 0 20px #ff333354, inset 0 0 8px rgba(255, 51, 51, 0.3);
+        }
+
+        /* Hidden audio element */
+        audio {
+            display: none;
+        }
+
+        /* === Progress Bar === */
+        .progress-container {
+            position: absolute;
+            top: 47.3%;
+            left: 24.2%;
+            width: 21%;
+            height: .75%;
+            /* Small white squares pattern for empty/unfilled area */
+            background-image:
+                linear-gradient(45deg, #fff 25%, transparent 25%),
+                linear-gradient(-45deg, #fff 25%, transparent 25%),
+                linear-gradient(45deg, transparent 75%, #fff 75%),
+                linear-gradient(-45deg, transparent 75%, #fff 75%);
+            background-size: 1cqi;
+            /* background-position: 0 0, 0 .2cqi, .2cqi -.2cqi, -.2cqi 0; */
+            background-color: transparent;
+            cursor: pointer;
+        }
+
+        /* Solid white fill for played portion */
+        .progress-fill {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 0%;
+            padding-right: 1%;
+            height: 100%;
+            background: #fff;
+            border-top-left-radius: 0.05cqi;
+            border-bottom-left-radius: 0.05cqi;
+            will-change: width;
+        }
+
+        /* Marker sits at the end of the fill */
+        .progress-marker {
+            position: absolute;
+            top: 50%;
+            left: -1%;
+            width: 1%;
+            height: 200%;
+            transform: translateY(-50%) translateX(50%);
+            background: #fff;
+            will-change: left;
+            -webkit-backface-visibility: hidden;
+            backface-visibility: hidden;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="player-wrapper">
+        <!-- Base Walkman Image -->
+        <img src="/assets/img/walkman.png" alt="Walkman Music Player" class="player-image">
+
+        <!-- Screen Overlay -->
+        <div class="screen-overlay">
+            <div class="song-title" id="songTitle">Loading...</div>
+            <div class="song-description" id="songDescription"></div>
+            <div class="play-status">
+                <span class="play-icon" id="playIcon">⏸</span>
+                <span class="track-number" id="trackNumber">001</span>
+            </div>
+        </div>
+
+        <!-- Progress Bar -->
+        <div class="progress-container" id="progressContainer">
+            <div class="progress-fill" id="progressFill"></div>
+            <div class="progress-marker" id="progressMarker"></div>
+        </div>
+
+        <!-- Control Buttons -->
+        <div class="controls">
+            <button class="control-btn prev-btn" id="prevBtn" aria-label="Previous track">⏮</button>
+            <button class="control-btn play-btn" id="playBtn" aria-label="Play/Pause">▶</button>
+            <button class="control-btn next-btn" id="nextBtn" aria-label="Next track">⏭</button>
+        </div>
+    </div>
+
+    <!-- Hidden Audio Element -->
+    <audio id="audioPlayer"></audio>
+
+    <script>
+        // ========================================
+        // SONG CONFIGURATION
+        // Add your songs here with title, description, and file path
+        // ========================================
+        const songs = [
+            {
+                title: "Fungal Floor",
+                description: "Hmmm, I wonder if I make this text long how long it will get?",
+                src: "/assets/boss-fights/Fungal Floor.mp3"
+            },
+            {
+                title: "M",
+                description: "Test Test Test",
+                src: "/assets/boss-fights/M W Highs.mp3"
+            },
+            // Add more songs as needed:
+            // {
+            //   title: "Song Title",
+            //   description: "Song Description",
+            //   src: "/assets/boss-fights/filename.mp3"
+            // },
+        ];
+
+        // ========================================
+        // PLAYER STATE & ELEMENTS
+        // ========================================
+        let currentIndex = 0;
+        let isPlaying = false;
+
+        const audio = document.getElementById('audioPlayer');
+        const playBtn = document.getElementById('playBtn');
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+        const songTitle = document.getElementById('songTitle');
+        const songDescription = document.getElementById('songDescription');
+        const playIcon = document.getElementById('playIcon');
+        const trackNumber = document.getElementById('trackNumber');
+        const progressMarker = document.getElementById('progressMarker');
+        const progressFill = document.getElementById('progressFill');
+        const progressContainer = document.getElementById('progressContainer');
+
+        // ========================================
+        // TEXT SCROLLING FOR OVERFLOW
+        // ========================================
+
+        function isOverflowing(element) {
+            return element.scrollWidth > element.clientWidth;
+        }
+
+        function setupTextScroller(element, text, intervalRef) {
+            // Set full text first to check overflow
+            element.textContent = text;
+
+            // If not overflowing,  just display the text
+            if (!isOverflowing(element)) {
+                return;
+            }
+
+            const padding = '   •   ';
+
+            // Add padding for scroll loop
+            const paddedText = text + padding + text;
+            let position = 0;
+
+            const initScroll = () => {
+                if (intervalRef.current) {
+                    clearInterval(intervalRef.current);
+                    intervalRef.current = null;
+                    position = 0;
+                }
+                setTimeout(() => {
+                    intervalRef.current = setInterval(scroll, 200); // Adjust speed here (ms per character)
+                }, 2000); // Initial delay before scrolling starts
+            }
+
+            function scroll() {
+                position++;
+                if (position > text.length + padding.length) {
+                    initScroll();
+                }
+                element.textContent = paddedText.substring(position);
+            }
+
+            initScroll();
+        }
+
+        const titleScrollRef = { current: null };
+        const descScrollRef = { current: null };
+
+        // ========================================
+        // HELPER FUNCTIONS
+        // ========================================
+        function formatTrackNumber(num) {
+            return String(num).padStart(3, '0');
+        }
+
+        // ========================================
+        // PLAYER FUNCTIONS
+        // ========================================
+        function loadSong(index) {
+            if (songs.length === 0) {
+                songTitle.textContent = "No songs loaded";
+                songDescription.textContent = "";
+                return;
+            }
+
+            const song = songs[index];
+            audio.src = song.src;
+
+            // Setup text scrollers for overflowing text
+            const displayTitle = song.title.toUpperCase();
+            setupTextScroller(songTitle, displayTitle, titleScrollRef);
+            setupTextScroller(songDescription, song.description, descScrollRef);
+
+            trackNumber.textContent = formatTrackNumber(index + 1);
+            progressMarker.style.left = '0%';
+            progressFill.style.width = '0%';
+        }
+
+        function togglePlay() {
+            if (songs.length === 0) return;
+
+            if (isPlaying) {
+                audio.pause();
+                playBtn.classList.remove('playing');
+                playIcon.textContent = '⏸';
+            } else {
+                audio.play();
+                playBtn.classList.add('playing');
+                playIcon.textContent = '▶';
+            }
+            isPlaying = !isPlaying;
+        }
+
+        function nextSong() {
+            if (songs.length === 0) return;
+            currentIndex = (currentIndex + 1) % songs.length;
+            loadSong(currentIndex);
+            if (!isPlaying) {
+                togglePlay();
+            }
+        }
+
+        function prevSong() {
+            if (songs.length === 0) return;
+            // If more than 3 seconds in, restart current song; otherwise go to previous
+            if (audio.currentTime > 3) {
+                audio.currentTime = 0;
+            } else {
+                currentIndex = (currentIndex - 1 + songs.length) % songs.length;
+                loadSong(currentIndex);
+                if (!isPlaying) {
+                    togglePlay();
+                }
+            }
+        }
+
+        function updateProgress() {
+            if (audio.duration) {
+                const percent = (audio.currentTime / audio.duration) * 99; // 98% max so marker stays in bounds
+                const roundedPercent = Math.round(percent * 10) / 10; // Round to 0.1% intervals
+                progressFill.style.width = roundedPercent + '%';
+                progressMarker.style.left = roundedPercent + '%';
+            }
+        }
+
+        function seekTo(e) {
+            const rect = progressContainer.getBoundingClientRect();
+            const percent = (e.clientX - rect.left) / rect.width;
+            audio.currentTime = percent * audio.duration;
+        }
+
+        // ========================================
+        // EVENT LISTENERS
+        // ========================================
+        playBtn.addEventListener('click', togglePlay);
+        nextBtn.addEventListener('click', nextSong);
+        prevBtn.addEventListener('click', prevSong);
+
+        audio.addEventListener('timeupdate', updateProgress);
+        audio.addEventListener('ended', nextSong);
+
+        progressContainer.addEventListener('click', seekTo);
+
+        // Keyboard controls
+        document.addEventListener('keydown', (e) => {
+            if (e.code === 'Space') {
+                e.preventDefault();
+                togglePlay();
+            } else if (e.code === 'ArrowRight') {
+                nextSong();
+            } else if (e.code === 'ArrowLeft') {
+                prevSong();
+            }
+        });
+
+        // ========================================
+        // INITIALIZE
+        // ========================================
+        loadSong(currentIndex);
+    </script>
+
+</body>
+
+</html>
