@@ -6,52 +6,62 @@ const songs = [
     {
         title: "Fungal Floor",
         description: "Boutique. On the Catwalk. MAY 2025",
-        src: "/assets/music/boss-fights/Fungal Floor.mp3"
+        src: "/assets/music/boss-fights/Fungal Floor.mp3",
+        favicon: "FF"
     },
     {
         title: "Bassaline",
         description: "Started before my first Ridgewood club visit, and finished after. AUG 2024",
-        src: "/assets/music/boss-fights/Bassaline.mp3"
+        src: "/assets/music/boss-fights/Bassaline.mp3",
+        favicon: "BA"
     },
     {
         title: "Twinning",
         description: "JAN 2024",
-        src: "/assets/music/boss-fights/Twinning.mp3"
+        src: "/assets/music/boss-fights/Twinning.mp3",
+        favicon: "TW"
     },
     {
         title: "Dug",
         description: "Started while my sister was visiting NYC. JAN 2024",
-        src: "/assets/music/boss-fights/Dug - Unfinished.mp3"
+        src: "/assets/music/boss-fights/Dug - Unfinished.mp3",
+        favicon: "DG"
     },
     {
         title: "15M",
         description: "Elevator Interlude in 7 - Unknown.",
-        src: "/assets/music/boss-fights/15M.mp3"
+        src: "/assets/music/boss-fights/15M.mp3",
+        favicon: "15"
     },
     {
         title: "SF",
         description: "Cheeky. Inconsistent bitcrushing. APR 2025",
-        src: "/assets/music/boss-fights/SF.mp3"
+        src: "/assets/music/boss-fights/SF.mp3",
+        favicon: "SF"
     },
     {
         title: "M",
         description: "Originally for Emma. FEB 2025",
-        src: "/assets/music/boss-fights/M W Highs.mp3"
+        src: "/assets/music/boss-fights/M W Highs.mp3",
+        favicon: "M"
     },
     {
         title: "Harpin'",
         description: "MAY 2021",
-        src: "/assets/music/boss-fights/HARPIN.mp3"
+        src: "/assets/music/boss-fights/HARPIN.mp3",
+        favicon: "HP"
     },
     {
         title: "H I H",
         description: "The name depicts the drums. Created over 2 years. SEP 2023?",
-        src: "/assets/music/boss-fights/H I H.mp3"
+        src: "/assets/music/boss-fights/H I H.mp3",
+        favicon: "HH"
     },
     {
         title: "Wonk 2a",
         description: "Stream of consciousness melody written in one sitting. FEB 2025",
-        src: "/assets/music/boss-fights/WONK2A.mp3"
+        src: "/assets/music/boss-fights/WONK2A.mp3",
+        favicon: "W2"
     }
 ];
 
@@ -143,6 +153,11 @@ function formatTrackNumber(num) {
 }
 
 // ========================================
+// FAVICON SCROLLER INSTANCE
+// ========================================
+const faviconScroller = new FaviconScroller();
+
+// ========================================
 // PLAYER FUNCTIONS
 // ========================================
 function loadSong(index) {
@@ -173,6 +188,11 @@ function loadSong(index) {
     setupTextScroller(songTitle, displayTitle, titleScrollRef);
     setupTextScroller(songDescription, song.description, descScrollRef);
 
+    // Update favicon only if playing
+    if (isPlaying) {
+        faviconScroller.start(song.title);
+    }
+
     trackNumber.textContent = formatTrackNumber(index + 1);
     progressMarker.style.left = '0%';
     progressFill.style.width = '0%';
@@ -185,10 +205,12 @@ function togglePlay() {
         audio.pause();
         playBtn.classList.remove('playing');
         playIcon.textContent = '⏸';
+        faviconScroller.restore();
     } else {
         audio.play();
         playBtn.classList.add('playing');
         playIcon.textContent = '▶';
+        faviconScroller.start(songs[currentIndex].title);
     }
     isPlaying = !isPlaying;
 }
