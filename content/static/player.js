@@ -1,3 +1,5 @@
+import { Konami } from '/scripts/Konami.js';
+
 // ========================================
 // SONG CONFIGURATION
 // Add your songs here with title, description, and file path
@@ -6,75 +8,74 @@ const songs = [
     {
         title: "Fungal Floor",
         description: "Boutique. On the Catwalk. MAY 2025",
-        src: "/assets/music/boss-fights/Fungal Floor.mp3",
-        favicon: "FF"
+        src: "/assets/music/boss-fights/Fungal Floor.mp3"
     },
     {
-        title: "Bassaline",
-        description: "Started before my first Ridgewood club visit, and finished after. AUG 2024",
-        src: "/assets/music/boss-fights/Bassaline.mp3",
-        favicon: "BA"
+        title: "Clubbed",
+        description: "AUG 2024",
+        src: "/assets/music/boss-fights/Bassaline.mp3"
     },
     {
-        title: "Twinning",
+        title: "Mouse Army",
         description: "JAN 2024",
-        src: "/assets/music/boss-fights/Twinning.mp3",
-        favicon: "TW"
+        src: "/assets/music/boss-fights/Twinning.mp3"
     },
     {
-        title: "Dug",
-        description: "Started while my sister was visiting NYC. JAN 2024",
-        src: "/assets/music/boss-fights/Dug - Unfinished.mp3",
-        favicon: "DG"
+        title: "Wander",
+        description: "Don't get lost. - JAN 2024",
+        src: "/assets/music/boss-fights/Dug Fork.mp3"
     },
     {
-        title: "15M",
-        description: "Elevator Interlude in 7 - Unknown.",
-        src: "/assets/music/boss-fights/15M.mp3",
-        favicon: "15"
+        title: "Floor 7",
+        description: "Almost there!.",
+        src: "/assets/music/boss-fights/15M.mp3"
     },
     {
-        title: "SF",
-        description: "Cheeky. Inconsistent bitcrushing. APR 2025",
-        src: "/assets/music/boss-fights/SF.mp3",
-        favicon: "SF"
+        title: "Honch",
+        description: "*pixelated crowd cheers* - APR 2025",
+        src: "/assets/music/boss-fights/SF.mp3"
     },
     {
-        title: "M",
-        description: "Originally for Emma. FEB 2025",
-        src: "/assets/music/boss-fights/M W Highs.mp3",
-        favicon: "M"
+        title: "Shadows",
+        description: "Maybe they're friendly - FEB 2025",
+        src: "/assets/music/boss-fights/M W Highs.mp3"
     },
     {
-        title: "Harpin'",
+        title: "Gates'",
         description: "MAY 2021",
-        src: "/assets/music/boss-fights/HARPIN.mp3",
-        favicon: "HP"
+        src: "/assets/music/boss-fights/HARPIN.mp3"
     },
     {
-        title: "H I H",
-        description: "The name depicts the drums. Created over 2 years. SEP 2023?",
-        src: "/assets/music/boss-fights/H I H.mp3",
-        favicon: "HH"
+        title: "Boulder",
+        description: "H I. Created over 2 years. SEP 2023",
+        src: "/assets/music/boss-fights/H I H.mp3"
     },
     {
-        title: "Wonk 2a",
+        title: "Wonk 2A",
         description: "Stream of consciousness melody written in one sitting. FEB 2025",
-        src: "/assets/music/boss-fights/WONK2A.mp3",
-        favicon: "W2"
+        src: "/assets/music/boss-fights/WONK2A.mp3"
     }
 ];
+
+const secretSong = {
+    title: "Crabbin'",
+    description: "MAY 2020",
+    src: "/assets/music/boss-fights/Crabbin.mp3"
+};
 
 // ========================================
 // PLAYER STATE & ELEMENTS
 // ========================================
 let currentIndex = 0;
 let isPlaying = false;
+let isRepeat = false;
 
 const audio = document.getElementById('audioPlayer');
 const playBtn = document.getElementById('playBtn');
 const prevBtn = document.getElementById('prevBtn');
 const nextBtn = document.getElementById('nextBtn');
+const repeatBtn = document.getElementById('repeatBtn');
+const repeatIndicator = document.getElementById('repeatIndicator');
 const songTitle = document.getElementById('songTitle');
 const songDescription = document.getElementById('songDescription');
 const playIcon = document.getElementById('playIcon');
@@ -89,6 +90,67 @@ const loadingOverlay = document.getElementById('loadingOverlay');
 // IMAGE LOADING & INITIALIZATION
 // ========================================
 function initializeApp() {
+    // Unlock secret song function
+    function unlockSecretSong() {
+        if (localStorage.getItem('secretSongUnlocked') !== 'true') {
+            songs.push(secretSong);
+            localStorage.setItem('secretSongUnlocked', 'true');
+        }
+        // Jump to and play the secret song
+        currentIndex = songs.length - 1;
+        loadSong(currentIndex);
+        audio.play();
+        isPlaying = true;
+        playBtn.classList.add('playing');
+        playIcon.src = '/assets/img/bossfights/play.png';
+        faviconScroller.start(songs[currentIndex].title);
+    }
+
+    // Check localStorage and add secret song if already unlocked
+    if (localStorage.getItem('secretSongUnlocked') === 'true') {
+        songs.push(secretSong);
+    }
+
+    // Set up Konami code to unlock secret song (desktop)
+    const konami = new Konami(unlockSecretSong);
+    konami.run();
+
+    // Keyboard controls
+document.addEventListener('keydown', (e) => {
+    if (e.defaultPrevented) return; // Skip if Konami code is being entered
+    if (e.code === 'Space') {
+        e.preventDefault();
+        togglePlay();
+    } else if (e.code === 'ArrowRight') {
+        nextSong();
+    } else if (e.code === 'ArrowLeft') {
+        prevSong();
+    }
+});
+
+    // Mobile: tap the walkman logo 10 times to unlock
+    let tapCount = 0;
+    let tapTimeout = null;
+    const TAP_THRESHOLD = 10;
+    const TAP_RESET_DELAY = 2000; // Reset after 2 seconds of no taps
+
+    const secretTapZone = document.getElementById('nothing-suspicious');
+    if (secretTapZone) {
+        secretTapZone.addEventListener('click', () => {
+            tapCount++;
+            clearTimeout(tapTimeout);
+            
+            if (tapCount >= TAP_THRESHOLD) {
+                unlockSecretSong();
+                tapCount = 0;
+            } else {
+                tapTimeout = setTimeout(() => {
+                    tapCount = 0;
+                }, TAP_RESET_DELAY);
+            }
+        });
+    }
+
     loadSong(currentIndex);
     loadingOverlay.classList.add('hidden');
 }
@@ -101,7 +163,7 @@ function isOverflowing(element) {
     return element.scrollWidth > element.clientWidth;
 }
 
-function setupTextScroller(element, text, intervalRef) {
+function setupTextScroller(element, text, scrollRef) {
     // Set full text first to check overflow
     element.textContent = text;
 
@@ -116,18 +178,22 @@ function setupTextScroller(element, text, intervalRef) {
     const paddedText = text + padding + text;
     let position = 0;
 
-    const clearIntervalIfExists = (ref) => {
-        if (ref.current) {
-            clearInterval(ref.current);
-            ref.current = null;
+    const clearTimersIfExist = (ref) => {
+        if (ref.intervalId) {
+            clearInterval(ref.intervalId);
+            ref.intervalId = null;
+        }
+        if (ref.timeoutId) {
+            clearTimeout(ref.timeoutId);
+            ref.timeoutId = null;
         }
     }
     const initScroll = () => {
-        clearIntervalIfExists(intervalRef);
+        clearTimersIfExist(scrollRef);
         position = 0;   
-        setTimeout(() => {
-            clearIntervalIfExists(intervalRef);
-            intervalRef.current = setInterval(scroll, 200); // Adjust speed here (ms per character)
+        scrollRef.timeoutId = setTimeout(() => {
+            clearTimersIfExist(scrollRef);
+            scrollRef.intervalId = setInterval(scroll, 200); // Adjust speed here (ms per character)
         }, 2000); // Initial delay before scrolling starts
     }
 
@@ -142,8 +208,8 @@ function setupTextScroller(element, text, intervalRef) {
     initScroll();
 }
 
-const titleScrollRef = { current: null };
-const descScrollRef = { current: null };
+const titleScrollRef = { intervalId: null, timeoutId: null };
+const descScrollRef = { intervalId: null, timeoutId: null };
 
 // ========================================
 // HELPER FUNCTIONS
@@ -169,17 +235,26 @@ function loadSong(index) {
 
     const song = songs[index];
     
-    // Clear any existing intervals
-    if (titleScrollRef.current) {
-        clearInterval(titleScrollRef.current);
-        titleScrollRef.current = null;
+    // Clear any existing timers
+    if (titleScrollRef.intervalId) {
+        clearInterval(titleScrollRef.intervalId);
+        titleScrollRef.intervalId = null;
     }
-    if (descScrollRef.current) {
-        clearInterval(descScrollRef.current);
-        descScrollRef.current = null;
+    if (titleScrollRef.timeoutId) {
+        clearTimeout(titleScrollRef.timeoutId);
+        titleScrollRef.timeoutId = null;
+    }
+    if (descScrollRef.intervalId) {
+        clearInterval(descScrollRef.intervalId);
+        descScrollRef.intervalId = null;
+    }
+    if (descScrollRef.timeoutId) {
+        clearTimeout(descScrollRef.timeoutId);
+        descScrollRef.timeoutId = null;
     }
     
     // Set new audio source and reset
+    audio.volume = 0.8; // Set default volume
     audio.src = song.src;
     audio.currentTime = 0;
 
@@ -204,12 +279,12 @@ function togglePlay() {
     if (isPlaying) {
         audio.pause();
         playBtn.classList.remove('playing');
-        playIcon.textContent = '⏸';
+        playIcon.src = '/assets/img/bossfights/pause.png';
         faviconScroller.restore();
     } else {
         audio.play();
         playBtn.classList.add('playing');
-        playIcon.textContent = '▶';
+        playIcon.src = '/assets/img/bossfights/play.png';
         faviconScroller.start(songs[currentIndex].title);
     }
     isPlaying = !isPlaying;
@@ -229,7 +304,7 @@ function nextSong() {
             audio.removeEventListener('loadeddata', playOnLoad);
             audio.play();
             playBtn.classList.add('playing');
-            playIcon.textContent = '▶';
+            playIcon.src = '/assets/img/bossfights/play.png';
         }, { once: true });
         audio.load(); // Trigger loading of new source
     }
@@ -253,7 +328,7 @@ function prevSong() {
                 audio.removeEventListener('loadeddata', playOnLoad);
                 audio.play();
                 playBtn.classList.add('playing');
-                playIcon.textContent = '▶';
+                playIcon.src = '/assets/img/bossfights/play.png';
             }, { once: true });
             audio.load(); // Trigger loading of new source
         }
@@ -281,23 +356,27 @@ function seekTo(e) {
 playBtn.addEventListener('click', togglePlay);
 nextBtn.addEventListener('click', nextSong);
 prevBtn.addEventListener('click', prevSong);
+repeatBtn.addEventListener('click', toggleRepeat);
+
+function toggleRepeat() {
+    isRepeat = !isRepeat;
+    repeatBtn.classList.toggle('active', isRepeat);
+    repeatIndicator.classList.toggle('active', isRepeat);
+}
+
+function handleSongEnded() {
+    if (isRepeat) {
+        audio.currentTime = 0;
+        audio.play();
+    } else {
+        nextSong();
+    }
+}
 
 audio.addEventListener('timeupdate', updateProgress);
-audio.addEventListener('ended', nextSong);
+audio.addEventListener('ended', handleSongEnded);
 
 progressContainer.addEventListener('click', seekTo);
-
-// Keyboard controls
-document.addEventListener('keydown', (e) => {
-    if (e.code === 'Space') {
-        e.preventDefault();
-        togglePlay();
-    } else if (e.code === 'ArrowRight') {
-        nextSong();
-    } else if (e.code === 'ArrowLeft') {
-        prevSong();
-    }
-});
 
 
 // Wait for image to load before initializing

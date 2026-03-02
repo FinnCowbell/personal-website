@@ -6,6 +6,11 @@ export var Konami = function(activateFunction = ()=>console.log("Konami Activate
    this.run =function(){
     let konami = this
     document.addEventListener('keydown', function(k){
+      // Check if this key continues the sequence before recording
+      const nextExpected = konami.code.substring(konami.recorded.length);
+      if (nextExpected.indexOf(k.keyCode) === 0) {
+        k.preventDefault(); // Prevent default only if key is part of the sequence
+      }
       konami.recorded += k.keyCode;
       if (konami.code == konami.recorded) {
         konami.activateFunction();

@@ -1,320 +1,469 @@
 ---
-permalink: /player
+permalink: /music
 ---
+
 <!DOCTYPE html>
 <html lang="en">
-
-<head>
-    <meta charset="utf-8">
-    <title>Music Player</title>
-    <meta name="description" content="Retro Walkman Music Player">
-    <meta name="viewport" content="width=device-width,initial-scale=1">
-    <link rel="icon" href="/assets/favicon/favicon.ico">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=DotGothic16&display=swap" rel="stylesheet">
+  <head>
+    <meta charset="utf-8" />
+    <title>BOSS FIGHTS</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <link rel="icon" href="/assets/favicon/favicon.ico" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Coral+Pixels&family=DotGothic16&display=swap"
+      rel="stylesheet"
+    />
     <style>
-        /* === Base Styles === */
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
+      /* === Base Styles === */
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;ˆ
+      }
 
-        body {
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: #f5f5f0;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-        }
+      body {
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        background: #f5f5f0;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+          sans-serif;
+      }
 
-        /* === Loading Overlay === */
-        .loading-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: #f5f5f0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 1000;
-            font-family: "DotGothic16", monospace;
-            font-size: 2rem;
-            color: #333;
-        }
+      /* === Title === */
+      .page-title {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: calc(50vh - 60px);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-family: "Coral Pixels", monospace;
+        font-size: clamp(1.5rem, 13vw, 4rem);
+        color: #333;
+        text-transform: uppercase;
+        letter-spacing: 0em;
+        line-height: 1em;
+        text-align: center;
+      }
 
-        .loading-overlay.hidden {
-            display: none;
-        }
+      /* === Loading Overlay === */
+      .loading-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: #f5f5f0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 1000;
+        font-family: "DotGothic16", monospace;
+        font-size: 2rem;
+        color: #333;
+      }
 
-        /* === Player Container === */
-        .player-wrapper {
-            position: relative;
-            display: inline-block;
-        }
+      .loading-overlay.hidden {
+        display: none;
+      }
 
-        .player-image {
-            display: block;
-            max-width: min(95vw, 500px);
-            max-height: 85vh;
-            width: auto;
-            height: auto;
-        }
+      /* === Player Container === */
+      .player-wrapper {
+        position: relative;
+        display: inline-block;
+      }
 
-        /* === Screen Overlay === */
-        .screen-overlay {
-            position: absolute;
-            top: 22%;
-            left: 22.7%;
-            width: 24%;
-            height: 49%;
-            padding: 1% 1.5%;
+      .player-image {
+        display: block;
+        max-width: min(95vw, 600px);
+        max-height: 85vh;
+        width: auto;
+        height: auto;
+      }
 
-            background: linear-gradient(to bottom, rgba(40, 40, 40, 1) 0%, rgba(0, 0, 0, 1) 50%, rgba(40, 40, 40, 1) 100%);
+      .screen-area {
+        position: absolute;
+        top: 22%;
+        left: 22.7%;
+        width: 24%;
+        height: 49%;
+        background: linear-gradient(
+          to bottom,
+          #353641 0%,
+          #38394b 15%,
+          #11101b 50%,
+          #353648 100%
+        );
+        border-radius: 5%;
+      }
 
-            font-family: "DotGothic16", sans-serif;
-            font-weight: 400;
-            font-style: normal;
+      /* === Screen Overlay === */
+      .screen-overlay {
+        position: absolute;
+        left: 5%;
+        top: 9%;
+        width: 90%;
+        height: 85;
+        padding: 0% 1.5%;
+        border-radius: 3%;
 
-            display: flex;
-            flex-direction: column;
-            overflow: hidden;
+        background: linear-gradient(
+          to bottom,
+          rgba(40, 40, 40, 1) 0%,
+          rgba(0, 0, 0, 1) 50%,
+          rgba(40, 40, 40, 1) 100%
+        );
 
-            container-type: inline-size;
-        }
+        font-family: "DotGothic16", sans-serif;
+        font-weight: 400;
+        font-style: normal;
 
-        .song-title-container {
-            display: flex;
-            align-items: center;
-            gap: 1%;
-        }
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
 
-        .song-icon {
-            width: 17%;
-            height: 11.5cqi;
-            flex-shrink: 0;
-        }
+        container-type: inline-size;
+      }
 
-        .song-title {
-            overflow: hidden;
-            color: #fff;
-            font-size: 11.5cqi;
-            text-transform: uppercase;
-            /* letter-spacing: 0.1em; */
-            white-space: pre;
-            margin-right: 2.2%;
-            flex: 1;
-        }
+      .song-title-container {
+        display: flex;
+        align-items: center;
+        gap: 1%;
+      }
 
-        .song-description-container {
-            display: flex;
-            align-items: center;
-            gap: 1%;
-            margin-top: -4%;
-        }
+      .song-icon {
+        width: 17%;
+        height: 11.5cqi;
+        flex-shrink: 0;
+        aspect-ratio: 1;
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+        padding-left: 1%;
+      }
 
-        .description-icon {
-            width: 17%;
-            height: 11.5cqi;    
-            flex-shrink: 0;
-        }
+      .song-icon img {
+        width: auto;
+        height: 100%;
+        object-fit: contain;
+      }
 
-        .song-description {
-            overflow: hidden;
-            color: #fff;
-            font-size: 11.5cqi;
-            margin-right: 2.2%;
-            white-space: pre;
-            flex: 1;
-        }
+      .song-title {
+        overflow: hidden;
+        color: #fff;
+        font-size: 11.5cqi;
+        text-transform: uppercase;
+        /* letter-spacing: 0.1em; */
+        white-space: pre;
+        margin-right: 2.2%;
+        flex: 1;
+      }
 
-        .play-status {
-            color: #fff;
-            font-size: 1.7cqi;
-            margin-top: .4%;
-            display: flex;
-            align-items: center;
-            gap: 1.5%;
-        }
+      .song-description-container {
+        display: flex;
+        align-items: center;
+        gap: 1%;
+        margin-top: -4%;
+      }
 
-        .play-icon {
-            width: 12.5%;
-            font-size: 10.5cqi;
-        }
+      .description-icon {
+        width: 17%;
+        height: 11.5cqi;
+        flex-shrink: 0;
+      }
 
-        .track-number {
-            font-size: 10cqi;
-        }
+      .song-description {
+        overflow: hidden;
+        color: #fff;
+        font-size: 11.5cqi;
+        margin-right: 2.2%;
+        white-space: pre;
+        flex: 1;
+      }
 
-        /* === Control Buttons === */
-        .controls {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-        }
+      .play-status {
+        color: #fff;
+        font-size: 1.7cqi;
+        margin-top: 0.4%;
+        display: flex;
+        align-items: center;
+        gap: 1.5%;
+      }
 
-        .control-btn {
-            position: absolute;
-            width: 8%;
-            height: 8%;
+      .play-icon {
+        width: 12.5%;
+        font-size: 10.5cqi;
+        padding: 1%;
+      }
 
-            background: transparent;
-            border: 2px solid transparent;
-            border-radius: 50%;
+      .track-number {
+        font-size: 10cqi;
+      }
 
-            color: transparent;
+      .repeat-indicator {
+        font-size: 10cqi;
+        opacity: 0;
+        margin-left: auto;
+        padding-right: 1%;
+      }
 
-            cursor: pointer;
-            pointer-events: auto;
+      .repeat-indicator.active {
+        opacity: 1;
+      }
 
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
+      /* === Control Buttons === */
+      .controls {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+      }
 
-        .control-btn.prev-btn {
-            left: 59.1%;
-            top: 65.7%;
-            width: 17%;
-            height: 27%;
-            background: url('/assets/img/prev.png') no-repeat center center;
-            background-size: contain;
-            border: none;
-            border-radius: 0;
-            z-index: 2
-        }
+      .control-btn {
+        position: absolute;
+        width: 8%;
+        height: 8%;
 
-        .control-btn.play-btn {
-            left: 58.1%;
-            top: 15.7%;
-            width: 19.7%;
-            height: 68%;
-        }
+        background: transparent;
+        border: 2px solid transparent;
+        border-radius: 50%;
 
-        .control-btn.next-btn {
-            left: 59.4%;
-            top: 9.9%;
-            width: 16.8%;
-            height: 22.9%;
-            background: url('/assets/img/next.png') no-repeat center center;
-            background-size: contain;
-            border: none;
-            border-radius: 0;
-            z-index: 2;
-        }
+        color: transparent;
 
-        .control-btn.play-btn.playing {
-            border: 1cqi solid #ff333354;
-            box-shadow: 0 0 10px #ff333354, 0 0 20px #ff333354, inset 0 0 8px rgba(255, 51, 51, 0.3);
-        }
+        cursor: pointer;
+        pointer-events: auto;
 
-        /* Hidden audio element */
-        audio {
-            display: none;
-        }
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
 
-        /* === Progress Bar === */
-        .progress-container {
-            position: absolute;
-            top: 47.3%;
-            left: 24.2%;
-            width: 21%;
-            height: .75%;
-            /* Small white squares pattern for empty/unfilled area */
-            background-image:
-                linear-gradient(45deg, #fff 25%, transparent 25%),
-                linear-gradient(-45deg, #fff 25%, transparent 25%),
-                linear-gradient(45deg, transparent 75%, #fff 75%),
-                linear-gradient(-45deg, transparent 75%, #fff 75%);
-            background-size: 1cqi;
-            /* background-position: 0 0, 0 .2cqi, .2cqi -.2cqi, -.2cqi 0; */
-            background-color: transparent;
-            cursor: pointer;
-        }
+      .control-btn.repeat-btn {
+        left: 48%;
+        top: 74.7%;
+        width: 10%;
+        height: 12%;
+        border: none;
+        border-radius: 0;
+        z-index: 2;
+        font-size: 1.5cqi;
+        opacity: 0.4;
+      }
 
-        /* Solid white fill for played portion */
-        .progress-fill {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 0%;
-            padding-right: 1%;
-            height: 100%;
-            background: #fff;
-            border-top-left-radius: 0.05cqi;
-            border-bottom-left-radius: 0.05cqi;
-            will-change: width;
-        }
+      .control-btn.repeat-btn.active {
+        opacity: 1;
+      }
 
-        /* Marker sits at the end of the fill */
-        .progress-marker {
-            position: absolute;
-            top: 50%;
-            left: -1%;
-            width: 1%;
-            height: 200%;
-            transform: translateY(-50%) translateX(50%);
-            background: #fff;
-            will-change: left;
-            -webkit-backface-visibility: hidden;
-            backface-visibility: hidden;
-        }
+      .control-btn.repeat-btn svg {
+        width: 60%;
+        height: 60%;
+        fill: #333;
+      }
+
+      .control-btn.prev-btn {
+        left: 59.1%;
+        top: 65.7%;
+        width: 17%;
+        height: 27%;
+        background: url("/assets/img/bossfights/prev.png") no-repeat center
+          center;
+        background-size: contain;
+        border: none;
+        border-radius: 0;
+        z-index: 2;
+      }
+
+      .control-btn.play-btn {
+        left: 58.1%;
+        top: 15.7%;
+        width: 19.7%;
+        height: 68%;
+      }
+
+      .control-btn.next-btn {
+        left: 59.4%;
+        top: 9.9%;
+        width: 16.8%;
+        height: 22.9%;
+        background: url("/assets/img/bossfights/next.png") no-repeat center
+          center;
+        background-size: contain;
+        border: none;
+        border-radius: 0;
+        z-index: 2;
+      }
+
+      .control-btn.play-btn.playing {
+        border: 1cqi solid #ff333354;
+        box-shadow: 0 0 10px #ff333354, 0 0 20px #ff333354,
+          inset 0 0 8px rgba(255, 51, 51, 0.3);
+      }
+
+      /* Hidden audio element */
+      audio {
+        display: none;
+      }
+
+      /* Secret tap zone (invisible) */
+      .nothing-suspicious {
+        position: absolute;
+    left: 80%;
+    top: 36%;
+    width: 16.1%;
+    height: 27%;
+        background: transparent;
+        cursor: default;
+        z-index: 2;
+        -webkit-tap-highlight-color: transparent;
+      }
+
+      /* === Progress Bar === */
+      .progress-container {
+        position: absolute;
+        top: 47.7%;
+        left: 24.3%;
+        width: 20.6%;
+        height: 0.75%;
+        background-image: linear-gradient(90deg, #fff 25%, transparent 25%),
+          linear-gradient(-90deg, #fff 25%, transparent 25%),
+          linear-gradient(90deg, transparent 75%, #fff 75%),
+          linear-gradient(-90deg, transparent 75%, #fff 75%);
+        background-size: 0.35cqi;
+        /* background-position: 0 0, 0 .2cqi, .2cqi -.2cqi, -.2cqi 0; */
+        background-color: transparent;
+        cursor: pointer;
+      }
+
+      /* Solid white fill for played portion */
+      .progress-fill {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 0%;
+        padding-right: 1%;
+        height: 100%;
+        background: #fff;
+        border-top-left-radius: 0.05cqi;
+        border-bottom-left-radius: 0.05cqi;
+        will-change: width;
+      }
+
+      /* Marker sits at the end of the fill */
+      .progress-marker {
+        position: absolute;
+        top: 50%;
+        left: -1.5%;
+        width: 1%;
+        height: 280%;
+        transform: translateY(-50%) translateX(50%);
+        background: #fff;
+        will-change: left;
+        -webkit-backface-visibility: hidden;
+        backface-visibility: hidden;
+      }
     </style>
-</head>
+  </head>
 
-<body>
+  <body>
     <!-- Loading Overlay -->
-    <div class="loading-overlay" id="loadingOverlay">
-    </div>
+    <div class="loading-overlay" id="loadingOverlay"></div>
+
+    <div class="page-title">BOSS FIGHTS</div>
 
     <div class="player-wrapper">
-        <!-- Base Walkman Image -->
-        <img src="/assets/img/walkman.png" alt="Walkman Music Player" class="player-image" id="walkmanImage">
+      <!-- Base Walkman Image -->
+      <img
+        src="/assets/img/bossfights/walkman.png"
+        alt="Walkman Music Player"
+        class="player-image"
+        id="walkmanImage"
+      />
 
-        <!-- Screen Overlay -->
+      <!-- Screen Overlay -->
+      <div class="screen-area">
         <div class="screen-overlay">
-            <div class="song-title-container">
-                <div class="song-icon"></div>
-                <div class="song-title" id="songTitle">Loading...</div>
+          <div class="song-title-container">
+            <div class="song-icon">
+              <img src="/assets/img/bossfights/note.png" alt="Note" />
             </div>
-            <div class="song-description-container">
-                <div class="description-icon"></div>
-                <div class="song-description" id="songDescription"></div>
-            </div>
-            <div class="play-status">
-                <span class="play-icon" id="playIcon">⏸</span>
-                <span class="track-number" id="trackNumber">001</span>
-            </div>
+            <div class="song-title" id="songTitle">Loading...</div>
+          </div>
+          <div class="song-description-container">
+            <div class="description-icon"></div>
+            <div class="song-description" id="songDescription"></div>
+          </div>
+          <div class="play-status">
+            <img
+              class="play-icon"
+              id="playIcon"
+              src="/assets/img/bossfights/pause.png"
+              alt="Paused"
+            />
+            <span class="track-number" id="trackNumber">001</span>
+            <span class="repeat-indicator" id="repeatIndicator">RPT</span>
+          </div>
         </div>
+      </div>
+      <!-- Progress Bar -->
+      <div class="progress-container" id="progressContainer">
+        <div class="progress-fill" id="progressFill"></div>
+        <div class="progress-marker" id="progressMarker"></div>
+      </div>
 
-        <!-- Progress Bar -->
-        <div class="progress-container" id="progressContainer">
-            <div class="progress-fill" id="progressFill"></div>
-            <div class="progress-marker" id="progressMarker"></div>
-        </div>
+      <!-- Secret Tap Zone for mobile unlock -->
+      <div class="nothing-suspicious" id="nothing-suspicious"></div>
 
-        <!-- Control Buttons -->
-        <div class="controls">
-            <button class="control-btn prev-btn" id="prevBtn" aria-label="Previous track">⏮</button>
-            <button class="control-btn play-btn" id="playBtn" aria-label="Play/Pause">▶</button>
-            <button class="control-btn next-btn" id="nextBtn" aria-label="Next track">⏭</button>
-        </div>
+      <!-- Control Buttons -->
+      <div class="controls">
+        <button
+          class="control-btn repeat-btn"
+          id="repeatBtn"
+          aria-label="Toggle repeat"
+        >
+          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path
+              d="M7 7h10v3l4-4-4-4v3H5v6h2V7zm10 10H7v-3l-4 4 4 4v-3h12v-6h-2v4z"
+            />
+          </svg>
+        </button>
+        <button
+          class="control-btn prev-btn"
+          id="prevBtn"
+          aria-label="Previous track"
+        >
+          ⏮
+        </button>
+        <button
+          class="control-btn play-btn"
+          id="playBtn"
+          aria-label="Play/Pause"
+        >
+          ▶
+        </button>
+        <button
+          class="control-btn next-btn"
+          id="nextBtn"
+          aria-label="Next track"
+        >
+          ⏭
+        </button>
+      </div>
     </div>
 
     <!-- Hidden Audio Element -->
-    <audio id="audioPlayer"></audio>
+    <audio preload="auto" id="audioPlayer"></audio>
 
     <!-- External JavaScript -->
     <script src="/content/static/favicon-scroller.js"></script>
-    <script src="/content/static/player.js"></script>
-
-</body>
-
+    <script type="module" src="/content/static/player.js"></script>
+  </body>
 </html>
