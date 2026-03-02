@@ -2,22 +2,21 @@ import { Konami } from '/scripts/Konami.js';
 
 // ========================================
 // SONG CONFIGURATION
-// Add your songs here with title, description, and file path
 // ========================================
 const songs = [
     {
         title: "Fungal Floor",
-        description: "Boutique. On the Catwalk. MAY 2025",
+        description: "Boutique. On the Catwalk - MAY 2025",
         src: "/assets/music/boss-fights/Fungal Floor.mp3"
     },
     {
-        title: "Clubbed",
-        description: "AUG 2024",
+        title: "Moshed Potato",
+        description: "Everyones looking at you - AUG 2024",
         src: "/assets/music/boss-fights/Bassaline.mp3"
     },
     {
         title: "Mouse Army",
-        description: "JAN 2024",
+        description: "There's too many of them - JAN 2024",
         src: "/assets/music/boss-fights/Twinning.mp3"
     },
     {
@@ -27,7 +26,7 @@ const songs = [
     },
     {
         title: "Floor 7",
-        description: "Almost there!.",
+        description: "Almost there - JAN 2024",
         src: "/assets/music/boss-fights/15M.mp3"
     },
     {
@@ -41,25 +40,25 @@ const songs = [
         src: "/assets/music/boss-fights/M W Highs.mp3"
     },
     {
-        title: "Gates'",
-        description: "MAY 2021",
+        title: "Gated",
+        description: "Getting through - MAY 2021",
         src: "/assets/music/boss-fights/HARPIN.mp3"
     },
     {
         title: "Boulder",
-        description: "H I. Created over 2 years. SEP 2023",
+        description: "H I  T H E R E. - SEP 2023",
         src: "/assets/music/boss-fights/H I H.mp3"
     },
     {
         title: "Wonk 2A",
-        description: "Stream of consciousness melody written in one sitting. FEB 2025",
+        description: "Stream of consciousness - FEB 2025",
         src: "/assets/music/boss-fights/WONK2A.mp3"
     }
 ];
 
 const secretSong = {
     title: "Crabbin'",
-    description: "MAY 2020",
+    description: "You found the back room - MAY 2020",
     src: "/assets/music/boss-fights/Crabbin.mp3"
 };
 
@@ -69,6 +68,12 @@ const secretSong = {
 let currentIndex = 0;
 let isPlaying = false;
 let isRepeat = false;
+
+// Track if user has skipped any track (for secret song unlock)
+let hasSkipped = false;
+
+// Global reference for unlockSecretSong (set in initializeApp)
+let unlockSecretSong = null;
 
 const audio = document.getElementById('audioPlayer');
 const playBtn = document.getElementById('playBtn');
@@ -91,7 +96,7 @@ const loadingOverlay = document.getElementById('loadingOverlay');
 // ========================================
 function initializeApp() {
     // Unlock secret song function
-    function unlockSecretSong() {
+    unlockSecretSong = function() {
         if (localStorage.getItem('secretSongUnlocked') !== 'true') {
             songs.push(secretSong);
             localStorage.setItem('secretSongUnlocked', 'true');
@@ -104,7 +109,7 @@ function initializeApp() {
         playBtn.classList.add('playing');
         playIcon.src = '/assets/img/bossfights/play.png';
         faviconScroller.start(songs[currentIndex].title);
-    }
+    };
 
     // Check localStorage and add secret song if already unlocked
     if (localStorage.getItem('secretSongUnlocked') === 'true') {
@@ -290,8 +295,10 @@ function togglePlay() {
     isPlaying = !isPlaying;
 }
 
-function nextSong() {
+function nextSong(e) {
     if (songs.length === 0) return;
+    // If called from user click (has event), mark as skipped
+    hasSkipped ||= true;
     const wasPlaying = isPlaying;
     if (isPlaying) {
         audio.pause();
@@ -310,12 +317,13 @@ function nextSong() {
     }
 }
 
-function prevSong() {
+function prevSong(e) {
     if (songs.length === 0) return;
     // If more than 3 seconds in, restart current song; otherwise go to previous
     if (audio.currentTime > 3) {
         audio.currentTime = 0;
     } else {
+        hasSkipped ||= !!e;
         const wasPlaying = isPlaying;
         if (isPlaying) {
             audio.pause();
@@ -347,7 +355,13 @@ function updateProgress() {
 function seekTo(e) {
     const rect = progressContainer.getBoundingClientRect();
     const percent = (e.clientX - rect.left) / rect.width;
-    audio.currentTime = percent * audio.duration;
+    const newTime = percent * audio.duration;
+    
+    // Seeking forward or backward more than 10% of the song counts as skipping
+    const isSkip = Math.abs(newTime - audio.currentTime) > (audio.duration * 0.1);
+    hasSkipped ||= isSkip;
+    
+    audio.currentTime = newTime;
 }
 
 // ========================================
@@ -365,6 +379,13 @@ function toggleRepeat() {
 }
 
 function handleSongEnded() {
+    // Check if last song finished without skipping - unlock secret
+    const lastOriginalIndex = songs.includes(secretSong) ? songs.length - 2 : songs.length - 1;
+    if (!hasSkipped && currentIndex === lastOriginalIndex && localStorage.getItem('secretSongUnlocked') !== 'true') {
+        unlockSecretSong();
+        return;
+    }
+    
     if (isRepeat) {
         audio.currentTime = 0;
         audio.play();
