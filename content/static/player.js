@@ -20,8 +20,8 @@ const songs = [
         src: "/assets/music/boss-fights/Twinning.mp3"
     },
     {
-        title: "Wander",
-        description: "Don't get lost. - JAN 2024",
+        title: "Clawing",
+        description: "There's is a way out. - JAN 2025",
         src: "/assets/music/boss-fights/Dug Fork.mp3"
     },
     {
@@ -41,7 +41,7 @@ const songs = [
     },
     {
         title: "Gated",
-        description: "Getting through - MAY 2021",
+        description: "Just get through - MAY 2021",
         src: "/assets/music/boss-fights/HARPIN.mp3"
     },
     {
@@ -58,7 +58,7 @@ const songs = [
 
 const secretSong = {
     title: "Crabbin'",
-    description: "You found the back room - MAY 2020",
+    description: "Ay, who let ya in the back room - MAY 2020",
     src: "/assets/music/boss-fights/Crabbin.mp3"
 };
 
