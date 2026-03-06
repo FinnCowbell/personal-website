@@ -7,59 +7,70 @@ const songs = [
     {
         title: "Fungal Floor",
         description: "Boutique. On the Catwalk - MAY 2025",
-        src: "/assets/music/boss-fights/Fungal Floor.mp3"
+        src: "/assets/music/boss-fights/Fungal Floor.mp3",
+        icon: "/assets/img/bossfights/mushroom.png"
     },
     {
         title: "Moshed Potato",
         description: "Everyones looking at you - AUG 2024",
-        src: "/assets/music/boss-fights/Bassaline.mp3"
+        src: "/assets/music/boss-fights/Bassaline.mp3",
+        icon: "/assets/img/bossfights/crowd.png"
     },
     {
         title: "Shadows",
         description: "Maybe they're friendly - FEB 2025",
-        src: "/assets/music/boss-fights/M W Highs.mp3"
+        src: "/assets/music/boss-fights/M W Highs.mp3",
+        icon: "/assets/img/bossfights/shadows.png"
     },
     {
         title: "Clawing",
         description: "There's is a way out. - JAN 2025",
-        src: "/assets/music/boss-fights/Dug Fork.mp3"
+        src: "/assets/music/boss-fights/Dug Fork.mp3",
+        icon: "/assets/img/bossfights/hallway.png"
     },
     {
         title: "Floor 7",
         description: "Almost there - JAN 2024",
-        src: "/assets/music/boss-fights/15M.mp3"
+        src: "/assets/music/boss-fights/15M.mp3",
+        icon: "/assets/img/bossfights/elevator.png"
     },
     {
         title: "Honch",
         description: "*pixelated crowd cheers* - APR 2025",
-        src: "/assets/music/boss-fights/SF.mp3"
+        src: "/assets/music/boss-fights/SF.mp3",
+        icon: "/assets/img/bossfights/pow.png"
     },
     {
         title: "Mouse Army",
         description: "There's too many of them - JAN 2024",
-        src: "/assets/music/boss-fights/Twinning.mp3"
+        src: "/assets/music/boss-fights/Twinning.mp3",
+        icon: "/assets/img/bossfights/mouse.png"
     },
     {
         title: "Gated",
         description: "Just get through - MAY 2021",
-        src: "/assets/music/boss-fights/HARPIN.mp3"
+        src: "/assets/music/boss-fights/HARPIN.mp3",
+        icon: "/assets/img/bossfights/gate.png"
     },
     {
         title: "Boulder",
         description: "H I  T H E R E. - SEP 2023",
-        src: "/assets/music/boss-fights/H I H.mp3"
+        src: "/assets/music/boss-fights/H I H.mp3",
+        icon: "/assets/img/bossfights/boulder.png"
     },
     {
         title: "Wonk 2A",
         description: "Stream of consciousness - FEB 2025",
-        src: "/assets/music/boss-fights/WONK2A.mp3"
+        src: "/assets/music/boss-fights/WONK2A.mp3",
+        icon: "/assets/img/bossfights/waves.png"
     }
 ];
 
 const secretSong = {
     title: "Crabbin'",
     description: "Ay, who let ya in the back room - MAY 2020",
-    src: "/assets/music/boss-fights/Crabbin.mp3"
+    src: "/assets/music/boss-fights/Crabbin.mp3",
+    icon: "/assets/img/bossfights/note.png"
 };
 
 // ========================================
@@ -90,6 +101,7 @@ const progressFill = document.getElementById('progressFill');
 const progressContainer = document.getElementById('progressContainer');
 const walkmanImage = document.getElementById('walkmanImage');
 const loadingOverlay = document.getElementById('loadingOverlay');
+const songIcon = document.getElementById('songIcon');
 
 // ========================================
 // IMAGE LOADING & INITIALIZATION
@@ -267,6 +279,12 @@ function loadSong(index) {
     const displayTitle = song.title.toUpperCase();
     setupTextScroller(songTitle, displayTitle, titleScrollRef);
     setupTextScroller(songDescription, song.description, descScrollRef);
+
+    // Update song icon
+    if (song.icon) {
+        songIcon.src = song.icon;
+        songIcon.alt = song.title + " icon";
+    }
 
     // Update favicon only if playing
     if (isPlaying) {

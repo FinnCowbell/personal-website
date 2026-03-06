@@ -177,6 +177,17 @@ permalink: /music
         width: 17%;
         height: 11.5cqi;
         flex-shrink: 0;
+        aspect-ratio: 1;
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+        padding-left: 1%;
+      }
+
+      .description-icon img {
+        width: auto;
+        height: 100%;
+        object-fit: contain;
       }
 
       .song-description {
@@ -398,7 +409,9 @@ permalink: /music
             <div class="song-title" id="songTitle">Loading...</div>
           </div>
           <div class="song-description-container">
-            <div class="description-icon"></div>
+            <div class="description-icon">
+              <img src="/assets/img/bossfights/mushroom.png" alt="Song icon" id="songIcon" />
+            </div>
             <div class="song-description" id="songDescription"></div>
           </div>
           <div class="play-status">
