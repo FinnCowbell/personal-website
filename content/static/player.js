@@ -70,7 +70,7 @@ const secretSong = {
     title: "Crabbin'",
     description: "Ay, who let ya in the back room - MAY 2020",
     src: "/assets/music/boss-fights/Crabbin.mp3",
-    icon: "/assets/img/bossfights/note.png"
+    icon: "/assets/img/bossfights/cane.png"
 };
 
 // ========================================
