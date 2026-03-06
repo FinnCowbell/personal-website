@@ -133,10 +133,10 @@ document.addEventListener('keydown', (e) => {
     }
 });
 
-    // Mobile: tap the walkman logo 10 times to unlock
+    // Mobile: tap the walkman logo 5 times to unlock
     let tapCount = 0;
     let tapTimeout = null;
-    const TAP_THRESHOLD = 10;
+    const TAP_THRESHOLD = 5;
     const TAP_RESET_DELAY = 2000; // Reset after 2 seconds of no taps
 
     const secretTapZone = document.getElementById('nothing-suspicious');
