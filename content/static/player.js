@@ -15,9 +15,9 @@ const songs = [
         src: "/assets/music/boss-fights/Bassaline.mp3"
     },
     {
-        title: "Mouse Army",
-        description: "There's too many of them - JAN 2024",
-        src: "/assets/music/boss-fights/Twinning.mp3"
+        title: "Shadows",
+        description: "Maybe they're friendly - FEB 2025",
+        src: "/assets/music/boss-fights/M W Highs.mp3"
     },
     {
         title: "Clawing",
@@ -35,9 +35,9 @@ const songs = [
         src: "/assets/music/boss-fights/SF.mp3"
     },
     {
-        title: "Shadows",
-        description: "Maybe they're friendly - FEB 2025",
-        src: "/assets/music/boss-fights/M W Highs.mp3"
+        title: "Mouse Army",
+        description: "There's too many of them - JAN 2024",
+        src: "/assets/music/boss-fights/Twinning.mp3"
     },
     {
         title: "Gated",
