@@ -1,92 +1,160 @@
 import { Konami } from '/scripts/Konami.js';
+import { SeamlessLoopPlayer } from '/content/static/seamless-loop-player.js';
 
-// ========================================
-// SONG CONFIGURATION
-// ========================================
+const defaultLoop = {
+    start: 0,
+    end: null
+};
+
+function timestampToSeconds(timestamp) {
+    if (typeof timestamp === 'number') {
+        return timestamp;
+    }
+
+    const parts = String(timestamp).split(':').map(Number);
+
+    if (!parts.every(Number.isFinite) || parts.length < 2 || parts.length > 3) {
+        throw new Error(`Invalid timestamp: ${timestamp}`);
+    }
+
+    if (parts.length === 2) {
+        const [minutes, seconds] = parts;
+        return (minutes * 60) + seconds;
+    }
+
+    const [hours, minutes, seconds] = parts;
+    return (hours * 3600) + (minutes * 60) + seconds;
+}
+
 const songs = [
     {
-        title: "Fungal Floor",
-        description: "Boutique. On the Catwalk - MAY 2025",
-        src: "/assets/music/boss-fights/Fungal Floor.mp3",
-        icon: "/assets/img/bossfights/mushroom.png"
+        title: 'Fungal Floor',
+        description: 'Boutique. On the Catwalk - MAY 2025',
+        src: '/assets/music/boss-fights/Fungal Floor.mp3',
+        icon: '/assets/img/bossfights/mushroom.png',
+        loop: {
+            ...defaultLoop,
+            start: timestampToSeconds('00:00:00.000'),
+            end: timestampToSeconds('00:02:05.042')
+        }
     },
     {
-        title: "Moshed Potato",
-        description: "Everyones looking at you - AUG 2024",
-        src: "/assets/music/boss-fights/Bassaline.mp3",
-        icon: "/assets/img/bossfights/crowd.png"
+        title: 'Moshed Potato',
+        description: 'Everyones looking at you - AUG 2024',
+        src: '/assets/music/boss-fights/Bassaline.mp3',
+        icon: '/assets/img/bossfights/crowd.png',
+        loop: {
+            ...defaultLoop,
+            start: timestampToSeconds('00:00:12.468'),
+            end: timestampToSeconds('00:03:38.182')
+        }
     },
     {
-        title: "Shadows",
+        title: 'Shadows',
         description: "Maybe they're friendly - FEB 2025",
-        src: "/assets/music/boss-fights/M W Highs.mp3",
-        icon: "/assets/img/bossfights/shadows.png"
+        src: '/assets/music/boss-fights/M W Highs.mp3',
+        icon: '/assets/img/bossfights/shadows.png',
+        loop: {
+            ...defaultLoop,
+            start: timestampToSeconds('00:00:39.375'),
+            end: timestampToSeconds('00:05:22.508')
+        }
     },
     {
-        title: "Clawing",
+        title: 'Clawing',
         description: "There's is a way out. - JAN 2025",
-        src: "/assets/music/boss-fights/Dug Fork.mp3",
-        icon: "/assets/img/bossfights/hallway.png"
+        src: '/assets/music/boss-fights/Dug Fork.mp3',
+        icon: '/assets/img/bossfights/hallway.png',
+        loop: {
+            ...defaultLoop,
+            start: timestampToSeconds('00:00:09.789'),
+            end: timestampToSeconds('00:02:45.474')
+        }
     },
     {
-        title: "Floor 7",
-        description: "Almost there - JAN 2024",
-        src: "/assets/music/boss-fights/15M.mp3",
-        icon: "/assets/img/bossfights/elevator.png"
+        title: 'Floor 7',
+        description: 'Almost there - JAN 2024',
+        src: '/assets/music/boss-fights/15M.mp3',
+        icon: '/assets/img/bossfights/elevator.png',
+        loop: {
+            ...defaultLoop,
+            start: timestampToSeconds('00:00:47.260'),
+            end: timestampToSeconds('00:02:04.250')
+        }
     },
     {
-        title: "Honch",
-        description: "*pixelated crowd cheers* - APR 2025",
-        src: "/assets/music/boss-fights/SF.mp3",
-        icon: "/assets/img/bossfights/pow.png"
+        title: 'Honch',
+        description: '*pixelated crowd cheers* - APR 2025',
+        src: '/assets/music/boss-fights/SF.mp3',
+        icon: '/assets/img/bossfights/pow.png',
+        loop: {
+            ...defaultLoop,
+            start: timestampToSeconds('00:00:21.771'),
+            end: timestampToSeconds('00:01:35.829')
+        }
     },
     {
-        title: "Mouse Army",
+        title: 'Mouse Army',
         description: "There's too many of them - JAN 2024",
-        src: "/assets/music/boss-fights/Twinning.mp3",
-        icon: "/assets/img/bossfights/mouse.png"
+        src: '/assets/music/boss-fights/Twinning.mp3',
+        icon: '/assets/img/bossfights/mouse.png',
+        loop: {
+            ...defaultLoop,
+            start: timestampToSeconds('00:00:24.000'),
+            end: timestampToSeconds('00:02:18.480')
+        }
     },
     {
-        title: "Gated",
-        description: "Just get through - MAY 2021",
-        src: "/assets/music/boss-fights/HARPIN.mp3",
-        icon: "/assets/img/bossfights/gate.png"
+        title: 'Gated',
+        description: 'Just get through - MAY 2021',
+        src: '/assets/music/boss-fights/HARPIN.mp3',
+        icon: '/assets/img/bossfights/gate.png',
+        loop: {
+            ...defaultLoop,
+            start: timestampToSeconds('00:00:06.486'),
+            end: timestampToSeconds('00:02:09.730')
+        }
     },
     {
-        title: "Boulder",
-        description: "H I  T H E R E. - SEP 2023",
-        src: "/assets/music/boss-fights/H I H.mp3",
-        icon: "/assets/img/bossfights/boulder.png"
+        title: 'Boulder',
+        description: 'H I  T H E R E. - SEP 2023',
+        src: '/assets/music/boss-fights/H I H.mp3',
+        icon: '/assets/img/bossfights/boulder.png',
+        loop: {
+            ...defaultLoop,
+            start: timestampToSeconds('00:00:50.000'),
+            end: timestampToSeconds('00:02:22.500')
+        }
     },
     {
-        title: "Wonk 2A",
-        description: "Stream of consciousness - FEB 2025",
-        src: "/assets/music/boss-fights/WONK2A.mp3",
-        icon: "/assets/img/bossfights/waves.png"
+        title: 'Wonk 2A',
+        description: 'Stream of consciousness - FEB 2025',
+        src: '/assets/music/boss-fights/WONK2A.mp3',
+        icon: '/assets/img/bossfights/waves.png',
+        loop: {
+            ...defaultLoop,
+            start: timestampToSeconds('00:00:00.909'),
+            end: timestampToSeconds('00:01:17.273')
+        }
     }
 ];
 
 const secretSong = {
     title: "Crabbin'",
-    description: "Ay, who let ya in the back room - MAY 2020",
-    src: "/assets/music/boss-fights/Crabbin.mp3",
-    icon: "/assets/img/bossfights/cane.png"
+    description: 'Ay, who let ya in the back room - MAY 2020',
+    src: '/assets/music/boss-fights/Crabbin.mp3',
+    icon: '/assets/img/bossfights/cane.png',
+    loop: {
+        ...defaultLoop,
+        start: timestampToSeconds('00:00:00.000'),
+        end: timestampToSeconds('00:01:28.000')
+    }
 };
 
-// ========================================
-// PLAYER STATE & ELEMENTS
-// ========================================
 let currentIndex = 0;
-let isPlaying = false;
-let isRepeat = false;
-
-// Track if user has skipped any track (for secret song unlock)
 let hasSkipped = false;
-
-// Global reference for unlockSecretSong (set in initializeApp)
 let unlockSecretSong = null;
 
-const audio = document.getElementById('audioPlayer');
 const playBtn = document.getElementById('playBtn');
 const prevBtn = document.getElementById('prevBtn');
 const nextBtn = document.getElementById('nextBtn');
@@ -103,95 +171,18 @@ const walkmanImage = document.getElementById('walkmanImage');
 const loadingOverlay = document.getElementById('loadingOverlay');
 const songIcon = document.getElementById('songIcon');
 
-// ========================================
-// IMAGE LOADING & INITIALIZATION
-// ========================================
-function initializeApp() {
-    // Unlock secret song function
-    unlockSecretSong = function() {
-        if (localStorage.getItem('secretSongUnlocked') !== 'true') {
-            songs.push(secretSong);
-            localStorage.setItem('secretSongUnlocked', 'true');
-        }
-        // Jump to and play the secret song
-        currentIndex = songs.length - 1;
-        loadSong(currentIndex);
-        audio.play();
-        isPlaying = true;
-        playBtn.classList.add('playing');
-        playIcon.src = '/assets/img/bossfights/play.png';
-        faviconScroller.start(songs[currentIndex].title);
-    };
-
-    // Check localStorage and add secret song if already unlocked
-    if (localStorage.getItem('secretSongUnlocked') === 'true') {
-        songs.push(secretSong);
-    }
-
-    // Set up Konami code to unlock secret song (desktop)
-    const konami = new Konami(unlockSecretSong);
-    konami.run();
-
-    // Keyboard controls
-document.addEventListener('keydown', (e) => {
-    if (e.defaultPrevented) return; // Skip if Konami code is being entered
-    if (e.code === 'Space') {
-        e.preventDefault();
-        togglePlay();
-    } else if (e.code === 'ArrowRight') {
-        nextSong();
-    } else if (e.code === 'ArrowLeft') {
-        prevSong();
-    }
-});
-
-    // Mobile: tap the walkman logo 5 times to unlock
-    let tapCount = 0;
-    let tapTimeout = null;
-    const TAP_THRESHOLD = 5;
-    const TAP_RESET_DELAY = 2000; // Reset after 2 seconds of no taps
-
-    const secretTapZone = document.getElementById('nothing-suspicious');
-    if (secretTapZone) {
-        secretTapZone.addEventListener('click', () => {
-            tapCount++;
-            clearTimeout(tapTimeout);
-            
-            if (tapCount >= TAP_THRESHOLD) {
-                unlockSecretSong();
-                tapCount = 0;
-            } else {
-                tapTimeout = setTimeout(() => {
-                    tapCount = 0;
-                }, TAP_RESET_DELAY);
-            }
-        });
-    }
-
-    loadSong(currentIndex);
-    loadingOverlay.classList.add('hidden');
-}
-
-// ========================================
-// TEXT SCROLLING FOR OVERFLOW
-// ========================================
-
 function isOverflowing(element) {
     return element.scrollWidth > element.clientWidth;
 }
 
 function setupTextScroller(element, text, scrollRef) {
-    // Set full text first to check overflow
     element.textContent = text;
 
-    // If not overflowing,  just display the text
     if (!isOverflowing(element)) {
         return;
     }
 
     const padding = '   •   ';
-
-    // Add padding for scroll loop
     const paddedText = text + padding + text;
     let position = 0;
 
@@ -204,20 +195,22 @@ function setupTextScroller(element, text, scrollRef) {
             clearTimeout(ref.timeoutId);
             ref.timeoutId = null;
         }
-    }
+    };
+
     const initScroll = () => {
         clearTimersIfExist(scrollRef);
-        position = 0;   
+        position = 0;
         scrollRef.timeoutId = setTimeout(() => {
             clearTimersIfExist(scrollRef);
-            scrollRef.intervalId = setInterval(scroll, 200); // Adjust speed here (ms per character)
-        }, 2000); // Initial delay before scrolling starts
-    }
+            scrollRef.intervalId = setInterval(scroll, 200);
+        }, 2000);
+    };
 
     function scroll() {
-        position++;
+        position += 1;
         if (position > text.length + padding.length) {
             initScroll();
+            return;
         }
         element.textContent = paddedText.substring(position);
     }
@@ -228,203 +221,285 @@ function setupTextScroller(element, text, scrollRef) {
 const titleScrollRef = { intervalId: null, timeoutId: null };
 const descScrollRef = { intervalId: null, timeoutId: null };
 
-// ========================================
-// HELPER FUNCTIONS
-// ========================================
+function clearTextScrollers() {
+    for (const ref of [titleScrollRef, descScrollRef]) {
+        if (ref.intervalId) {
+            clearInterval(ref.intervalId);
+            ref.intervalId = null;
+        }
+        if (ref.timeoutId) {
+            clearTimeout(ref.timeoutId);
+            ref.timeoutId = null;
+        }
+    }
+}
+
 function formatTrackNumber(num) {
     return String(num).padStart(3, '0');
 }
 
-// ========================================
-// FAVICON SCROLLER INSTANCE
-// ========================================
 const faviconScroller = new FaviconScroller();
 
-// ========================================
-// PLAYER FUNCTIONS
-// ========================================
-function loadSong(index) {
-    if (songs.length === 0) {
-        songTitle.textContent = "No songs loaded";
-        songDescription.textContent = "";
-        return;
+const player = new SeamlessLoopPlayer({
+    maxRepeats: 10,
+    maxPlaybackMinutes: 30,
+    onStateChange: syncPlayerState,
+    onProgress: updateProgress,
+    onTrackEnded: handleSongEnded
+});
+
+function addSecretSongIfNeeded() {
+    const alreadyPresent = songs.some((song) => song.src === secretSong.src);
+    if (!alreadyPresent) {
+        songs.push(secretSong);
+    }
+}
+
+async function initializeApp() {
+    unlockSecretSong = async function() {
+        if (localStorage.getItem('secretSongUnlocked') !== 'true') {
+            addSecretSongIfNeeded();
+            localStorage.setItem('secretSongUnlocked', 'true');
+        }
+
+        currentIndex = songs.findIndex((song) => song.src === secretSong.src);
+        await loadSong(currentIndex, { autoplay: true, resetSkipState: false });
+    };
+
+    if (localStorage.getItem('secretSongUnlocked') === 'true') {
+        addSecretSongIfNeeded();
     }
 
-    const song = songs[index];
-    
-    // Clear any existing timers
-    if (titleScrollRef.intervalId) {
-        clearInterval(titleScrollRef.intervalId);
-        titleScrollRef.intervalId = null;
-    }
-    if (titleScrollRef.timeoutId) {
-        clearTimeout(titleScrollRef.timeoutId);
-        titleScrollRef.timeoutId = null;
-    }
-    if (descScrollRef.intervalId) {
-        clearInterval(descScrollRef.intervalId);
-        descScrollRef.intervalId = null;
-    }
-    if (descScrollRef.timeoutId) {
-        clearTimeout(descScrollRef.timeoutId);
-        descScrollRef.timeoutId = null;
-    }
-    
-    // Set new audio source and reset
-    audio.volume = 0.8; // Set default volume
-    audio.src = song.src;
-    audio.currentTime = 0;
+    const konami = new Konami(unlockSecretSong);
+    konami.run();
 
-    // Setup text scrollers for overflowing text
+    document.addEventListener('keydown', async (event) => {
+        if (event.defaultPrevented) {
+            return;
+        }
+
+        if (event.code === 'Space') {
+            event.preventDefault();
+            await togglePlay();
+        } else if (event.code === 'ArrowRight') {
+            await nextSong({ userInitiated: true });
+        } else if (event.code === 'ArrowLeft') {
+            await prevSong({ userInitiated: true });
+        }
+    });
+
+    let tapCount = 0;
+    let tapTimeout = null;
+    const secretTapZone = document.getElementById('nothing-suspicious');
+
+    if (secretTapZone) {
+        secretTapZone.addEventListener('click', async () => {
+            tapCount += 1;
+            clearTimeout(tapTimeout);
+
+            if (tapCount >= 5) {
+                await unlockSecretSong();
+                tapCount = 0;
+                return;
+            }
+
+            tapTimeout = setTimeout(() => {
+                tapCount = 0;
+            }, 2000);
+        });
+    }
+
+    await loadSong(currentIndex, { autoplay: false, resetSkipState: false });
+    loadingOverlay.classList.add('hidden');
+}
+
+function renderSong(song, index) {
+    clearTextScrollers();
+
     const displayTitle = song.title.toUpperCase();
     setupTextScroller(songTitle, displayTitle, titleScrollRef);
     setupTextScroller(songDescription, song.description, descScrollRef);
 
-    // Update song icon
     if (song.icon) {
         songIcon.src = song.icon;
-        songIcon.alt = song.title + " icon";
-    }
-
-    // Update favicon only if playing
-    if (isPlaying) {
-        faviconScroller.start(song.title);
+        songIcon.alt = `${song.title} icon`;
     }
 
     trackNumber.textContent = formatTrackNumber(index + 1);
-    progressMarker.style.left = '0%';
     progressFill.style.width = '0%';
+    progressMarker.style.left = '0%';
 }
 
-function togglePlay() {
-    if (songs.length === 0) return;
-
-    if (isPlaying) {
-        audio.pause();
-        playBtn.classList.remove('playing');
-        playIcon.src = '/assets/img/bossfights/pause.png';
-        faviconScroller.restore();
-    } else {
-        audio.play();
-        playBtn.classList.add('playing');
-        playIcon.src = '/assets/img/bossfights/play.png';
-        faviconScroller.start(songs[currentIndex].title);
-    }
-    isPlaying = !isPlaying;
-}
-
-function nextSong(e) {
-    if (songs.length === 0) return;
-    // If called from user click (has event), mark as skipped
-    hasSkipped ||= true;
-    const wasPlaying = isPlaying;
-    if (isPlaying) {
-        audio.pause();
-    }
-    currentIndex = (currentIndex + 1) % songs.length;
-    loadSong(currentIndex);
-    if (wasPlaying) {
-        // Wait for the new audio source to be ready before playing
-        audio.addEventListener('loadeddata', function playOnLoad() {
-            audio.removeEventListener('loadeddata', playOnLoad);
-            audio.play();
-            playBtn.classList.add('playing');
-            playIcon.src = '/assets/img/bossfights/play.png';
-        }, { once: true });
-        audio.load(); // Trigger loading of new source
-    }
-}
-
-function prevSong(e) {
-    if (songs.length === 0) return;
-    // If more than 3 seconds in, restart current song; otherwise go to previous
-    if (audio.currentTime > 3) {
-        audio.currentTime = 0;
-    } else {
-        hasSkipped ||= !!e;
-        const wasPlaying = isPlaying;
-        if (isPlaying) {
-            audio.pause();
-        }
-        currentIndex = (currentIndex - 1 + songs.length) % songs.length;
-        loadSong(currentIndex);
-        if (wasPlaying) {
-            // Wait for the new audio source to be ready before playing
-            audio.addEventListener('loadeddata', function playOnLoad() {
-                audio.removeEventListener('loadeddata', playOnLoad);
-                audio.play();
-                playBtn.classList.add('playing');
-                playIcon.src = '/assets/img/bossfights/play.png';
-            }, { once: true });
-            audio.load(); // Trigger loading of new source
-        }
-    }
-}
-
-function updateProgress() {
-    if (audio.duration) {
-        const percent = (audio.currentTime / audio.duration) * 99; // 98% max so marker stays in bounds
-        const roundedPercent = Math.round(percent * 10) / 10; // Round to 0.1% intervals
-        progressFill.style.width = roundedPercent + '%';
-        progressMarker.style.left = roundedPercent + '%';
-    }
-}
-
-function seekTo(e) {
-    const rect = progressContainer.getBoundingClientRect();
-    const percent = (e.clientX - rect.left) / rect.width;
-    const newTime = percent * audio.duration;
-    
-    // Seeking forward or backward more than 10% of the song counts as skipping
-    const isSkip = Math.abs(newTime - audio.currentTime) > (audio.duration * 0.1);
-    hasSkipped ||= isSkip;
-    
-    audio.currentTime = newTime;
-}
-
-// ========================================
-// EVENT LISTENERS
-// ========================================
-playBtn.addEventListener('click', togglePlay);
-nextBtn.addEventListener('click', nextSong);
-prevBtn.addEventListener('click', prevSong);
-repeatBtn.addEventListener('click', toggleRepeat);
-
-function toggleRepeat() {
-    isRepeat = !isRepeat;
-    repeatBtn.classList.toggle('active', isRepeat);
-    repeatIndicator.classList.toggle('active', isRepeat);
-}
-
-function handleSongEnded() {
-    // Check if last song finished without skipping - unlock secret
-    const lastOriginalIndex = songs.includes(secretSong) ? songs.length - 2 : songs.length - 1;
-    if (!hasSkipped && currentIndex === lastOriginalIndex && localStorage.getItem('secretSongUnlocked') !== 'true') {
-        unlockSecretSong();
+async function loadSong(index, { autoplay = false, resetSkipState = false } = {}) {
+    if (songs.length === 0) {
+        songTitle.textContent = 'No songs loaded';
+        songDescription.textContent = '';
         return;
     }
-    
-    if (isRepeat) {
-        audio.currentTime = 0;
-        audio.play();
-    } else {
-        nextSong();
+
+    currentIndex = index;
+    if (resetSkipState) {
+        hasSkipped = false;
+    }
+
+    const song = songs[index];
+    renderSong(song, index);
+
+    try {
+        await player.loadTrack(song, { autoplay });
+        syncPlayerState(player.getState());
+        updateProgress(player.getState());
+    } catch (error) {
+        console.error('Failed to load track', error);
+        songTitle.textContent = 'Track failed to load';
+        songDescription.textContent = song.title;
     }
 }
 
-audio.addEventListener('timeupdate', updateProgress);
-audio.addEventListener('ended', handleSongEnded);
+async function togglePlay() {
+    if (songs.length === 0) {
+        return;
+    }
 
-progressContainer.addEventListener('click', seekTo);
+    if (player.getState().isPlaying) {
+        player.pause();
+        return;
+    }
 
+    try {
+        await player.play();
+    } catch (error) {
+        console.error('Playback failed', error);
+    }
+}
 
-// Wait for image to load before initializing
+async function nextSong({ userInitiated = false, autoplay = null } = {}) {
+    if (songs.length === 0) {
+        return;
+    }
+
+    if (userInitiated) {
+        hasSkipped = true;
+    }
+
+    const wasPlaying = autoplay ?? player.getState().isPlaying;
+    const nextIndex = (currentIndex + 1) % songs.length;
+    await loadSong(nextIndex, { autoplay: wasPlaying });
+}
+
+async function prevSong({ userInitiated = false } = {}) {
+    if (songs.length === 0) {
+        return;
+    }
+
+    const state = player.getState();
+    if (state.currentTime > 3) {
+        await player.seek(0);
+        return;
+    }
+
+    if (userInitiated) {
+        hasSkipped = true;
+    }
+
+    const wasPlaying = state.isPlaying;
+    const prevIndex = (currentIndex - 1 + songs.length) % songs.length;
+    await loadSong(prevIndex, { autoplay: wasPlaying });
+}
+
+function updateProgress({ currentTime, duration }) {
+    if (!duration) {
+        progressFill.style.width = '0%';
+        progressMarker.style.left = '0%';
+        return;
+    }
+
+    const percent = (currentTime / duration) * 99;
+    const roundedPercent = Math.round(percent * 10) / 10;
+    progressFill.style.width = `${roundedPercent}%`;
+    progressMarker.style.left = `${roundedPercent}%`;
+}
+
+async function seekTo(event) {
+    const state = player.getState();
+    if (!state.duration) {
+        return;
+    }
+
+    const rect = progressContainer.getBoundingClientRect();
+    const percent = Math.min(Math.max((event.clientX - rect.left) / rect.width, 0), 1);
+    const newTime = percent * state.duration;
+
+    const isSkip = Math.abs(newTime - state.currentTime) > (state.duration * 0.1);
+    hasSkipped ||= isSkip;
+
+    await player.seek(newTime);
+}
+
+async function toggleRepeat() {
+    await player.toggleRepeat();
+}
+
+function syncPlayerState(state) {
+    playBtn.classList.toggle('playing', state.isPlaying);
+    playIcon.src = state.isPlaying
+        ? '/assets/img/bossfights/play.png'
+        : '/assets/img/bossfights/pause.png';
+
+    repeatBtn.classList.toggle('active', state.repeatEnabled);
+    repeatIndicator.classList.toggle('active', state.repeatEnabled);
+    repeatIndicator.textContent = state.breakoutActive ? 'END' : 'RPT';
+
+    const activeSong = songs[currentIndex];
+    if (state.isPlaying && activeSong) {
+        faviconScroller.start(activeSong.title);
+    } else {
+        faviconScroller.restore();
+    }
+}
+
+async function handleSongEnded() {
+    const secretUnlocked = localStorage.getItem('secretSongUnlocked') === 'true';
+    const lastOriginalIndex = songs.some((song) => song.src === secretSong.src)
+        ? songs.length - 2
+        : songs.length - 1;
+
+    if (!hasSkipped && currentIndex === lastOriginalIndex && !secretUnlocked) {
+        await unlockSecretSong();
+        return;
+    }
+
+    await nextSong({ userInitiated: false, autoplay: true });
+}
+
+playBtn.addEventListener('click', () => {
+    void togglePlay();
+});
+
+nextBtn.addEventListener('click', () => {
+    void nextSong({ userInitiated: true });
+});
+
+prevBtn.addEventListener('click', () => {
+    void prevSong({ userInitiated: true });
+});
+
+repeatBtn.addEventListener('click', () => {
+    void toggleRepeat();
+});
+
+progressContainer.addEventListener('click', (event) => {
+    void seekTo(event);
+});
+
 if (walkmanImage.complete) {
-    initializeApp();
+    void initializeApp();
 } else {
-    walkmanImage.addEventListener('load', initializeApp);
+    walkmanImage.addEventListener('load', () => {
+        void initializeApp();
+    });
     walkmanImage.addEventListener('error', () => {
         console.error('Failed to load walkman image');
-        initializeApp(); // Initialize anyway if image fails to load
+        void initializeApp();
     });
 }

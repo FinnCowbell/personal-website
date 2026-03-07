@@ -1,12 +1,13 @@
 // Service Worker for Boss Fights Music Player
 // Enables offline playback of music
 
-const CACHE_NAME = 'boss-fights-v1';
+const CACHE_NAME = 'boss-fights-v2';
 
 // Assets to cache on install
 const PRECACHE_ASSETS = [
   '/music',
   '/content/static/player.js',
+  '/content/static/seamless-loop-player.js',
   '/scripts/Konami.js',
   '/content/static/favicon-scroller.js',
   
