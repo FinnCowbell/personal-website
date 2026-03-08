@@ -513,21 +513,5 @@ permalink: /music
     <!-- External JavaScript -->
     <script src="/content/static/favicon-scroller.js"></script>
     <script type="module" src="/content/static/player.js"></script>
-
-    <!-- Service Worker for offline playback -->
-    <script>
-      if ("serviceWorker" in navigator) {
-        window.addEventListener("load", () => {
-          navigator.serviceWorker
-            .register("/content/static/music-sw.js")
-            .then((reg) => {
-              console.log("🎵 Music offline ready! Scope:", reg.scope);
-            })
-            .catch((err) => {
-              console.log("SW registration failed:", err);
-            });
-        });
-      }
-    </script>
   </body>
 </html>

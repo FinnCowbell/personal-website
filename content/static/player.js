@@ -367,6 +367,28 @@ function renderSong(song, index) {
     updateLoopMarkers({ repeatEnabled: false, duration: 0, loopWindow: null });
 }
 
+function getNextSong(index = currentIndex) {
+    if (songs.length < 2) {
+        return null;
+    }
+
+    const nextIndex = (index + 1) % songs.length;
+    return songs[nextIndex] ?? null;
+}
+
+async function preloadUpcomingSong(index = currentIndex) {
+    const nextSong = getNextSong(index);
+    if (!nextSong) {
+        return;
+    }
+
+    try {
+        await player.preloadTrack(nextSong, { priority: 'low' });
+    } catch (error) {
+        console.warn('Failed to preload next track', error);
+    }
+}
+
 async function loadSong(index, { autoplay = false, resetSkipState = false } = {}) {
     if (songs.length === 0) {
         songTitle.textContent = 'No songs loaded';
@@ -383,9 +405,14 @@ async function loadSong(index, { autoplay = false, resetSkipState = false } = {}
     renderSong(song, index);
 
     try {
-        await player.loadTrack(song, { autoplay });
+        const didLoad = await player.loadTrack(song, { autoplay });
+        if (!didLoad) {
+            return;
+        }
+
         syncPlayerState(player.getState());
         updateProgress(player.getState());
+        void preloadUpcomingSong(index);
     } catch (error) {
         console.error('Failed to load track', error);
         songTitle.textContent = 'Track failed to load';

@@ -17,6 +17,8 @@ export class SeamlessLoopPlayer {
         this.audioContext = null;
         this.gainNode = null;
         this.bufferCache = new Map();
+        this.bufferLoadPromises = new Map();
+        this.trackLoadRequestId = 0;
 
         this.currentTrack = null;
         this.currentBuffer = null;
@@ -43,12 +45,32 @@ export class SeamlessLoopPlayer {
     }
 
     async loadTrack(track, { autoplay = false, startTime = 0 } = {}) {
+        const requestId = ++this.trackLoadRequestId;
         const wasPlaying = this.isPlaying;
         this.stopCurrentSource();
         this.stopProgressUpdates();
 
         this.currentTrack = track;
-        this.currentBuffer = await this.loadBuffer(track.src);
+        this.currentBuffer = null;
+        this.currentLoop = null;
+        this.lastKnownTime = 0;
+        this.loopCount = 0;
+        this.breakoutActive = false;
+        this.loopExitBoundaryContextTime = null;
+        this.loopPlaybackActive = false;
+        this.activePlaybackSeconds = 0;
+        this.activePlaybackStartedAt = null;
+        this.isPlaying = false;
+
+        this.emitProgress();
+        this.emitState();
+
+        const buffer = await this.loadBuffer(track.src, { priority: 'high' });
+        if (requestId !== this.trackLoadRequestId) {
+            return false;
+        }
+
+        this.currentBuffer = buffer;
         this.currentLoop = this.normalizeLoop(track, this.currentBuffer.duration);
 
         this.lastKnownTime = this.clamp(startTime, 0, this.currentBuffer.duration);
@@ -66,10 +88,20 @@ export class SeamlessLoopPlayer {
         if (autoplay || wasPlaying) {
             await this.play();
         }
+
+        return true;
+    }
+
+    preloadTrack(track, { priority = 'low' } = {}) {
+        if (!track?.src) {
+            return Promise.resolve(null);
+        }
+
+        return this.loadBuffer(track.src, { priority });
     }
 
     async play() {
-        if (!this.currentTrack) {
+        if (!this.currentTrack || !this.currentBuffer) {
             return;
         }
 
@@ -190,6 +222,7 @@ export class SeamlessLoopPlayer {
         this.audioContext = null;
         this.gainNode = null;
         this.bufferCache.clear();
+        this.bufferLoadPromises.clear();
     }
 
     async ensureAudioContext() {
@@ -204,21 +237,41 @@ export class SeamlessLoopPlayer {
         this.gainNode.connect(this.audioContext.destination);
     }
 
-    async loadBuffer(src) {
+    async loadBuffer(src, { priority = 'auto' } = {}) {
         if (this.bufferCache.has(src)) {
             return this.bufferCache.get(src);
         }
 
-        await this.ensureAudioContext();
-        const response = await fetch(src);
-        if (!response.ok) {
-            throw new Error(`Failed to fetch audio: ${src}`);
+        if (this.bufferLoadPromises.has(src)) {
+            return this.bufferLoadPromises.get(src);
         }
 
-        const arrayBuffer = await response.arrayBuffer();
-        const decoded = await this.audioContext.decodeAudioData(arrayBuffer.slice(0));
-        this.bufferCache.set(src, decoded);
-        return decoded;
+        const loadPromise = (async () => {
+            await this.ensureAudioContext();
+
+            const requestOptions = {};
+            if (priority !== 'auto') {
+                requestOptions.priority = priority;
+            }
+
+            const response = await fetch(src, requestOptions);
+            if (!response.ok) {
+                throw new Error(`Failed to fetch audio: ${src}`);
+            }
+
+            const arrayBuffer = await response.arrayBuffer();
+            const decoded = await this.audioContext.decodeAudioData(arrayBuffer.slice(0));
+            this.bufferCache.set(src, decoded);
+            return decoded;
+        })();
+
+        this.bufferLoadPromises.set(src, loadPromise);
+
+        try {
+            return await loadPromise;
+        } finally {
+            this.bufferLoadPromises.delete(src);
+        }
     }
 
     normalizeLoop(track, duration) {
