@@ -105,8 +105,8 @@ const songs = [
         }
     },
     {
-        title: 'Gated',
-        description: 'Just get through - MAY 2021',
+        title: 'Firewall',
+        description: 'Pass through - MAY 2021',
         src: '/assets/music/boss-fights/HARPIN.mp3',
         icon: '/assets/img/bossfights/gate.png',
         loop: {
@@ -167,6 +167,8 @@ const trackNumber = document.getElementById('trackNumber');
 const progressMarker = document.getElementById('progressMarker');
 const progressFill = document.getElementById('progressFill');
 const progressContainer = document.getElementById('progressContainer');
+const loopStartMarker = document.getElementById('loopStartMarker');
+const loopEndMarker = document.getElementById('loopEndMarker');
 const walkmanImage = document.getElementById('walkmanImage');
 const loadingOverlay = document.getElementById('loadingOverlay');
 const songIcon = document.getElementById('songIcon');
@@ -236,6 +238,40 @@ function clearTextScrollers() {
 
 function formatTrackNumber(num) {
     return String(num).padStart(3, '0');
+}
+
+function clampMarkerPercent(percent) {
+    return Math.min(Math.max(percent, 0.4), 99.6);
+}
+
+function timeToPercent(time, duration) {
+    if (!duration) {
+        return 0;
+    }
+
+    return Math.min(Math.max((time / duration) * 100, 0), 100);
+}
+
+function setLoopMarker(marker, percent, visible) {
+    if (!marker) {
+        return;
+    }
+
+    marker.style.left = `${percent}%`;
+    marker.classList.toggle('visible', visible);
+}
+
+function updateLoopMarkers({ repeatEnabled, duration, loopWindow }) {
+    const hasLoopWindow = repeatEnabled && duration && loopWindow && Number.isFinite(loopWindow.start) && Number.isFinite(loopWindow.end);
+
+    if (!hasLoopWindow) {
+        setLoopMarker(loopStartMarker, 0, false);
+        setLoopMarker(loopEndMarker, 0, false);
+        return;
+    }
+
+    setLoopMarker(loopStartMarker, clampMarkerPercent(timeToPercent(loopWindow.start, duration)), true);
+    setLoopMarker(loopEndMarker, clampMarkerPercent(timeToPercent(loopWindow.end, duration)), true);
 }
 
 const faviconScroller = new FaviconScroller();
@@ -328,6 +364,7 @@ function renderSong(song, index) {
     trackNumber.textContent = formatTrackNumber(index + 1);
     progressFill.style.width = '0%';
     progressMarker.style.left = '0%';
+    updateLoopMarkers({ repeatEnabled: false, duration: 0, loopWindow: null });
 }
 
 async function loadSong(index, { autoplay = false, resetSkipState = false } = {}) {
@@ -407,15 +444,17 @@ async function prevSong({ userInitiated = false } = {}) {
     await loadSong(prevIndex, { autoplay: wasPlaying });
 }
 
-function updateProgress({ currentTime, duration }) {
+function updateProgress(state) {
+    const { currentTime, duration } = state;
+    updateLoopMarkers(state);
+
     if (!duration) {
         progressFill.style.width = '0%';
         progressMarker.style.left = '0%';
         return;
     }
 
-    const percent = (currentTime / duration) * 99;
-    const roundedPercent = Math.round(percent * 10) / 10;
+    const roundedPercent = Math.round(timeToPercent(currentTime, duration) * 10) / 10;
     progressFill.style.width = `${roundedPercent}%`;
     progressMarker.style.left = `${roundedPercent}%`;
 }
@@ -449,6 +488,7 @@ function syncPlayerState(state) {
     repeatBtn.classList.toggle('active', state.repeatEnabled);
     repeatIndicator.classList.toggle('active', state.repeatEnabled);
     repeatIndicator.textContent = state.breakoutActive ? 'END' : 'RPT';
+    updateLoopMarkers(state);
 
     const activeSong = songs[currentIndex];
     if (state.isPlaying && activeSong) {

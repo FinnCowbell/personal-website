@@ -479,10 +479,7 @@ export class SeamlessLoopPlayer {
     }
 
     emitProgress() {
-        this.onProgress?.({
-            currentTime: this.getCurrentTime(),
-            duration: this.currentBuffer?.duration ?? 0
-        });
+        this.onProgress?.(this.getState());
     }
 
     emitState() {

@@ -331,10 +331,10 @@ permalink: /music
       /* Secret tap zone (invisible) */
       .nothing-suspicious {
         position: absolute;
-    left: 80%;
-    top: 30%;
-    width: 18%;
-    height: 40%;
+        left: 80%;
+        top: 30%;
+        width: 18%;
+        height: 40%;
         background: transparent;
         cursor: default;
         z-index: 2;
@@ -385,6 +385,23 @@ permalink: /music
         -webkit-backface-visibility: hidden;
         backface-visibility: hidden;
       }
+
+      .progress-loop-marker {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 0.23cqi;
+        height: 100%;
+        background: rgb(209 72 28);
+        opacity: 0;
+        pointer-events: none;
+        transform: translateX(-50%);
+        transition: opacity 120ms ease-out;
+      }
+
+      .progress-loop-marker.visible {
+        opacity: 1;
+      }
     </style>
   </head>
 
@@ -414,7 +431,11 @@ permalink: /music
           </div>
           <div class="song-description-container">
             <div class="description-icon">
-              <img src="/assets/img/bossfights/mushroom.png" alt="Song icon" id="songIcon" />
+              <img
+                src="/assets/img/bossfights/mushroom.png"
+                alt="Song icon"
+                id="songIcon"
+              />
             </div>
             <div class="song-description" id="songDescription"></div>
           </div>
@@ -433,6 +454,16 @@ permalink: /music
       <!-- Progress Bar -->
       <div class="progress-container" id="progressContainer">
         <div class="progress-fill" id="progressFill"></div>
+        <div
+          class="progress-loop-marker"
+          id="loopStartMarker"
+          aria-hidden="true"
+        ></div>
+        <div
+          class="progress-loop-marker"
+          id="loopEndMarker"
+          aria-hidden="true"
+        ></div>
         <div class="progress-marker" id="progressMarker"></div>
       </div>
 
@@ -482,17 +513,18 @@ permalink: /music
     <!-- External JavaScript -->
     <script src="/content/static/favicon-scroller.js"></script>
     <script type="module" src="/content/static/player.js"></script>
-    
+
     <!-- Service Worker for offline playback -->
     <script>
-      if ('serviceWorker' in navigator) {
-        window.addEventListener('load', () => {
-          navigator.serviceWorker.register('/content/static/music-sw.js')
+      if ("serviceWorker" in navigator) {
+        window.addEventListener("load", () => {
+          navigator.serviceWorker
+            .register("/content/static/music-sw.js")
             .then((reg) => {
-              console.log('🎵 Music offline ready! Scope:', reg.scope);
+              console.log("🎵 Music offline ready! Scope:", reg.scope);
             })
             .catch((err) => {
-              console.log('SW registration failed:', err);
+              console.log("SW registration failed:", err);
             });
         });
       }
