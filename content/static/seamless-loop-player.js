@@ -16,6 +16,7 @@ export class SeamlessLoopPlayer {
 
         this.audioContext = null;
         this.gainNode = null;
+        this.audioUnlocked = false;
         this.bufferCache = new Map();
         this.bufferLoadPromises = new Map();
         this.trackLoadRequestId = 0;
@@ -105,8 +106,7 @@ export class SeamlessLoopPlayer {
             return;
         }
 
-        await this.ensureAudioContext();
-        await this.audioContext.resume();
+        await this.unlockAudio();
 
         if (this.isPlaying) {
             return;
@@ -231,10 +231,42 @@ export class SeamlessLoopPlayer {
         }
 
         const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+        if (!AudioContextClass) {
+            throw new Error('Web Audio is not supported in this browser');
+        }
+
         this.audioContext = new AudioContextClass();
         this.gainNode = this.audioContext.createGain();
         this.gainNode.gain.value = this.volume;
         this.gainNode.connect(this.audioContext.destination);
+    }
+
+    async unlockAudio() {
+        await this.ensureAudioContext();
+
+        if (this.audioContext.state === 'suspended') {
+            await this.audioContext.resume();
+        }
+
+        if (this.audioUnlocked) {
+            return;
+        }
+
+        const unlockBuffer = this.audioContext.createBuffer(1, 1, this.audioContext.sampleRate);
+        const unlockSource = this.audioContext.createBufferSource();
+        unlockSource.buffer = unlockBuffer;
+        unlockSource.connect(this.gainNode);
+        unlockSource.start(0);
+
+        window.setTimeout(() => {
+            unlockSource.disconnect();
+        }, 0);
+
+        this.audioUnlocked = true;
+    }
+
+    isAudioUnlocked() {
+        return this.audioUnlocked;
     }
 
     async loadBuffer(src, { priority = 'auto' } = {}) {

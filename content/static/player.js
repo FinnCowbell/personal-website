@@ -154,6 +154,8 @@ const secretSong = {
 let currentIndex = 0;
 let hasSkipped = false;
 let unlockSecretSong = null;
+let audioUnlocked = false;
+let hasLoadedTrack = false;
 
 const playBtn = document.getElementById('playBtn');
 const prevBtn = document.getElementById('prevBtn');
@@ -291,8 +293,41 @@ function addSecretSongIfNeeded() {
     }
 }
 
+async function unlockAudioIfNeeded() {
+    if (audioUnlocked) {
+        return true;
+    }
+
+    try {
+        await player.unlockAudio();
+        audioUnlocked = true;
+        return true;
+    } catch (error) {
+        console.error('Failed to unlock audio', error);
+        return false;
+    }
+}
+
+function primeAudioUnlock(target) {
+    if (!target) {
+        return;
+    }
+
+    const unlock = () => {
+        void unlockAudioIfNeeded();
+    };
+
+    target.addEventListener('pointerdown', unlock, { passive: true });
+    target.addEventListener('touchstart', unlock, { passive: true });
+}
+
 async function initializeApp() {
     unlockSecretSong = async function() {
+        const didUnlockAudio = await unlockAudioIfNeeded();
+        if (!didUnlockAudio) {
+            return;
+        }
+
         if (localStorage.getItem('secretSongUnlocked') !== 'true') {
             addSecretSongIfNeeded();
             localStorage.setItem('secretSongUnlocked', 'true');
@@ -329,6 +364,8 @@ async function initializeApp() {
     const secretTapZone = document.getElementById('nothing-suspicious');
 
     if (secretTapZone) {
+        primeAudioUnlock(secretTapZone);
+
         secretTapZone.addEventListener('click', async () => {
             tapCount += 1;
             clearTimeout(tapTimeout);
@@ -345,7 +382,8 @@ async function initializeApp() {
         });
     }
 
-    await loadSong(currentIndex, { autoplay: false, resetSkipState: false });
+    renderSong(songs[currentIndex], currentIndex);
+    syncPlayerState(player.getState());
     loadingOverlay.classList.add('hidden');
 }
 
@@ -377,6 +415,10 @@ function getNextSong(index = currentIndex) {
 }
 
 async function preloadUpcomingSong(index = currentIndex) {
+    if (!audioUnlocked) {
+        return;
+    }
+
     const nextSong = getNextSong(index);
     if (!nextSong) {
         return;
@@ -393,7 +435,7 @@ async function loadSong(index, { autoplay = false, resetSkipState = false } = {}
     if (songs.length === 0) {
         songTitle.textContent = 'No songs loaded';
         songDescription.textContent = '';
-        return;
+        return false;
     }
 
     currentIndex = index;
@@ -410,13 +452,18 @@ async function loadSong(index, { autoplay = false, resetSkipState = false } = {}
             return;
         }
 
+        hasLoadedTrack = true;
+
         syncPlayerState(player.getState());
         updateProgress(player.getState());
         void preloadUpcomingSong(index);
+        return true;
     } catch (error) {
         console.error('Failed to load track', error);
+        hasLoadedTrack = false;
         songTitle.textContent = 'Track failed to load';
         songDescription.textContent = song.title;
+        return false;
     }
 }
 
@@ -425,8 +472,18 @@ async function togglePlay() {
         return;
     }
 
+    const didUnlockAudio = await unlockAudioIfNeeded();
+    if (!didUnlockAudio) {
+        return;
+    }
+
     if (player.getState().isPlaying) {
         player.pause();
+        return;
+    }
+
+    if (!hasLoadedTrack) {
+        await loadSong(currentIndex, { autoplay: true, resetSkipState: false });
         return;
     }
 
@@ -443,6 +500,13 @@ async function nextSong({ userInitiated = false, autoplay = null } = {}) {
     }
 
     if (userInitiated) {
+        const didUnlockAudio = await unlockAudioIfNeeded();
+        if (!didUnlockAudio) {
+            return;
+        }
+    }
+
+    if (userInitiated) {
         hasSkipped = true;
     }
 
@@ -454,6 +518,13 @@ async function nextSong({ userInitiated = false, autoplay = null } = {}) {
 async function prevSong({ userInitiated = false } = {}) {
     if (songs.length === 0) {
         return;
+    }
+
+    if (userInitiated) {
+        const didUnlockAudio = await unlockAudioIfNeeded();
+        if (!didUnlockAudio) {
+            return;
+        }
     }
 
     const state = player.getState();
@@ -487,6 +558,11 @@ function updateProgress(state) {
 }
 
 async function seekTo(event) {
+    const didUnlockAudio = await unlockAudioIfNeeded();
+    if (!didUnlockAudio) {
+        return;
+    }
+
     const state = player.getState();
     if (!state.duration) {
         return;
@@ -503,6 +579,11 @@ async function seekTo(event) {
 }
 
 async function toggleRepeat() {
+    const didUnlockAudio = await unlockAudioIfNeeded();
+    if (!didUnlockAudio) {
+        return;
+    }
+
     await player.toggleRepeat();
 }
 
@@ -538,6 +619,12 @@ async function handleSongEnded() {
 
     await nextSong({ userInitiated: false, autoplay: true });
 }
+
+primeAudioUnlock(playBtn);
+primeAudioUnlock(nextBtn);
+primeAudioUnlock(prevBtn);
+primeAudioUnlock(repeatBtn);
+primeAudioUnlock(progressContainer);
 
 playBtn.addEventListener('click', () => {
     void togglePlay();
