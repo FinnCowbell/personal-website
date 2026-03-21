@@ -79,23 +79,27 @@ function init(){
   let velocityHandler = new ScrollVelocity();
   let konami = new Konami(showSecrets);
   let hex = new PinWheel(pinwheelElements);
-  let prevIndex = 1;
-  var flkty = new Flickity( '.main-carousel', {
-    cellAlign: "left", 
-    wrapAround: true, 
-    dragThreshold: 10, 
-    autoPlay: 7000, 
-    pageDots: false, 
-    setGallerySize: false,
-    on: {
-      change: ( index ) => {
-        if(index-prevIndex == 1 || index-prevIndex < -1)
-          hex.applySpeed(2.4)
-        else 
-          hex.applySpeed(-2.4);
-        prevIndex = index;
-      }
-    }});
+  const carouselElement = document.querySelector('.main-carousel');
+
+  if (carouselElement){
+    let prevIndex = 1;
+    new Flickity(carouselElement, {
+      cellAlign: "left", 
+      wrapAround: true, 
+      dragThreshold: 10, 
+      autoPlay: 7000, 
+      pageDots: false, 
+      setGallerySize: false,
+      on: {
+        change: ( index ) => {
+          if(index-prevIndex == 1 || index-prevIndex < -1)
+            hex.applySpeed(2.4)
+          else 
+            hex.applySpeed(-2.4);
+          prevIndex = index;
+        }
+      }});
+  }
   konami.run()
   window.scrolled = 0;// Declaration
   document.addEventListener('scroll', function(e){
