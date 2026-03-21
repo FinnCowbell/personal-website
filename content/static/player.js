@@ -1,8 +1,7 @@
 import { Konami } from '/scripts/Konami.js';
-import { NativeAudioPlayer } from './native-audio-player.js';
 import { mediaMetadata, secretSong, songs } from './player-data.js';
 import { shouldUseNativeTransport } from './player-shared.js';
-import { SeamlessLoopPlayer } from './seamless-loop-player.js';
+import { SegmentPlayer } from './segment-player.js';
 
 let currentIndex = 0;
 let hasSkipped = false;
@@ -153,7 +152,6 @@ function updateLoopMarkers({ repeatEnabled, duration, loopWindow }) {
 
 const faviconScroller = new FaviconScroller();
 
-let player;
 const useNativeTransport = shouldUseNativeTransport({
     search: window.location.search,
     userAgent: navigator.userAgent,
@@ -161,31 +159,24 @@ const useNativeTransport = shouldUseNativeTransport({
     platform: navigator.platform
 });
 
-if (useNativeTransport) {
-    player = new NativeAudioPlayer({
-        audioElement,
-        volume: 0.8,
-        onStateChange: syncPlayerState,
-        onProgress: updateProgress,
-        onTrackEnded: handleSongEnded,
-        onPreviousTrack: () => {
-            void prevSong({ userInitiated: false });
-        },
-        onNextTrack: () => {
-            void nextSong({ userInitiated: false, autoplay: true });
-        }
-    });
-} else {
-    player = new SeamlessLoopPlayer({
-        maxRepeats: 10,
-        maxPlaybackMinutes: 30,
-        onStateChange: syncPlayerState,
-        onProgress: updateProgress,
-        onTrackEnded: handleSongEnded
-    });
-}
+const player = new SegmentPlayer({
+    audioElement,
+    enableMediaSession: useNativeTransport,
+    volume: 0.8,
+    maxRepeats: 10,
+    maxPlaybackMinutes: 30,
+    onStateChange: syncPlayerState,
+    onProgress: updateProgress,
+    onTrackEnded: handleSongEnded,
+    onPreviousTrack: () => {
+        void prevSong({ userInitiated: false });
+    },
+    onNextTrack: () => {
+        void nextSong({ userInitiated: false, autoplay: true });
+    }
+});
 
-console.info(`Using ${useNativeTransport ? 'native' : 'web-audio'} transport for ${mediaMetadata.album} player`);
+console.info(`Using segment player (mediaSession=${useNativeTransport}) for ${mediaMetadata.album} player`);
 
 function addSecretSongIfNeeded() {
     const alreadyPresent = songs.some((song) => song.src === secretSong.src);
@@ -491,9 +482,12 @@ async function toggleRepeat() {
 
 function syncPlayerState(state) {
     playBtn.classList.toggle('playing', state.isPlaying);
-    playIcon.src = state.isPlaying
+    const newPlayIconSrc = state.isPlaying
         ? '/assets/img/bossfights/play.png'
         : '/assets/img/bossfights/pause.png';
+    if (!playIcon.src.endsWith(newPlayIconSrc)) {
+        playIcon.src = newPlayIconSrc;
+    }
 
     repeatBtn.classList.toggle('active', state.repeatEnabled);
     repeatIndicator.classList.toggle('active', state.repeatEnabled);

@@ -319,8 +319,8 @@ permalink: /music
 
       .control-btn.play-btn.playing {
         border: 1cqi solid #ff333354;
-        box-shadow: 0 0 10px #ff333354, 0 0 20px #ff333354,
-          inset 0 0 8px rgba(255, 51, 51, 0.3);
+        box-shadow: 0 0 1cqi #ff333354, 0 0 2cqi #ff333354,
+          inset 0 0 0.8cqi rgba(255, 51, 51, 0.3);
       }
 
       /* Hidden audio element */
@@ -393,7 +393,7 @@ permalink: /music
         position: absolute;
         top: 0;
         left: 0;
-        width: 0.23cqi;
+        width: 0.45cqi;
         height: 100%;
         background: rgb(209 72 28);
         opacity: 0;
@@ -485,6 +485,7 @@ permalink: /music
           class="control-btn repeat-btn"
           id="repeatBtn"
           aria-label="Toggle repeat"
+          tabindex="4"
         >
           <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
             <path
@@ -496,6 +497,7 @@ permalink: /music
           class="control-btn prev-btn"
           id="prevBtn"
           aria-label="Previous track"
+          tabindex="2"
         >
           ⏮
         </button>
@@ -503,6 +505,7 @@ permalink: /music
           class="control-btn play-btn"
           id="playBtn"
           aria-label="Play/Pause"
+          tabindex="1"
         >
           ▶
         </button>
@@ -510,6 +513,7 @@ permalink: /music
           class="control-btn next-btn"
           id="nextBtn"
           aria-label="Next track"
+          tabindex="3"
         >
           ⏭
         </button>
