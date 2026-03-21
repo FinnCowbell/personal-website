@@ -35,7 +35,14 @@ export class PinWheel{
     }
   }
   updateElement(){
-      this.paths.forEach((p)=>p.style.transform=`rotate(${this.rotation}deg)`);
+      this.paths.forEach((path)=>{
+        const baseTransform = path.dataset.pinwheelBaseTransform;
+        const direction = Number(path.dataset.pinwheelDirection || 1);
+        const rotation = this.rotation * direction;
+        path.style.transform = baseTransform
+          ? `${baseTransform} rotate(${rotation}deg)`
+          : `rotate(${rotation}deg)`;
+      });
   }
   tick(){
     if(window.scrolled != 0){

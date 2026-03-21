@@ -1,7 +1,31 @@
 import { Konami } from '/scripts/Konami.js';
 import { PinWheel } from '/scripts/Pinwheel.js';
 
-const isSafari = !!(window.safari)
+function buildSvgMaskUrl(pathData, offsetX = 0){
+  const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1 1" preserveAspectRatio="none"><path fill="black" transform="translate(${offsetX} 0)" d="${pathData}"/></svg>`;
+  return `url("data:image/svg+xml,${encodeURIComponent(svg)}")`;
+}
+
+function shouldUseProfileClipFallback(){
+  const userAgent = navigator.userAgent;
+  const platform = navigator.platform || '';
+  const isIOSDevice = /iPad|iPhone|iPod/.test(userAgent)
+    || (platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+
+  if (isIOSDevice){
+    return true;
+  }
+
+  return /Safari/i.test(userAgent) && !/Chrome|Chromium|Android|CriOS|FxiOS|EdgiOS|OPiOS/i.test(userAgent);
+}
+
+function getPinwheelElements(useProfileClipFallback){
+  const selector = useProfileClipFallback
+    ? '[data-profile-clip-fallback-mask], [data-profile-clip-fallback-image]'
+    : '#hexagon-clip #hexagon-path';
+
+  return Array.from(document.querySelectorAll(selector));
+}
 
 function ScrollVelocity(){
   this.st = window.pageYOffset || document.documentElement.scrollTop;
@@ -15,7 +39,37 @@ function ScrollVelocity(){
 }
 
 function init(){
-  let pinwheelElements = document.querySelectorAll("#hexagon-clip #hexagon-path");
+  const useProfileClipFallback = shouldUseProfileClipFallback();
+  document.documentElement.classList.toggle('profile-pic-clip-fallback', useProfileClipFallback);
+
+  if (useProfileClipFallback){
+    const fallbackContainer = document.querySelector('.profile-pic-fallback');
+    const svgProfile = document.querySelector('#hex-svg');
+
+    if (fallbackContainer){
+      fallbackContainer.style.display = 'block';
+      const maskPath = fallbackContainer.dataset.profileMaskPath;
+      const maskOffsetX = Number(fallbackContainer.dataset.profileMaskOffsetX || 0);
+
+      if (maskPath){
+        const maskUrl = buildSvgMaskUrl(maskPath, maskOffsetX);
+        fallbackContainer.style.webkitMaskImage = maskUrl;
+        fallbackContainer.style.maskImage = maskUrl;
+        fallbackContainer.style.webkitMaskRepeat = 'no-repeat';
+        fallbackContainer.style.maskRepeat = 'no-repeat';
+        fallbackContainer.style.webkitMaskSize = '100% 100%';
+        fallbackContainer.style.maskSize = '100% 100%';
+        fallbackContainer.style.webkitMaskPosition = 'center';
+        fallbackContainer.style.maskPosition = 'center';
+      }
+    }
+
+    if (svgProfile){
+      svgProfile.style.display = 'none';
+    }
+  }
+
+  let pinwheelElements = getPinwheelElements(useProfileClipFallback);
   function showSecrets(){
     _.forEach(document.getElementsByClassName('secret'),(s)=>{s.removeAttribute("hidden")});
     const nameElement = document.querySelector('#masthead .finn')
@@ -43,11 +97,6 @@ function init(){
       }
     }});
   konami.run()
-  if (isSafari){
-    document.querySelector('#hex-svg').style.transform = 'translate(16px)';
-    document.querySelector('#hexagon-clip').style.transform = '';
-    return;
-  }
   window.scrolled = 0;// Declaration
   document.addEventListener('scroll', function(e){
     //window.scrolled is set to a velocity.

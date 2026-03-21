@@ -1,6 +1,29 @@
 {% assign metadata_styles = 'flex items-center mb-3' %}
 
 <div id="profile-pic" class="justify-center align-center m-auto my-5 xl:max-w-xs cursor-pointer">
+  <div
+    class="profile-pic-fallback"
+    aria-hidden="true"
+    data-profile-clip-fallback-mask
+    data-pinwheel-direction="1"
+    data-profile-mask-path="M0.3897114317029974 0.024999999999999998Q0.4330127018922193 0 0.4763139720814412 0.025L0.8227241335952167 0.225Q0.8660254037844386 0.25 0.8660254037844386 0.3L0.8660254037844386 0.7Q0.8660254037844386 0.75 0.8227241335952167 0.775L0.4763139720814412 0.975Q0.4330127018922193 1 0.3897114317029974 0.975L0.04330127018922193 0.775Q0 0.75 0 0.7L0 0.3Q0 0.25 0.04330127018922194 0.225Z"
+    data-profile-mask-offset-x="0.0669872981077807"
+    style="display:none;width:200px;max-width:100%;aspect-ratio:1 / 1;margin:0 auto;overflow:hidden;transform-origin:center;will-change:transform;"
+  >
+    <img
+      class="profile-pic-fallback-image"
+      data-profile-clip-fallback-image
+      data-pinwheel-direction="-1"
+      data-pinwheel-base-transform="scale(1.18)"
+      src="{{ user.avatar_url }}"
+      alt=""
+      height="200"
+      width="200"
+      loading="eager"
+      decoding="async"
+      style="display:block;width:100%;height:100%;object-fit:cover;transform-origin:center;will-change:transform;"
+    >
+  </div>
   {% include masthead-profile.svg %}
 </div>
 {% include masthead-name.html %}
