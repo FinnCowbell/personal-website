@@ -268,8 +268,11 @@ const preferTrackNavigationControls = playerExperimentOverrides.nativeControls =
         ? false
         : isMobilePlaybackDeviceContext;
 
-const nativeHandlerTiming = playerExperimentOverrides.nativeHandlerTiming ?? 'init';
-const enableWebAudioMediaSession = playerExperimentOverrides.webAudioMediaSession === 'on';
+const nativeHandlerTiming = playerExperimentOverrides.nativeHandlerTiming
+    ?? (isMobilePlaybackDeviceContext ? 'both' : 'init');
+const enableWebAudioMediaSession = playerExperimentOverrides.webAudioMediaSession === 'off'
+    ? false
+    : true;
 
 const player = useNativeTransport
     ? new NativeAudioPlayer({

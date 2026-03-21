@@ -465,6 +465,7 @@ export class NativeAudioPlayer {
         }
 
         this.setupMediaSessionHandlers();
+        this.updateMediaSession();
     }
 
     handleSeeked() {
