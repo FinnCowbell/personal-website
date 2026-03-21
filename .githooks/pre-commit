@@ -1,0 +1,10 @@
+#!/usr/bin/env sh
+set -eu
+
+if git diff --cached --quiet -- assets/music/boss-fights content/static/player-catalog.js scripts/splice-boss-fights.js; then
+    exit 0
+fi
+
+echo "Splicing BOSS FIGHTS tracks before commit"
+npm run boss-fights:splice
+git add -- assets/music/boss-fights/segments content/static/player-segments.generated.js
