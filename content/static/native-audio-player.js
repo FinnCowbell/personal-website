@@ -11,6 +11,7 @@ export class NativeAudioPlayer {
         onNextTrack,
         preferFullTrackWhenRepeatDisabled = false,
         preferTrackNavigationControls = false,
+        mediaSessionHandlerTiming = 'init',
         volume = 0.8
     } = {}) {
         if (!audioElement) {
@@ -28,6 +29,7 @@ export class NativeAudioPlayer {
         this.onNextTrack = onNextTrack;
         this.preferFullTrackWhenRepeatDisabled = Boolean(preferFullTrackWhenRepeatDisabled);
         this.preferTrackNavigationControls = Boolean(preferTrackNavigationControls);
+        this.mediaSessionHandlerTiming = mediaSessionHandlerTiming;
 
         this.currentTrack = null;
         this.repeatEnabled = false;
@@ -39,6 +41,7 @@ export class NativeAudioPlayer {
         this.playbackRequested = false;
 
         this.boundOnPlay = this.handlePlaybackEvent.bind(this);
+        this.boundOnPlaying = this.handlePlaying.bind(this);
         this.boundOnPause = this.handlePlaybackEvent.bind(this);
         this.boundOnSeeked = this.handleSeeked.bind(this);
         this.boundOnTimeUpdate = this.handleTimeUpdate.bind(this);
@@ -50,11 +53,14 @@ export class NativeAudioPlayer {
         this.boundOnVisibilityChange = this.handleVisibilityChange.bind(this);
 
         this.attachEventListeners();
-        this.setupMediaSessionHandlers();
+        if (this.shouldRegisterMediaSessionHandlersOnInit()) {
+            this.setupMediaSessionHandlers();
+        }
     }
 
     attachEventListeners() {
         this.audio.addEventListener('play', this.boundOnPlay);
+        this.audio.addEventListener('playing', this.boundOnPlaying);
         this.audio.addEventListener('pause', this.boundOnPause);
         this.audio.addEventListener('seeked', this.boundOnSeeked);
         this.audio.addEventListener('timeupdate', this.boundOnTimeUpdate);
@@ -68,6 +74,7 @@ export class NativeAudioPlayer {
 
     removeEventListeners() {
         this.audio.removeEventListener('play', this.boundOnPlay);
+        this.audio.removeEventListener('playing', this.boundOnPlaying);
         this.audio.removeEventListener('pause', this.boundOnPause);
         this.audio.removeEventListener('seeked', this.boundOnSeeked);
         this.audio.removeEventListener('timeupdate', this.boundOnTimeUpdate);
@@ -103,6 +110,14 @@ export class NativeAudioPlayer {
 
     shouldExposeSeekControls() {
         return !this.preferTrackNavigationControls;
+    }
+
+    shouldRegisterMediaSessionHandlersOnInit() {
+        return this.mediaSessionHandlerTiming === 'init' || this.mediaSessionHandlerTiming === 'both';
+    }
+
+    shouldRegisterMediaSessionHandlersOnPlaying() {
+        return this.mediaSessionHandlerTiming === 'playing' || this.mediaSessionHandlerTiming === 'both';
     }
 
     async play() {
@@ -442,6 +457,14 @@ export class NativeAudioPlayer {
         this.updateMediaSession();
         this.emitProgress();
         this.emitState();
+    }
+
+    handlePlaying() {
+        if (!this.shouldRegisterMediaSessionHandlersOnPlaying()) {
+            return;
+        }
+
+        this.setupMediaSessionHandlers();
     }
 
     handleSeeked() {

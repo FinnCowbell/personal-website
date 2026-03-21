@@ -2,7 +2,7 @@ import { Konami } from '/scripts/Konami.js';
 import { mediaMetadata, secretSong, songs } from './player-data.js';
 import { NativeAudioPlayer } from './native-audio-player.js';
 import { createPlaybackPersistence } from './player-persistence.js';
-import { isMobilePlaybackDevice, shouldUseNativeTransport } from './player-shared.js';
+import { getPlayerExperimentOverridesFromSearch, isMobilePlaybackDevice, shouldUseNativeTransport } from './player-shared.js';
 import { SegmentPlayer } from './segment-player.js';
 
 let currentIndex = 0;
@@ -254,12 +254,29 @@ const isMobilePlaybackDeviceContext = isMobilePlaybackDevice({
     maxTouchPoints: navigator.maxTouchPoints,
     platform: navigator.platform
 });
+const playerExperimentOverrides = getPlayerExperimentOverridesFromSearch(window.location.search);
+
+const preferFullTrackWhenRepeatDisabled = playerExperimentOverrides.nativeSegments === 'always'
+    ? false
+    : playerExperimentOverrides.nativeSegments === 'repeat-only'
+        ? true
+        : isMobilePlaybackDeviceContext;
+
+const preferTrackNavigationControls = playerExperimentOverrides.nativeControls === 'tracks'
+    ? true
+    : playerExperimentOverrides.nativeControls === 'seek'
+        ? false
+        : isMobilePlaybackDeviceContext;
+
+const nativeHandlerTiming = playerExperimentOverrides.nativeHandlerTiming ?? 'init';
+const enableWebAudioMediaSession = playerExperimentOverrides.webAudioMediaSession === 'on';
 
 const player = useNativeTransport
     ? new NativeAudioPlayer({
         audioElement,
-        preferFullTrackWhenRepeatDisabled: isMobilePlaybackDeviceContext,
-        preferTrackNavigationControls: isMobilePlaybackDeviceContext,
+        preferFullTrackWhenRepeatDisabled,
+        preferTrackNavigationControls,
+        mediaSessionHandlerTiming: nativeHandlerTiming,
         volume: 0.8,
         onStateChange: syncPlayerState,
         onProgress: updateProgress,
@@ -273,7 +290,7 @@ const player = useNativeTransport
     })
     : new SegmentPlayer({
         audioElement,
-        enableMediaSession: false,
+        enableMediaSession: enableWebAudioMediaSession,
         volume: 0.8,
         maxRepeats: 10,
         maxPlaybackMinutes: 30,
@@ -288,7 +305,7 @@ const player = useNativeTransport
         }
     });
 
-console.info(`Using ${useNativeTransport ? 'native' : 'segment'} player for ${mediaMetadata.album} player`);
+console.info(`Using ${useNativeTransport ? 'native' : 'segment'} player for ${mediaMetadata.album} player`, playerExperimentOverrides);
 
 const playbackPersistence = createPlaybackPersistence({
     player,

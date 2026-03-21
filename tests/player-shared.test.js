@@ -3,6 +3,7 @@ import assert from 'node:assert/strict';
 
 import { mediaMetadata, secretSong, songs } from '../content/static/player-data.js';
 import {
+    getPlayerExperimentOverridesFromSearch,
     getTransportOverrideFromSearch,
     isMobilePlaybackDevice,
     shouldUseNativeTransport,
@@ -55,6 +56,24 @@ test('timestampToSeconds rejects invalid timestamps', () => {
 test('getTransportOverrideFromSearch reads the transport override', () => {
     assert.equal(getTransportOverrideFromSearch('?transport=native'), 'native');
     assert.equal(getTransportOverrideFromSearch('?foo=bar'), null);
+});
+
+test('getPlayerExperimentOverridesFromSearch reads supported experiment overrides', () => {
+    assert.deepEqual(getPlayerExperimentOverridesFromSearch('?nativeSegments=repeat-only&nativeControls=tracks&nativeHandlerTiming=both&webAudioMediaSession=on'), {
+        nativeSegments: 'repeat-only',
+        nativeControls: 'tracks',
+        nativeHandlerTiming: 'both',
+        webAudioMediaSession: 'on'
+    });
+});
+
+test('getPlayerExperimentOverridesFromSearch ignores unsupported values', () => {
+    assert.deepEqual(getPlayerExperimentOverridesFromSearch('?nativeSegments=bad&nativeControls=nope&nativeHandlerTiming=later&webAudioMediaSession=maybe'), {
+        nativeSegments: null,
+        nativeControls: null,
+        nativeHandlerTiming: null,
+        webAudioMediaSession: null
+    });
 });
 
 test('shouldUseNativeTransport respects explicit overrides', () => {

@@ -23,6 +23,25 @@ export function getTransportOverrideFromSearch(search = '') {
     return params.get('transport');
 }
 
+function normalizeChoice(value, allowedValues) {
+    if (typeof value !== 'string') {
+        return null;
+    }
+
+    return allowedValues.includes(value) ? value : null;
+}
+
+export function getPlayerExperimentOverridesFromSearch(search = '') {
+    const params = new URLSearchParams(search);
+
+    return {
+        nativeSegments: normalizeChoice(params.get('nativeSegments'), ['repeat-only', 'always']),
+        nativeControls: normalizeChoice(params.get('nativeControls'), ['tracks', 'seek']),
+        nativeHandlerTiming: normalizeChoice(params.get('nativeHandlerTiming'), ['init', 'playing', 'both']),
+        webAudioMediaSession: normalizeChoice(params.get('webAudioMediaSession'), ['on', 'off'])
+    };
+}
+
 export function isMobilePlaybackDevice({
     userAgent = '',
     maxTouchPoints = 0,

@@ -75,6 +75,7 @@ class MockAudioElement extends MockEventTarget {
     async play() {
         this.paused = false;
         this.dispatchEvent({ type: 'play' });
+        this.dispatchEvent({ type: 'playing' });
     }
 
     pause() {
@@ -272,6 +273,57 @@ test('NativeAudioPlayer can prefer track navigation controls over seek controls'
         assert.equal(actionHandlers.get('seekforward'), null);
         assert.equal(actionHandlers.get('seekto'), null);
         assert.deepEqual(positionStates.at(-1), {});
+    } finally {
+        restoreGlobals();
+    }
+});
+
+test('NativeAudioPlayer can defer media session handler registration until playing', async () => {
+    const restoreGlobals = installBrowserGlobals();
+
+    try {
+        const actionCalls = [];
+        globalThis.navigator.mediaSession.setActionHandler = (action, handler) => {
+            actionCalls.push({ action, handler });
+        };
+
+        const audioElement = new MockAudioElement({ duration: 45 });
+        const player = new NativeAudioPlayer({
+            audioElement,
+            mediaSessionHandlerTiming: 'playing'
+        });
+
+        assert.equal(actionCalls.length, 0);
+
+        await player.loadTrack(segmentedTrack, { startTime: 12, autoplay: true });
+
+        assert.equal(actionCalls.some((entry) => entry.action === 'nexttrack'), true);
+        assert.equal(actionCalls.some((entry) => entry.action === 'previoustrack'), true);
+    } finally {
+        restoreGlobals();
+    }
+});
+
+test('NativeAudioPlayer can register media session handlers on init and playing', async () => {
+    const restoreGlobals = installBrowserGlobals();
+
+    try {
+        const actionCalls = [];
+        globalThis.navigator.mediaSession.setActionHandler = (action, handler) => {
+            actionCalls.push({ action, handler });
+        };
+
+        const audioElement = new MockAudioElement({ duration: 45 });
+        const player = new NativeAudioPlayer({
+            audioElement,
+            mediaSessionHandlerTiming: 'both'
+        });
+
+        const initialCallCount = actionCalls.length;
+        await player.loadTrack(segmentedTrack, { startTime: 12, autoplay: true });
+
+        assert.equal(initialCallCount > 0, true);
+        assert.equal(actionCalls.length > initialCallCount, true);
     } finally {
         restoreGlobals();
     }
