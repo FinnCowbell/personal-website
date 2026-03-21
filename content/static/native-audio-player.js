@@ -514,7 +514,7 @@ export class NativeAudioPlayer {
             return;
         }
 
-        const seekActions = ['seekbackward', 'seekforward', 'seekto'];
+        const seekActions = ['seekbackward', 'seekforward'];
 
         if (!this.shouldExposeSeekControls()) {
             for (const action of seekActions) {
@@ -538,16 +538,13 @@ export class NativeAudioPlayer {
             },
             nexttrack: () => {
                 this.onNextTrack?.();
-            }
-        };
-
-        if (this.shouldExposeSeekControls()) {
-            handlers.seekto = (details) => {
+            },
+            seekto: (details) => {
                 if (typeof details.seekTime === 'number') {
                     void this.seek(details.seekTime);
                 }
-            };
-        }
+            }
+        };
 
         for (const [action, handler] of Object.entries(handlers)) {
             try {
@@ -568,16 +565,6 @@ export class NativeAudioPlayer {
 
     updateMediaSessionPosition() {
         if (!('mediaSession' in navigator) || typeof navigator.mediaSession.setPositionState !== 'function') {
-            return;
-        }
-
-        if (!this.shouldExposeSeekControls()) {
-            try {
-                navigator.mediaSession.setPositionState({});
-            } catch (error) {
-                return;
-            }
-
             return;
         }
 
