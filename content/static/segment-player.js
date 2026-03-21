@@ -60,6 +60,7 @@ export class SegmentPlayer {
         this.preBoundaryTimer = null;
         this.boundaryTimer = null;
         this.transitionTimer = null;
+        this.keepalivePrimed = false;
 
         this.boundOnVisibilityChange = this.handleVisibilityChange.bind(this);
         this.boundOnPageShow = this.handlePageShow.bind(this);
@@ -313,6 +314,8 @@ export class SegmentPlayer {
         if (this.audioContext.state === 'suspended') {
             await this.audioContext.resume();
         }
+
+        await this.primeKeepalive();
 
         if (this.audioUnlocked) {
             return;
@@ -964,20 +967,33 @@ export class SegmentPlayer {
 
     // ── iOS keepalive ──────────────────────────────────────────────
 
+    async primeKeepalive() {
+        if (!this.audioElement || !this.enableMediaSession || this.keepalivePrimed) {
+            return;
+        }
+
+        this.audioElement.loop = true;
+        this.audioElement.volume = 0;
+
+        if (!this.audioElement.src || this.audioElement.src === window.location.href) {
+            this.setKeepaliveSrc();
+        }
+
+        try {
+            await this.audioElement.play();
+            this.keepalivePrimed = true;
+        } catch (_) {
+            this.keepalivePrimed = false;
+        }
+    }
+
     startKeepalive() {
         if (!this.audioElement || !this.enableMediaSession) {
             return;
         }
 
         if (this.audioElement.paused) {
-            this.audioElement.loop = true;
-            this.audioElement.volume = 0;
-
-            if (!this.audioElement.src || this.audioElement.src === window.location.href) {
-                this.setKeepaliveSrc();
-            }
-
-            this.audioElement.play().catch(() => {});
+            void this.primeKeepalive();
         }
     }
 
@@ -987,6 +1003,7 @@ export class SegmentPlayer {
         }
 
         this.audioElement.pause();
+        this.keepalivePrimed = false;
     }
 
     setKeepaliveSrc() {
