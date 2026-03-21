@@ -10,13 +10,7 @@ export const mediaMetadata = Object.freeze({
     album: 'BOSS FIGHTS',
     artwork: [
         {
-            src: '/assets/favicon/android-chrome-192x192.png',
-            sizes: '192x192',
-            type: 'image/png'
-        },
-        {
-            src: '/assets/favicon/android-chrome-512x512.png',
-            sizes: '512x512',
+            src: '/assets/img/bossfights/Favicon.png',
             type: 'image/png'
         }
     ]
