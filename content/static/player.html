@@ -328,17 +328,20 @@ permalink: /music
         display: none;
       }
 
-      /* Secret tap zone (invisible) */
+      /* Secret tap zone (logo) */
       .nothing-suspicious {
         position: absolute;
-        left: 80%;
+        left: 79.2%;
         top: 30%;
         width: 18%;
         height: 40%;
-        background: transparent;
+        object-fit: contain;
         cursor: default;
         z-index: 2;
         -webkit-tap-highlight-color: transparent;
+        transform: scale(.9) rotate(13deg);
+        filter: brightness(0.85);
+        image-rendering: pixelated;
       }
 
       /* === Progress Bar === */
@@ -414,7 +417,7 @@ permalink: /music
     <div class="player-wrapper">
       <!-- Base Walkman Image -->
       <img
-        src="/assets/img/bossfights/walkman.png"
+        src="/assets/img/bossfights/walkman_nologo.png"
         alt="Walkman Music Player"
         class="player-image"
         id="walkmanImage"
@@ -468,7 +471,13 @@ permalink: /music
       </div>
 
       <!-- Secret Tap Zone for mobile unlock -->
-      <div class="nothing-suspicious" id="nothing-suspicious"></div>
+      <img
+        class="nothing-suspicious"
+        id="nothing-suspicious"
+        src="/assets/img/bossfights/Fman.png"
+        alt=""
+        draggable="false"
+      />
 
       <!-- Control Buttons -->
       <div class="controls">
