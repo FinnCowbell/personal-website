@@ -603,6 +603,16 @@ function updateProgress(state) {
     progressMarker.style.left = `${roundedPercent}%`;
 }
 
+function getProgressSeekPercent(event, rect) {
+    const isRotatedMobileLayout = mobilePlaybackLayoutActive && isPortraitMobileViewport();
+
+    if (isRotatedMobileLayout) {
+        return Math.min(Math.max((event.clientY - rect.top) / rect.height, 0), 1);
+    }
+
+    return Math.min(Math.max((event.clientX - rect.left) / rect.width, 0), 1);
+}
+
 async function seekTo(event) {
     if (!await canRunAudioAction()) {
         return;
@@ -614,7 +624,7 @@ async function seekTo(event) {
     }
 
     const rect = progressContainer.getBoundingClientRect();
-    const percent = Math.min(Math.max((event.clientX - rect.left) / rect.width, 0), 1);
+    const percent = getProgressSeekPercent(event, rect);
     const newTime = percent * state.duration;
 
     const isSkip = Math.abs(newTime - state.currentTime) > (state.duration * 0.1);

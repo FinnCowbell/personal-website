@@ -268,7 +268,9 @@ test('NativeAudioPlayer can prefer track navigation controls over seek controls'
 
         assert.equal(actionHandlers.has('previoustrack'), true);
         assert.equal(actionHandlers.has('nexttrack'), true);
-        assert.equal(actionHandlers.has('seekto'), false);
+        assert.equal(actionHandlers.get('seekbackward'), null);
+        assert.equal(actionHandlers.get('seekforward'), null);
+        assert.equal(actionHandlers.get('seekto'), null);
         assert.deepEqual(positionStates.at(-1), {});
     } finally {
         restoreGlobals();

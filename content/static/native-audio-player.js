@@ -490,6 +490,18 @@ export class NativeAudioPlayer {
             return;
         }
 
+        const seekActions = ['seekbackward', 'seekforward', 'seekto'];
+
+        if (!this.shouldExposeSeekControls()) {
+            for (const action of seekActions) {
+                try {
+                    navigator.mediaSession.setActionHandler(action, null);
+                } catch (error) {
+                    continue;
+                }
+            }
+        }
+
         const handlers = {
             play: () => {
                 void this.play();
