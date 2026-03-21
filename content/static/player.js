@@ -1,6 +1,7 @@
 import { Konami } from '/scripts/Konami.js';
 import { mediaMetadata, secretSong, songs } from './player-data.js';
 import { NativeAudioPlayer } from './native-audio-player.js';
+import { createPlaybackPersistence } from './player-persistence.js';
 import { shouldUseNativeTransport } from './player-shared.js';
 import { SegmentPlayer } from './segment-player.js';
 
@@ -8,6 +9,10 @@ let currentIndex = 0;
 let hasSkipped = false;
 let unlockSecretSong = null;
 let hasLoadedTrack = false;
+let mobilePlaybackLayoutActive = false;
+
+const MOBILE_PLAYER_BREAKPOINT = 768;
+const MOBILE_PLAYER_MARGIN = 24;
 
 const playBtn = document.getElementById('playBtn');
 const prevBtn = document.getElementById('prevBtn');
@@ -27,6 +32,7 @@ const walkmanImage = document.getElementById('walkmanImage');
 const loadingOverlay = document.getElementById('loadingOverlay');
 const songIcon = document.getElementById('songIcon');
 const audioElement = document.getElementById('audioPlayer');
+const playerWrapper = document.querySelector('.player-wrapper');
 const preloadedSongIcons = [];
 
 function preloadSongIcons() {
@@ -113,6 +119,69 @@ function clearTextScrollers() {
     }
 }
 
+function getViewportSize() {
+    const viewport = window.visualViewport;
+
+    return {
+        width: viewport?.width ?? window.innerWidth,
+        height: viewport?.height ?? window.innerHeight
+    };
+}
+
+function isPortraitMobileViewport() {
+    const { width, height } = getViewportSize();
+    return width <= MOBILE_PLAYER_BREAKPOINT && height > width;
+}
+
+function updateMobilePlaybackMeasurements() {
+    if (!playerWrapper || !walkmanImage) {
+        return;
+    }
+
+    const { width: viewportWidth, height: viewportHeight } = getViewportSize();
+    const wrapperWidth = playerWrapper.offsetWidth || walkmanImage.width || 1;
+    const wrapperHeight = playerWrapper.offsetHeight || walkmanImage.height || 1;
+    const availableWidth = Math.max(viewportWidth - (MOBILE_PLAYER_MARGIN * 2), 1);
+    const availableHeight = Math.max(viewportHeight - (MOBILE_PLAYER_MARGIN * 2), 1);
+    const scaleForRotatedWidth = availableWidth / wrapperHeight;
+    const scaleForRotatedHeight = availableHeight / wrapperWidth;
+    const mobilePlayerScale = Math.max(
+        Math.min(scaleForRotatedWidth, scaleForRotatedHeight),
+        0.01
+    );
+
+    document.documentElement.style.setProperty('--mobile-player-scale', mobilePlayerScale.toFixed(4));
+}
+
+function syncMobilePlaybackLayout() {
+    updateMobilePlaybackMeasurements();
+
+    if (!document.body) {
+        return;
+    }
+
+    const shouldEnableMobileLayout = mobilePlaybackLayoutActive && isPortraitMobileViewport();
+    document.body.classList.toggle('mobile-playback-active', shouldEnableMobileLayout);
+}
+
+function activateMobilePlaybackLayout() {
+    if (!isPortraitMobileViewport()) {
+        return;
+    }
+
+    mobilePlaybackLayoutActive = true;
+    syncMobilePlaybackLayout();
+}
+
+function deactivateMobilePlaybackLayout() {
+    mobilePlaybackLayoutActive = false;
+    syncMobilePlaybackLayout();
+}
+
+function handleViewportChange() {
+    syncMobilePlaybackLayout();
+}
+
 function formatTrackNumber(num) {
     return String(num).padStart(3, '0');
 }
@@ -193,6 +262,14 @@ const player = useNativeTransport
 
 console.info(`Using ${useNativeTransport ? 'native' : 'segment'} player for ${mediaMetadata.album} player`);
 
+const playbackPersistence = createPlaybackPersistence({
+    player,
+    trackList: songs,
+    loadTrackByIndex: loadSong,
+    syncPlayerState,
+    updateProgress
+});
+
 function addSecretSongIfNeeded() {
     const alreadyPresent = songs.some((song) => song.src === secretSong.src);
     if (!alreadyPresent) {
@@ -263,6 +340,11 @@ async function initializeApp() {
     const konami = new Konami(unlockSecretSong);
     konami.run();
 
+    playbackPersistence.registerEventHandlers();
+    syncMobilePlaybackLayout();
+    window.addEventListener('resize', handleViewportChange);
+    window.visualViewport?.addEventListener('resize', handleViewportChange);
+
     document.addEventListener('keydown', async (event) => {
         if (event.defaultPrevented) {
             return;
@@ -301,8 +383,20 @@ async function initializeApp() {
         });
     }
 
-    renderSong(songs[currentIndex], currentIndex);
-    syncPlayerState(player.getState());
+    const restoredPlayback = await playbackPersistence.restoreState();
+    if (!restoredPlayback) {
+        renderSong(songs[currentIndex], currentIndex);
+        syncPlayerState(player.getState());
+
+        if (!useNativeTransport && songs[currentIndex]) {
+            try {
+                await loadSong(currentIndex, { autoplay: false, resetSkipState: false });
+            } catch (error) {
+                console.warn('Failed to preload initial desktop track', error);
+            }
+        }
+    }
+
     loadingOverlay.classList.add('hidden');
 }
 
@@ -334,7 +428,7 @@ function getNextSong(index = currentIndex) {
 }
 
 async function preloadUpcomingSong(index = currentIndex) {
-    if (!player.isAudioUnlocked()) {
+    if (useNativeTransport && !player.isAudioUnlocked()) {
         return;
     }
 
@@ -350,7 +444,7 @@ async function preloadUpcomingSong(index = currentIndex) {
     }
 }
 
-async function loadSong(index, { autoplay = false, resetSkipState = false } = {}) {
+async function loadSong(index, { autoplay = false, resetSkipState = false, startTime = 0 } = {}) {
     if (songs.length === 0) {
         songTitle.textContent = 'No songs loaded';
         songDescription.textContent = '';
@@ -366,7 +460,7 @@ async function loadSong(index, { autoplay = false, resetSkipState = false } = {}
     renderSong(song, index);
 
     try {
-        const didLoad = await player.loadTrack(song, { autoplay });
+        const didLoad = await player.loadTrack(song, { autoplay, startTime });
         if (!didLoad) {
             return false;
         }
@@ -392,18 +486,23 @@ async function togglePlay() {
     }
 
     if (player.getState().isPlaying) {
+        deactivateMobilePlaybackLayout();
         player.pause();
         return;
     }
 
     await runWithUnlockedAudio(async () => {
         if (!hasLoadedTrack) {
-            await loadSong(currentIndex, { autoplay: true, resetSkipState: false });
+            const didLoad = await loadSong(currentIndex, { autoplay: true, resetSkipState: false });
+            if (didLoad) {
+                activateMobilePlaybackLayout();
+            }
             return;
         }
 
         try {
             await player.play();
+            activateMobilePlaybackLayout();
         } catch (error) {
             console.error('Playback failed', error);
         }
@@ -496,6 +595,14 @@ async function toggleRepeat() {
 }
 
 function syncPlayerState(state) {
+    playbackPersistence.persistState(state);
+
+    if (state.isPlaying) {
+        activateMobilePlaybackLayout();
+    } else {
+        deactivateMobilePlaybackLayout();
+    }
+
     playBtn.classList.toggle('playing', state.isPlaying);
     const newPlayIconSrc = state.isPlaying
         ? '/assets/img/bossfights/play.png'
