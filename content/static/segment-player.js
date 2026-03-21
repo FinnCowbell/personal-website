@@ -1,5 +1,5 @@
 import { normalizeSegments, resolvePlaybackState } from './native-audio-player-logic.js';
-import { mediaMetadata } from './player-data.js';
+import { buildTrackMediaMetadata } from './player-data.js';
 
 export class SegmentPlayer {
     constructor({
@@ -1048,20 +1048,11 @@ export class SegmentPlayer {
     }
 
     updateMediaSessionMetadata() {
-        if (!this.enableMediaSession || !('mediaSession' in navigator) || !this.currentTrack) {
+        if (!this.enableMediaSession || !('mediaSession' in navigator) || typeof MediaMetadata !== 'function' || !this.currentTrack) {
             return;
         }
 
-        const artwork = this.currentTrack.icon
-            ? [{ src: this.currentTrack.icon, sizes: '512x512', type: 'image/png' }]
-            : undefined;
-
-        navigator.mediaSession.metadata = new MediaMetadata({
-            title: this.currentTrack.title,
-            artist: mediaMetadata.artist,
-            album: mediaMetadata.album,
-            artwork
-        });
+        navigator.mediaSession.metadata = new MediaMetadata(buildTrackMediaMetadata(this.currentTrack));
     }
 
     updateMediaSessionPosition() {

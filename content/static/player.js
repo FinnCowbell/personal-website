@@ -1,5 +1,6 @@
 import { Konami } from '/scripts/Konami.js';
 import { mediaMetadata, secretSong, songs } from './player-data.js';
+import { NativeAudioPlayer } from './native-audio-player.js';
 import { shouldUseNativeTransport } from './player-shared.js';
 import { SegmentPlayer } from './segment-player.js';
 
@@ -159,24 +160,38 @@ const useNativeTransport = shouldUseNativeTransport({
     platform: navigator.platform
 });
 
-const player = new SegmentPlayer({
-    audioElement,
-    enableMediaSession: useNativeTransport,
-    volume: 0.8,
-    maxRepeats: 10,
-    maxPlaybackMinutes: 30,
-    onStateChange: syncPlayerState,
-    onProgress: updateProgress,
-    onTrackEnded: handleSongEnded,
-    onPreviousTrack: () => {
-        void prevSong({ userInitiated: false });
-    },
-    onNextTrack: () => {
-        void nextSong({ userInitiated: false, autoplay: true });
-    }
-});
+const player = useNativeTransport
+    ? new NativeAudioPlayer({
+        audioElement,
+        volume: 0.8,
+        onStateChange: syncPlayerState,
+        onProgress: updateProgress,
+        onTrackEnded: handleSongEnded,
+        onPreviousTrack: () => {
+            void prevSong({ userInitiated: false });
+        },
+        onNextTrack: () => {
+            void nextSong({ userInitiated: false, autoplay: true });
+        }
+    })
+    : new SegmentPlayer({
+        audioElement,
+        enableMediaSession: false,
+        volume: 0.8,
+        maxRepeats: 10,
+        maxPlaybackMinutes: 30,
+        onStateChange: syncPlayerState,
+        onProgress: updateProgress,
+        onTrackEnded: handleSongEnded,
+        onPreviousTrack: () => {
+            void prevSong({ userInitiated: false });
+        },
+        onNextTrack: () => {
+            void nextSong({ userInitiated: false, autoplay: true });
+        }
+    });
 
-console.info(`Using segment player (mediaSession=${useNativeTransport}) for ${mediaMetadata.album} player`);
+console.info(`Using ${useNativeTransport ? 'native' : 'segment'} player for ${mediaMetadata.album} player`);
 
 function addSecretSongIfNeeded() {
     const alreadyPresent = songs.some((song) => song.src === secretSong.src);
