@@ -10,6 +10,7 @@ let hasSkipped = false;
 let unlockSecretSong = null;
 let hasLoadedTrack = false;
 let mobilePlaybackLayoutActive = false;
+let playbackRequested = false;
 
 const MOBILE_PLAYER_BREAKPOINT = 768;
 const MOBILE_PLAYER_MARGIN = 24;
@@ -176,6 +177,28 @@ function activateMobilePlaybackLayout() {
 function deactivateMobilePlaybackLayout() {
     mobilePlaybackLayoutActive = false;
     syncMobilePlaybackLayout();
+}
+
+function getPlaybackRequested(state = null) {
+    if (typeof state?.playbackRequested === 'boolean') {
+        return state.playbackRequested;
+    }
+
+    if (typeof state?.isPlaying === 'boolean') {
+        return state.isPlaying;
+    }
+
+    return playbackRequested;
+}
+
+function setPlaybackRequested(value) {
+    playbackRequested = Boolean(value);
+    if (playbackRequested) {
+        activateMobilePlaybackLayout();
+        return;
+    }
+
+    deactivateMobilePlaybackLayout();
 }
 
 function handleViewportChange() {
@@ -468,6 +491,9 @@ async function loadSong(index, { autoplay = false, resetSkipState = false, start
     try {
         const didLoad = await player.loadTrack(song, { autoplay, startTime });
         if (!didLoad) {
+            if (autoplay) {
+                setPlaybackRequested(false);
+            }
             return false;
         }
 
@@ -480,6 +506,9 @@ async function loadSong(index, { autoplay = false, resetSkipState = false, start
     } catch (error) {
         console.error('Failed to load track', error);
         hasLoadedTrack = false;
+        if (autoplay) {
+            setPlaybackRequested(false);
+        }
         songTitle.textContent = 'Track failed to load';
         songDescription.textContent = song.title;
         return false;
@@ -491,25 +520,27 @@ async function togglePlay() {
         return;
     }
 
-    if (player.getState().isPlaying) {
-        deactivateMobilePlaybackLayout();
+    if (getPlaybackRequested(player.getState())) {
+        setPlaybackRequested(false);
         player.pause();
         return;
     }
 
+    setPlaybackRequested(true);
+
     await runWithUnlockedAudio(async () => {
         if (!hasLoadedTrack) {
             const didLoad = await loadSong(currentIndex, { autoplay: true, resetSkipState: false });
-            if (didLoad) {
-                activateMobilePlaybackLayout();
+            if (!didLoad) {
+                setPlaybackRequested(false);
             }
             return;
         }
 
         try {
             await player.play();
-            activateMobilePlaybackLayout();
         } catch (error) {
+            setPlaybackRequested(false);
             console.error('Playback failed', error);
         }
     });
@@ -528,7 +559,8 @@ async function nextSong({ userInitiated = false, autoplay = null } = {}) {
         hasSkipped = true;
     }
 
-    const wasPlaying = autoplay ?? player.getState().isPlaying;
+    const wasPlaying = autoplay ?? getPlaybackRequested(player.getState());
+    setPlaybackRequested(wasPlaying);
     const nextIndex = (currentIndex + 1) % songs.length;
     await loadSong(nextIndex, { autoplay: wasPlaying });
 }
@@ -552,7 +584,8 @@ async function prevSong({ userInitiated = false } = {}) {
         hasSkipped = true;
     }
 
-    const wasPlaying = state.isPlaying;
+    const wasPlaying = getPlaybackRequested(state);
+    setPlaybackRequested(wasPlaying);
     const prevIndex = (currentIndex - 1 + songs.length) % songs.length;
     await loadSong(prevIndex, { autoplay: wasPlaying });
 }
@@ -602,12 +635,9 @@ async function toggleRepeat() {
 
 function syncPlayerState(state) {
     playbackPersistence.persistState(state);
-
-    if (state.isPlaying) {
-        activateMobilePlaybackLayout();
-    } else {
-        deactivateMobilePlaybackLayout();
-    }
+    playbackRequested = getPlaybackRequested(state);
+    mobilePlaybackLayoutActive = playbackRequested;
+    syncMobilePlaybackLayout();
 
     playBtn.classList.toggle('playing', state.isPlaying);
     const newPlayIconSrc = state.isPlaying

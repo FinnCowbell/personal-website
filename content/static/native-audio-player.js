@@ -34,6 +34,7 @@ export class NativeAudioPlayer {
         this.currentMode = 'full';
         this.transitionInFlight = null;
         this.pendingPlaybackPosition = null;
+        this.playbackRequested = false;
 
         this.boundOnPlay = this.handlePlaybackEvent.bind(this);
         this.boundOnPause = this.handlePlaybackEvent.bind(this);
@@ -79,6 +80,7 @@ export class NativeAudioPlayer {
     async loadTrack(track, { autoplay = false, startTime = 0 } = {}) {
         this.currentTrack = track;
         this.segmentConfig = this.normalizeSegments(track);
+        this.playbackRequested = Boolean(autoplay);
 
         const nextState = this.resolvePlaybackState(startTime);
         await this.applyPlaybackState(nextState);
@@ -102,13 +104,23 @@ export class NativeAudioPlayer {
             return;
         }
 
-        await this.audio.play();
-        this.audioUnlocked = true;
-        this.updateMediaSession();
-        this.emitState();
+        this.playbackRequested = true;
+
+        try {
+            await this.audio.play();
+            this.audioUnlocked = true;
+            this.updateMediaSession();
+            this.emitState();
+        } catch (error) {
+            this.playbackRequested = false;
+            this.updateMediaSession();
+            this.emitState();
+            throw error;
+        }
     }
 
     pause() {
+        this.playbackRequested = false;
         this.audio.pause();
         this.updateMediaSession();
         this.emitProgress();
@@ -120,7 +132,7 @@ export class NativeAudioPlayer {
             return;
         }
 
-        const wasPlaying = !this.audio.paused;
+        const wasPlaying = this.playbackRequested;
         const nextState = this.resolvePlaybackState(seconds);
         await this.applyPlaybackState(nextState);
 
@@ -136,7 +148,7 @@ export class NativeAudioPlayer {
         const nextRepeatEnabled = Boolean(enabled);
         const repeatValueChanged = this.repeatEnabled !== nextRepeatEnabled;
         const wasUsingSegmentedPlayback = this.shouldUseSegmentedPlayback();
-        const wasPlaying = !this.audio.paused;
+        const wasPlaying = this.playbackRequested;
         const currentTime = this.getCurrentTime();
 
         this.repeatEnabled = nextRepeatEnabled;
@@ -181,6 +193,7 @@ export class NativeAudioPlayer {
         return {
             currentTrack: this.currentTrack,
             isPlaying: !this.audio.paused,
+            playbackRequested: this.playbackRequested,
             repeatEnabled: this.repeatEnabled,
             breakoutActive: false,
             loopCount: 0,

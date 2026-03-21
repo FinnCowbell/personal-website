@@ -217,3 +217,30 @@ test('NativeAudioPlayer swaps between full and loop sources without losing absol
         restoreGlobals();
     }
 });
+
+test('NativeAudioPlayer keeps requested playback intent through segmented source swaps', async () => {
+    const restoreGlobals = installBrowserGlobals();
+
+    try {
+        const audioElement = new MockAudioElement({ duration: 45 });
+        const player = new NativeAudioPlayer({
+            audioElement,
+            preferFullTrackWhenRepeatDisabled: true
+        });
+
+        await player.loadTrack(segmentedTrack, { startTime: 18, autoplay: true });
+        assert.equal(player.getState().playbackRequested, true);
+
+        await player.setRepeat(true);
+        assert.equal(player.currentMode, 'loop');
+        assert.equal(player.getState().playbackRequested, true);
+
+        await player.seek(22);
+        assert.equal(player.getState().playbackRequested, true);
+
+        player.pause();
+        assert.equal(player.getState().playbackRequested, false);
+    } finally {
+        restoreGlobals();
+    }
+});
