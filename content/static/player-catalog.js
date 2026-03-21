@@ -7,13 +7,25 @@ const defaultLoop = {
 
 export const mediaMetadata = Object.freeze({
     artist: 'Finn Navin',
-    album: 'BOSS FIGHTS'
+    album: 'BOSS FIGHTS',
+    artwork: [
+        {
+            src: '/assets/favicon/android-chrome-192x192.png',
+            sizes: '192x192',
+            type: 'image/png'
+        },
+        {
+            src: '/assets/favicon/android-chrome-512x512.png',
+            sizes: '512x512',
+            type: 'image/png'
+        }
+    ]
 });
 
 export const songs = [
     {
         title: 'Fungal Floor',
-        description: 'Boutique. On the Catwalk - MAY 2025',
+        description: 'MAY 2025 - Boutique. On the Catwalk',
         src: '/assets/music/boss-fights/Fungal Floor.mp3',
         icon: '/assets/img/bossfights/mushroom.png',
         loop: {
@@ -24,7 +36,7 @@ export const songs = [
     },
     {
         title: 'Moshed Potato',
-        description: 'Everyones looking at you - AUG 2024',
+        description: 'AUG 2024 - Everyones looking at you',
         src: '/assets/music/boss-fights/Bassaline.mp3',
         icon: '/assets/img/bossfights/crowd.png',
         loop: {
@@ -35,7 +47,7 @@ export const songs = [
     },
     {
         title: 'Shadows',
-        description: "Maybe they're friendly - FEB 2025",
+        description: "FEB 2025 - Maybe they're friendly",
         src: '/assets/music/boss-fights/M W Highs.mp3',
         icon: '/assets/img/bossfights/shadows.png',
         loop: {
@@ -46,7 +58,7 @@ export const songs = [
     },
     {
         title: 'Clawing',
-        description: "There's is a way out. - JAN 2025",
+        description: "JAN 2025 - There's is a way out.",
         src: '/assets/music/boss-fights/Dug Fork.mp3',
         icon: '/assets/img/bossfights/hallway.png',
         loop: {
@@ -57,7 +69,7 @@ export const songs = [
     },
     {
         title: 'Floor 7',
-        description: 'Almost there - JAN 2024',
+        description: 'JAN 2024 - Almost there',
         src: '/assets/music/boss-fights/15M.mp3',
         icon: '/assets/img/bossfights/elevator.png',
         loop: {
@@ -68,7 +80,7 @@ export const songs = [
     },
     {
         title: 'Honch',
-        description: '*pixelated crowd cheers* - APR 2025',
+        description: 'APR 2025 - *pixelated crowd cheers*',
         src: '/assets/music/boss-fights/SF.mp3',
         icon: '/assets/img/bossfights/pow.png',
         loop: {
@@ -79,7 +91,7 @@ export const songs = [
     },
     {
         title: 'Mouse Army',
-        description: "There's too many of them - JAN 2024",
+        description: "JAN 2024 - There's too many of them",
         src: '/assets/music/boss-fights/Twinning.mp3',
         icon: '/assets/img/bossfights/mouse.png',
         loop: {
@@ -90,7 +102,7 @@ export const songs = [
     },
     {
         title: 'Firewall',
-        description: 'Pass through - MAY 2021',
+        description: 'MAY 2021 - Pass through',
         src: '/assets/music/boss-fights/HARPIN.mp3',
         icon: '/assets/img/bossfights/gate.png',
         loop: {
@@ -101,7 +113,7 @@ export const songs = [
     },
     {
         title: 'Boulder',
-        description: 'H I  T H E R E. - SEP 2023',
+        description: 'SEP 2023 - H I  T H E R E.',
         src: '/assets/music/boss-fights/H I H.mp3',
         icon: '/assets/img/bossfights/boulder.png',
         loop: {
@@ -112,7 +124,7 @@ export const songs = [
     },
     {
         title: 'Wonk 2A',
-        description: 'Stream of consciousness - FEB 2025',
+        description: 'FEB 2025 - Stream of consciousness',
         src: '/assets/music/boss-fights/WONK2A.mp3',
         icon: '/assets/img/bossfights/waves.png',
         loop: {
@@ -125,7 +137,7 @@ export const songs = [
 
 export const secretSong = {
     title: "Crabbin'",
-    description: 'Ay, who let ya in the back room - MAY 2020',
+    description: 'MAY 2020 - Ay, who let ya in the back room',
     src: '/assets/music/boss-fights/Crabbin.mp3',
     icon: '/assets/img/bossfights/cane.png',
     loop: {
