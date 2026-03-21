@@ -121,11 +121,9 @@ function clearTextScrollers() {
 }
 
 function getViewportSize() {
-    const viewport = window.visualViewport;
-
     return {
-        width: viewport?.width ?? window.innerWidth,
-        height: viewport?.height ?? window.innerHeight
+        width: document.documentElement?.clientWidth ?? window.innerWidth,
+        height: document.documentElement?.clientHeight ?? window.innerHeight
     };
 }
 
@@ -261,6 +259,7 @@ const player = useNativeTransport
     ? new NativeAudioPlayer({
         audioElement,
         preferFullTrackWhenRepeatDisabled: isMobilePlaybackDeviceContext,
+        preferTrackNavigationControls: isMobilePlaybackDeviceContext,
         volume: 0.8,
         onStateChange: syncPlayerState,
         onProgress: updateProgress,
@@ -372,7 +371,6 @@ async function initializeApp() {
     playbackPersistence.registerEventHandlers();
     syncMobilePlaybackLayout();
     window.addEventListener('resize', handleViewportChange);
-    window.visualViewport?.addEventListener('resize', handleViewportChange);
 
     document.addEventListener('keydown', async (event) => {
         if (event.defaultPrevented) {

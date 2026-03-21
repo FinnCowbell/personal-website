@@ -244,3 +244,33 @@ test('NativeAudioPlayer keeps requested playback intent through segmented source
         restoreGlobals();
     }
 });
+
+test('NativeAudioPlayer can prefer track navigation controls over seek controls', async () => {
+    const restoreGlobals = installBrowserGlobals();
+
+    try {
+        const actionHandlers = new Map();
+        const positionStates = [];
+        globalThis.navigator.mediaSession.setActionHandler = (action, handler) => {
+            actionHandlers.set(action, handler);
+        };
+        globalThis.navigator.mediaSession.setPositionState = (state) => {
+            positionStates.push(state);
+        };
+
+        const audioElement = new MockAudioElement({ duration: 45 });
+        const player = new NativeAudioPlayer({
+            audioElement,
+            preferTrackNavigationControls: true
+        });
+
+        await player.loadTrack(segmentedTrack, { startTime: 12, autoplay: true });
+
+        assert.equal(actionHandlers.has('previoustrack'), true);
+        assert.equal(actionHandlers.has('nexttrack'), true);
+        assert.equal(actionHandlers.has('seekto'), false);
+        assert.deepEqual(positionStates.at(-1), {});
+    } finally {
+        restoreGlobals();
+    }
+});

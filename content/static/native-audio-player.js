@@ -10,6 +10,7 @@ export class NativeAudioPlayer {
         onPreviousTrack,
         onNextTrack,
         preferFullTrackWhenRepeatDisabled = false,
+        preferTrackNavigationControls = false,
         volume = 0.8
     } = {}) {
         if (!audioElement) {
@@ -26,6 +27,7 @@ export class NativeAudioPlayer {
         this.onPreviousTrack = onPreviousTrack;
         this.onNextTrack = onNextTrack;
         this.preferFullTrackWhenRepeatDisabled = Boolean(preferFullTrackWhenRepeatDisabled);
+        this.preferTrackNavigationControls = Boolean(preferTrackNavigationControls);
 
         this.currentTrack = null;
         this.repeatEnabled = false;
@@ -97,6 +99,10 @@ export class NativeAudioPlayer {
 
     preloadTrack() {
         return Promise.resolve(null);
+    }
+
+    shouldExposeSeekControls() {
+        return !this.preferTrackNavigationControls;
     }
 
     async play() {
@@ -496,13 +502,16 @@ export class NativeAudioPlayer {
             },
             nexttrack: () => {
                 this.onNextTrack?.();
-            },
-            seekto: (details) => {
+            }
+        };
+
+        if (this.shouldExposeSeekControls()) {
+            handlers.seekto = (details) => {
                 if (typeof details.seekTime === 'number') {
                     void this.seek(details.seekTime);
                 }
-            }
-        };
+            };
+        }
 
         for (const [action, handler] of Object.entries(handlers)) {
             try {
@@ -523,6 +532,16 @@ export class NativeAudioPlayer {
 
     updateMediaSessionPosition() {
         if (!('mediaSession' in navigator) || typeof navigator.mediaSession.setPositionState !== 'function') {
+            return;
+        }
+
+        if (!this.shouldExposeSeekControls()) {
+            try {
+                navigator.mediaSession.setPositionState({});
+            } catch (error) {
+                return;
+            }
+
             return;
         }
 
