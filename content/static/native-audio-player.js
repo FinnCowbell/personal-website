@@ -9,6 +9,7 @@ export class NativeAudioPlayer {
         onTrackEnded,
         onPreviousTrack,
         onNextTrack,
+        enableMediaSession = true,
         preferFullTrackWhenRepeatDisabled = false,
         preferTrackNavigationControls = false,
         mediaSessionHandlerTiming = 'init',
@@ -29,6 +30,7 @@ export class NativeAudioPlayer {
         this.onTrackEnded = onTrackEnded;
         this.onPreviousTrack = onPreviousTrack;
         this.onNextTrack = onNextTrack;
+        this.enableMediaSession = Boolean(enableMediaSession);
         this.preferFullTrackWhenRepeatDisabled = Boolean(preferFullTrackWhenRepeatDisabled);
         this.preferTrackNavigationControls = Boolean(preferTrackNavigationControls);
         this.mediaSessionHandlerTiming = mediaSessionHandlerTiming;
@@ -135,10 +137,18 @@ export class NativeAudioPlayer {
     }
 
     shouldRegisterMediaSessionHandlersOnInit() {
+        if (!this.enableMediaSession) {
+            return false;
+        }
+
         return this.mediaSessionHandlerTiming === 'init' || this.mediaSessionHandlerTiming === 'both';
     }
 
     shouldRegisterMediaSessionHandlersOnPlaying() {
+        if (!this.enableMediaSession) {
+            return false;
+        }
+
         return this.mediaSessionHandlerTiming === 'playing' || this.mediaSessionHandlerTiming === 'both';
     }
 
@@ -676,7 +686,7 @@ export class NativeAudioPlayer {
     }
 
     setupMediaSessionHandlers() {
-        if (!('mediaSession' in navigator)) {
+        if (!this.enableMediaSession || !('mediaSession' in navigator)) {
             return;
         }
 
@@ -722,7 +732,7 @@ export class NativeAudioPlayer {
     }
 
     updateMediaSessionMetadata() {
-        if (!('mediaSession' in navigator) || typeof MediaMetadata !== 'function' || !this.currentTrack) {
+        if (!this.enableMediaSession || !('mediaSession' in navigator) || typeof MediaMetadata !== 'function' || !this.currentTrack) {
             return;
         }
 
@@ -730,7 +740,7 @@ export class NativeAudioPlayer {
     }
 
     updateMediaSessionPosition() {
-        if (!('mediaSession' in navigator) || typeof navigator.mediaSession.setPositionState !== 'function') {
+        if (!this.enableMediaSession || !('mediaSession' in navigator) || typeof navigator.mediaSession.setPositionState !== 'function') {
             return;
         }
 
@@ -751,7 +761,7 @@ export class NativeAudioPlayer {
     }
 
     updateMediaSession() {
-        if (!('mediaSession' in navigator)) {
+        if (!this.enableMediaSession || !('mediaSession' in navigator)) {
             return;
         }
 

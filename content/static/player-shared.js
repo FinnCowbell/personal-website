@@ -37,8 +37,7 @@ export function getPlayerExperimentOverridesFromSearch(search = '') {
     return {
         nativeSegments: normalizeChoice(params.get('nativeSegments'), ['repeat-only', 'always']),
         nativeControls: normalizeChoice(params.get('nativeControls'), ['tracks', 'seek']),
-        nativeHandlerTiming: normalizeChoice(params.get('nativeHandlerTiming'), ['init', 'playing', 'both']),
-        webAudioMediaSession: normalizeChoice(params.get('webAudioMediaSession'), ['on', 'off'])
+        nativeHandlerTiming: normalizeChoice(params.get('nativeHandlerTiming'), ['init', 'playing', 'both'])
     };
 }
 

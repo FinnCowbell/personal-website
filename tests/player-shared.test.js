@@ -59,20 +59,18 @@ test('getTransportOverrideFromSearch reads the transport override', () => {
 });
 
 test('getPlayerExperimentOverridesFromSearch reads supported experiment overrides', () => {
-    assert.deepEqual(getPlayerExperimentOverridesFromSearch('?nativeSegments=repeat-only&nativeControls=tracks&nativeHandlerTiming=both&webAudioMediaSession=on'), {
+    assert.deepEqual(getPlayerExperimentOverridesFromSearch('?nativeSegments=repeat-only&nativeControls=tracks&nativeHandlerTiming=both'), {
         nativeSegments: 'repeat-only',
         nativeControls: 'tracks',
-        nativeHandlerTiming: 'both',
-        webAudioMediaSession: 'on'
+        nativeHandlerTiming: 'both'
     });
 });
 
 test('getPlayerExperimentOverridesFromSearch ignores unsupported values', () => {
-    assert.deepEqual(getPlayerExperimentOverridesFromSearch('?nativeSegments=bad&nativeControls=nope&nativeHandlerTiming=later&webAudioMediaSession=maybe'), {
+    assert.deepEqual(getPlayerExperimentOverridesFromSearch('?nativeSegments=bad&nativeControls=nope&nativeHandlerTiming=later'), {
         nativeSegments: null,
         nativeControls: null,
-        nativeHandlerTiming: null,
-        webAudioMediaSession: null
+        nativeHandlerTiming: null
     });
 });
 
