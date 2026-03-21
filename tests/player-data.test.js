@@ -1,7 +1,40 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 
-import { buildTrackMediaMetadata } from '../content/static/player-data.js';
+import { buildTrackMediaMetadata, collectPlayerImageSources, playerImageSources } from '../content/static/player-data.js';
+
+test('collectPlayerImageSources dedupes shared and track artwork sources', () => {
+    const sources = collectPlayerImageSources([
+        {
+            icon: '/assets/img/bossfights/elevator.png',
+            mediaMetadata: {
+                artwork: [
+                    { src: '/assets/img/bossfights/walkman.png' },
+                    { src: '/assets/img/bossfights/elevator.png' }
+                ]
+            }
+        },
+        {
+            icon: '/assets/img/bossfights/elevator.png'
+        }
+    ], {
+        artwork: [
+            { src: '/assets/favicon/android-chrome-192x192.png', sizes: '192x192', type: 'image/png' },
+            { src: '/assets/favicon/android-chrome-192x192.png', sizes: '192x192', type: 'image/png' }
+        ]
+    });
+
+    assert.deepEqual(sources, [
+        '/assets/favicon/android-chrome-192x192.png',
+        '/assets/img/bossfights/elevator.png',
+        '/assets/img/bossfights/walkman.png'
+    ]);
+});
+
+test('playerImageSources includes track icons used by the player catalog', () => {
+    assert.ok(playerImageSources.includes('/assets/img/bossfights/mushroom.png'));
+    assert.ok(playerImageSources.includes('/assets/img/bossfights/cane.png'));
+});
 
 test('buildTrackMediaMetadata prefers track artwork and keeps shared fallback artwork', () => {
     const metadata = buildTrackMediaMetadata({

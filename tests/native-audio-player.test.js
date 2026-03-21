@@ -46,7 +46,7 @@ class MockEventTarget {
 }
 
 class MockAudioElement extends MockEventTarget {
-    constructor({ duration = 0 } = {}) {
+    constructor({ duration = 0, failLoadsFor = null } = {}) {
         super();
         this._src = '';
         this.currentTime = 0;
@@ -56,6 +56,9 @@ class MockAudioElement extends MockEventTarget {
         this.loop = false;
         this.preload = 'metadata';
         this.volume = 1;
+        this.error = null;
+        this.failLoadsFor = failLoadsFor ?? new Set();
+        this.loadCount = 0;
     }
 
     get src() {
@@ -67,8 +70,20 @@ class MockAudioElement extends MockEventTarget {
     }
 
     load() {
+        this.loadCount += 1;
+
+        if (this.failLoadsFor.has(this._src)) {
+            this.readyState = 0;
+            this.error = { code: 2 };
+            this.dispatchEvent({ type: 'error' });
+            return;
+        }
+
         this.readyState = 1;
+        this.error = null;
         this.dispatchEvent({ type: 'loadedmetadata' });
+        this.dispatchEvent({ type: 'loadeddata' });
+        this.dispatchEvent({ type: 'canplaythrough' });
         this.dispatchEvent({ type: 'durationchange' });
     }
 
@@ -328,6 +343,71 @@ test('NativeAudioPlayer can register media session handlers on init and playing'
 
         assert.equal(initialCallCount > 0, true);
         assert.equal(actionCalls.length > initialCallCount, true);
+    } finally {
+        restoreGlobals();
+    }
+});
+
+test('NativeAudioPlayer preloads full and segmented sources for upcoming tracks', async () => {
+    const restoreGlobals = installBrowserGlobals();
+
+    try {
+        const audioElement = new MockAudioElement({ duration: 45 });
+        const preloadedAudioElements = [];
+        const player = new NativeAudioPlayer({
+            audioElement,
+            createPreloadAudio: () => {
+                const preloadAudio = new MockAudioElement({ duration: 45 });
+                preloadedAudioElements.push(preloadAudio);
+                return preloadAudio;
+            },
+            maxPreloadedSources: 8
+        });
+
+        await player.preloadTrack(segmentedTrack);
+
+        assert.deepEqual(
+            preloadedAudioElements.map((element) => element.src),
+            [
+                'https://example.test/audio/full.mp3',
+                'https://example.test/audio/intro.m4a',
+                'https://example.test/audio/loop.m4a',
+                'https://example.test/audio/outro.m4a'
+            ]
+        );
+        assert.equal(preloadedAudioElements.every((element) => element.preload === 'auto'), true);
+        assert.equal(preloadedAudioElements.every((element) => element.loadCount === 1), true);
+    } finally {
+        restoreGlobals();
+    }
+});
+
+test('NativeAudioPlayer reports load failures and clears the error on a successful retry', async () => {
+    const restoreGlobals = installBrowserGlobals();
+
+    try {
+        const failingSource = 'https://example.test/audio/full.mp3';
+        const failLoadsFor = new Set([failingSource]);
+        const audioElement = new MockAudioElement({ duration: 45, failLoadsFor });
+        const player = new NativeAudioPlayer({
+            audioElement,
+            preferFullTrackWhenRepeatDisabled: true
+        });
+
+        await assert.rejects(
+            player.loadTrack(segmentedTrack, { startTime: 5 }),
+            /Failed to load audio source/
+        );
+
+        assert.equal(player.getState().hasError, true);
+        assert.match(player.getState().errorReason, /Failed to load audio source/);
+
+        failLoadsFor.clear();
+        await player.loadTrack(segmentedTrack, { startTime: 5 });
+
+        assert.equal(player.getState().hasError, false);
+        assert.equal(player.getState().errorReason, null);
+        assert.equal(audioElement.currentTime, 5);
     } finally {
         restoreGlobals();
     }

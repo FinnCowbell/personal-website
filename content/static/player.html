@@ -10,6 +10,23 @@ permalink: /music
     <meta name="viewport" content="width=device-width,initial-scale=1" />
     <link rel="icon" type="image/png" href="/assets/img/bossfights/Favicon.png" />
     <link rel="apple-touch-icon" href="/assets/img/bossfights/Favicon.png" />
+    <link rel="preload" as="image" href="/assets/img/bossfights/walkman_nologo.png" fetchpriority="high" />
+    <link rel="preload" as="image" href="/assets/img/bossfights/note.png" fetchpriority="high" />
+    <link rel="preload" as="image" href="/assets/img/bossfights/mushroom.png" fetchpriority="high" />
+    <link rel="preload" as="image" href="/assets/img/bossfights/pause.png" fetchpriority="high" />
+    <link rel="preload" as="image" href="/assets/img/bossfights/play.png" fetchpriority="high" />
+    <link rel="preload" as="image" href="/assets/img/bossfights/Fman.png" fetchpriority="high" />
+    <link rel="preload" as="image" href="/assets/img/bossfights/Favicon.png" />
+    <link rel="preload" as="image" href="/assets/img/bossfights/crowd.png" />
+    <link rel="preload" as="image" href="/assets/img/bossfights/elevator.png" />
+    <link rel="preload" as="image" href="/assets/img/bossfights/gate.png" />
+    <link rel="preload" as="image" href="/assets/img/bossfights/hallway.png" />
+    <link rel="preload" as="image" href="/assets/img/bossfights/mouse.png" />
+    <link rel="preload" as="image" href="/assets/img/bossfights/pow.png" />
+    <link rel="preload" as="image" href="/assets/img/bossfights/shadows.png" />
+    <link rel="preload" as="image" href="/assets/img/bossfights/waves.png" />
+    <link rel="preload" as="image" href="/assets/img/bossfights/boulder.png" />
+    <link rel="preload" as="image" href="/assets/img/bossfights/cane.png" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -242,6 +259,27 @@ permalink: /music
         opacity: 1;
       }
 
+      .error-indicator {
+        width: 8cqi;
+        height: 8cqi;
+        flex: 0 0 8cqi;
+        margin-left: 0.5%;
+        margin-right: 1%;
+        opacity: 0;
+      }
+
+      .error-indicator.active {
+        opacity: 1;
+      }
+
+      .error-indicator svg {
+        width: 100%;
+        height: 100%;
+        display: block;
+        shape-rendering: crispEdges;
+        image-rendering: pixelated;
+      }
+
       /* === Control Buttons === */
       .controls {
         position: absolute;
@@ -350,7 +388,6 @@ permalink: /music
         -webkit-tap-highlight-color: transparent;
         transform: scale(.9) rotate(13deg);
         filter: brightness(0.85);
-        image-rendering: pixelated;
       }
 
       /* === Progress Bar === */
@@ -450,6 +487,9 @@ permalink: /music
         alt="Walkman Music Player"
         class="player-image"
         id="walkmanImage"
+        loading="eager"
+        fetchpriority="high"
+        decoding="async"
       />
 
       <!-- Screen Overlay -->
@@ -457,7 +497,7 @@ permalink: /music
         <div class="screen-overlay">
           <div class="song-title-container">
             <div class="song-icon">
-              <img src="/assets/img/bossfights/note.png" alt="Note" />
+              <img src="/assets/img/bossfights/note.png" alt="Note" loading="eager" fetchpriority="high" decoding="async" />
             </div>
             <div class="song-title" id="songTitle">Loading...</div>
           </div>
@@ -467,6 +507,9 @@ permalink: /music
                 src="/assets/img/bossfights/mushroom.png"
                 alt="Song icon"
                 id="songIcon"
+                loading="eager"
+                fetchpriority="high"
+                decoding="async"
               />
             </div>
             <div class="song-description" id="songDescription"></div>
@@ -477,8 +520,40 @@ permalink: /music
               id="playIcon"
               src="/assets/img/bossfights/pause.png"
               alt="Paused"
+              loading="eager"
+              fetchpriority="high"
+              decoding="async"
             />
             <span class="track-number" id="trackNumber">001</span>
+            <span
+              class="error-indicator"
+              id="errorIndicator"
+              aria-hidden="true"
+              title="Track failed to load"
+            >
+              <svg
+                viewBox="0 0 16 16"
+                xmlns="http://www.w3.org/2000/svg"
+                aria-hidden="true"
+              >
+                <rect x="7" y="2" width="2" height="1" fill="#3b1610"/>
+                <rect x="6" y="3" width="4" height="1" fill="#3b1610"/>
+                <rect x="5" y="4" width="6" height="2" fill="#3b1610"/>
+                <rect x="4" y="6" width="8" height="2" fill="#3b1610"/>
+                <rect x="3" y="8" width="10" height="2" fill="#3b1610"/>
+                <rect x="2" y="10" width="12" height="2" fill="#3b1610"/>
+                <rect x="1" y="12" width="14" height="2" fill="#3b1610"/>
+                <rect x="0" y="14" width="16" height="1" fill="#3b1610"/>
+                <rect x="7" y="3" width="2" height="1" fill="#ff6a3d"/>
+                <rect x="6" y="4" width="4" height="2" fill="#ff6a3d"/>
+                <rect x="5" y="6" width="6" height="2" fill="#ff6a3d"/>
+                <rect x="4" y="8" width="8" height="2" fill="#ff6a3d"/>
+                <rect x="3" y="10" width="10" height="2" fill="#ff6a3d"/>
+                <rect x="2" y="12" width="12" height="2" fill="#ff6a3d"/>
+                <rect x="7" y="5" width="2" height="4" fill="#fff6cf"/>
+                <rect x="7" y="11" width="2" height="1" fill="#fff6cf"/>
+              </svg>
+            </span>
             <span class="repeat-indicator" id="repeatIndicator">RPT</span>
           </div>
         </div>
@@ -506,6 +581,9 @@ permalink: /music
         src="/assets/img/bossfights/Fman.png"
         alt=""
         draggable="false"
+        loading="eager"
+        fetchpriority="high"
+        decoding="async"
       />
 
       <!-- Control Buttons -->

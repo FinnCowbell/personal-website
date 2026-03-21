@@ -1,5 +1,5 @@
 import { Konami } from '/scripts/Konami.js';
-import { mediaMetadata, secretSong, songs } from './player-data.js';
+import { mediaMetadata, playerImageSources, secretSong, songs } from './player-data.js';
 import { NativeAudioPlayer } from './native-audio-player.js';
 import { createPlaybackPersistence } from './player-persistence.js';
 import { getPlayerExperimentOverridesFromSearch, isMobilePlaybackDevice, shouldUseNativeTransport } from './player-shared.js';
@@ -23,6 +23,7 @@ const repeatIndicator = document.getElementById('repeatIndicator');
 const songTitle = document.getElementById('songTitle');
 const songDescription = document.getElementById('songDescription');
 const playIcon = document.getElementById('playIcon');
+const errorIndicator = document.getElementById('errorIndicator');
 const trackNumber = document.getElementById('trackNumber');
 const progressMarker = document.getElementById('progressMarker');
 const progressFill = document.getElementById('progressFill');
@@ -34,28 +35,52 @@ const loadingOverlay = document.getElementById('loadingOverlay');
 const songIcon = document.getElementById('songIcon');
 const audioElement = document.getElementById('audioPlayer');
 const playerWrapper = document.querySelector('.player-wrapper');
-const preloadedSongIcons = [];
+const preloadedImages = [];
+const preloadedImageSources = new Set();
+let playerErrorMessage = null;
 
-function preloadSongIcons() {
-    const iconSources = new Set(
-        [...songs, secretSong]
-            .map((song) => song?.icon)
-            .filter(Boolean)
-    );
+const shellImageSources = [
+    '/assets/img/bossfights/walkman_nologo.png',
+    '/assets/img/bossfights/note.png',
+    '/assets/img/bossfights/play.png',
+    '/assets/img/bossfights/pause.png',
+    '/assets/img/bossfights/Fman.png'
+];
 
-    for (const iconSrc of iconSources) {
-        const image = new Image();
-        image.decoding = 'async';
-        image.src = iconSrc;
-        preloadedSongIcons.push(image);
+function preloadImageSource(src, fetchPriority = 'auto') {
+    if (!src || preloadedImageSources.has(src)) {
+        return;
+    }
+
+    preloadedImageSources.add(src);
+
+    if (document.head) {
+        const preloadLink = document.createElement('link');
+        preloadLink.rel = 'preload';
+        preloadLink.as = 'image';
+        preloadLink.href = src;
+        preloadLink.fetchPriority = fetchPriority;
+        document.head.append(preloadLink);
+    }
+
+    const image = new Image();
+    image.decoding = 'async';
+    image.fetchPriority = fetchPriority;
+    image.src = src;
+    preloadedImages.push(image);
+}
+
+function preloadPlayerImages() {
+    for (const imageSrc of shellImageSources) {
+        preloadImageSource(imageSrc, 'high');
+    }
+
+    for (const imageSrc of playerImageSources) {
+        preloadImageSource(imageSrc, 'auto');
     }
 }
 
-if (document.readyState === 'complete') {
-    preloadSongIcons();
-} else {
-    window.addEventListener('load', preloadSongIcons, { once: true });
-}
+preloadPlayerImages();
 
 function isOverflowing(element) {
     return element.scrollWidth > element.clientWidth;
@@ -68,7 +93,7 @@ function setupTextScroller(element, text, scrollRef) {
         return;
     }
 
-    const padding = '   •   ';
+    const padding = '  •  ';
     const paddedText = text + padding + text;
     let position = 0;
 
@@ -197,6 +222,34 @@ function setPlaybackRequested(value) {
     }
 
     deactivateMobilePlaybackLayout();
+}
+
+function setPlayerError(error) {
+    playerErrorMessage = error instanceof Error
+        ? error.message
+        : typeof error === 'string'
+            ? error
+            : 'Track playback failed';
+    syncErrorIndicator(player.getState());
+}
+
+function clearPlayerError() {
+    playerErrorMessage = null;
+    syncErrorIndicator(player.getState());
+}
+
+function getHasPlaybackError(state = null) {
+    return Boolean(playerErrorMessage || state?.hasError);
+}
+
+function syncErrorIndicator(state = null) {
+    if (!errorIndicator) {
+        return;
+    }
+
+    const hasError = getHasPlaybackError(state);
+    errorIndicator.classList.toggle('active', hasError);
+    errorIndicator.setAttribute('aria-hidden', String(!hasError));
 }
 
 function handleViewportChange() {
@@ -463,6 +516,7 @@ function renderSong(song, index) {
     progressFill.style.width = '0%';
     progressMarker.style.left = '0%';
     updateLoopMarkers({ repeatEnabled: false, duration: 0, loopWindow: null });
+    syncErrorIndicator(player.getState());
 }
 
 function getNextSong(index = currentIndex) {
@@ -504,6 +558,8 @@ async function loadSong(index, { autoplay = false, resetSkipState = false, start
     }
 
     const song = songs[index];
+    player.clearError?.();
+    clearPlayerError();
     renderSong(song, index);
 
     try {
@@ -516,6 +572,7 @@ async function loadSong(index, { autoplay = false, resetSkipState = false, start
         }
 
         hasLoadedTrack = true;
+        clearPlayerError();
 
         syncPlayerState(player.getState());
         updateProgress(player.getState());
@@ -527,8 +584,8 @@ async function loadSong(index, { autoplay = false, resetSkipState = false, start
         if (autoplay) {
             setPlaybackRequested(false);
         }
-        songTitle.textContent = 'Track failed to load';
-        songDescription.textContent = song.title;
+        setPlayerError(error);
+        syncPlayerState(player.getState());
         return false;
     }
 }
@@ -538,7 +595,29 @@ async function togglePlay() {
         return;
     }
 
-    if (getPlaybackRequested(player.getState())) {
+    const state = player.getState();
+
+    if (getHasPlaybackError(state)) {
+        setPlaybackRequested(true);
+
+        await runWithUnlockedAudio(async () => {
+            player.clearError?.();
+            clearPlayerError();
+
+            const didLoad = await loadSong(currentIndex, {
+                autoplay: true,
+                resetSkipState: false,
+                startTime: state.currentTime || 0
+            });
+
+            if (!didLoad) {
+                setPlaybackRequested(false);
+            }
+        });
+        return;
+    }
+
+    if (getPlaybackRequested(state)) {
         setPlaybackRequested(false);
         player.pause();
         return;
@@ -557,8 +636,10 @@ async function togglePlay() {
 
         try {
             await player.play();
+            clearPlayerError();
         } catch (error) {
             setPlaybackRequested(false);
+            setPlayerError(error);
             console.error('Playback failed', error);
         }
     });
@@ -664,8 +745,10 @@ async function toggleRepeat() {
 function syncPlayerState(state) {
     playbackPersistence.persistState(state);
     playbackRequested = getPlaybackRequested(state);
+    hasLoadedTrack = Boolean(state.currentTrack) && !getHasPlaybackError(state);
     mobilePlaybackLayoutActive = playbackRequested;
     syncMobilePlaybackLayout();
+    syncErrorIndicator(state);
 
     playBtn.classList.toggle('playing', state.isPlaying);
     const newPlayIconSrc = state.isPlaying

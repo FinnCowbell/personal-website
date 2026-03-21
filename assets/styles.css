@@ -474,6 +474,7 @@ hr {
  */
 img {
   border-style: solid;
+  image-rendering: pixelated;
 }
 textarea {
   resize: vertical;

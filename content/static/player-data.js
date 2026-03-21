@@ -82,6 +82,20 @@ function withSegments(track) {
 
 export { mediaMetadata };
 
+export function collectPlayerImageSources(trackList = [], sharedMetadata = mediaMetadata) {
+    const artwork = dedupeArtwork([
+        ...normalizeArtwork(sharedMetadata?.artwork),
+        ...trackList.flatMap((track) => [
+            ...normalizeArtwork(track?.icon),
+            ...normalizeArtwork(track?.mediaMetadata?.artwork)
+        ])
+    ]);
+
+    return artwork
+        .map((entry) => entry?.src)
+        .filter((src) => typeof src === 'string' && src.length > 0);
+}
+
 export function buildTrackMediaMetadata(track) {
     const trackMetadata = track?.mediaMetadata ?? {};
     const artwork = dedupeArtwork([
@@ -101,3 +115,7 @@ export function buildTrackMediaMetadata(track) {
 export const songs = rawSongs.map(withSegments);
 
 export const secretSong = withSegments(rawSecretSong);
+
+export const playerImageSources = Object.freeze(
+    collectPlayerImageSources([...songs, secretSong])
+);

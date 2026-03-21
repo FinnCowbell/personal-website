@@ -12,14 +12,16 @@ export class NativeAudioPlayer {
         preferFullTrackWhenRepeatDisabled = false,
         preferTrackNavigationControls = false,
         mediaSessionHandlerTiming = 'init',
-        volume = 0.8
+        volume = 0.8,
+        createPreloadAudio = null,
+        maxPreloadedSources = 6
     } = {}) {
         if (!audioElement) {
             throw new Error('NativeAudioPlayer requires an audio element');
         }
 
         this.audio = audioElement;
-        this.audio.preload = 'metadata';
+        this.audio.preload = 'auto';
         this.audio.volume = volume;
 
         this.onStateChange = onStateChange;
@@ -39,6 +41,10 @@ export class NativeAudioPlayer {
         this.transitionInFlight = null;
         this.pendingPlaybackPosition = null;
         this.playbackRequested = false;
+        this.errorReason = null;
+        this.createPreloadAudio = createPreloadAudio ?? (() => new Audio());
+        this.maxPreloadedSources = Math.max(Number(maxPreloadedSources) || 0, 1);
+        this.preloadEntries = new Map();
 
         this.boundOnPlay = this.handlePlaybackEvent.bind(this);
         this.boundOnPlaying = this.handlePlaying.bind(this);
@@ -90,22 +96,38 @@ export class NativeAudioPlayer {
         this.currentTrack = track;
         this.segmentConfig = this.normalizeSegments(track);
         this.playbackRequested = Boolean(autoplay);
+        this.clearError({ emitState: false });
 
-        const nextState = this.resolvePlaybackState(startTime);
-        await this.applyPlaybackState(nextState);
+        try {
+            const nextState = this.resolvePlaybackState(startTime);
+            await this.applyPlaybackState(nextState);
 
-        if (autoplay) {
-            await this.play();
-        } else {
-            this.emitProgress();
-            this.emitState();
+            if (autoplay) {
+                await this.play();
+            } else {
+                this.emitProgress();
+                this.emitState();
+            }
+
+            return true;
+        } catch (error) {
+            this.playbackRequested = false;
+            this.setError(error, { emitState: true });
+            throw error;
         }
-
-        return true;
     }
 
-    preloadTrack() {
-        return Promise.resolve(null);
+    async preloadTrack(track) {
+        if (!track?.src) {
+            return null;
+        }
+
+        const sources = this.getPreloadSources(track);
+        const requestedKeys = new Set(sources.map((src) => this.getAbsoluteSourceUrl(src)));
+        this.prunePreloadEntries(requestedKeys);
+
+        const preloadPromises = sources.map((src) => this.preloadSource(src));
+        return Promise.all(preloadPromises);
     }
 
     shouldExposeSeekControls() {
@@ -130,10 +152,12 @@ export class NativeAudioPlayer {
         try {
             await this.audio.play();
             this.audioUnlocked = true;
+            this.clearError({ emitState: false });
             this.updateMediaSession();
             this.emitState();
         } catch (error) {
             this.playbackRequested = false;
+            this.setError(error, { emitState: false });
             this.updateMediaSession();
             this.emitState();
             throw error;
@@ -154,14 +178,22 @@ export class NativeAudioPlayer {
         }
 
         const wasPlaying = this.playbackRequested;
-        const nextState = this.resolvePlaybackState(seconds);
-        await this.applyPlaybackState(nextState);
+        this.clearError({ emitState: false });
 
-        if (wasPlaying) {
-            await this.play();
-        } else {
-            this.emitProgress();
-            this.emitState();
+        try {
+            const nextState = this.resolvePlaybackState(seconds);
+            await this.applyPlaybackState(nextState);
+
+            if (wasPlaying) {
+                await this.play();
+            } else {
+                this.emitProgress();
+                this.emitState();
+            }
+        } catch (error) {
+            this.playbackRequested = false;
+            this.setError(error, { emitState: true });
+            throw error;
         }
     }
 
@@ -215,6 +247,8 @@ export class NativeAudioPlayer {
             currentTrack: this.currentTrack,
             isPlaying: !this.audio.paused,
             playbackRequested: this.playbackRequested,
+            hasError: Boolean(this.errorReason),
+            errorReason: this.errorReason,
             repeatEnabled: this.repeatEnabled,
             breakoutActive: false,
             loopCount: 0,
@@ -230,8 +264,20 @@ export class NativeAudioPlayer {
     destroy() {
         this.removeEventListeners();
         this.pause();
+        this.clearPreloadEntries();
         this.audio.removeAttribute('src');
         this.audio.load();
+    }
+
+    clearError({ emitState = true } = {}) {
+        if (!this.errorReason) {
+            return;
+        }
+
+        this.errorReason = null;
+        if (emitState) {
+            this.emitState();
+        }
     }
 
     normalizeSegments(track) {
@@ -265,6 +311,7 @@ export class NativeAudioPlayer {
             this.currentMode = mode;
             this.audio.loop = this.shouldLoopCurrentMode();
             this.audio.currentTime = Math.max(offset, 0);
+            this.clearError({ emitState: false });
             this.clearPendingPlaybackPositionIfResolved();
             this.updateMediaSessionMetadata();
             this.updateMediaSessionPosition();
@@ -371,6 +418,116 @@ export class NativeAudioPlayer {
         return this.segmentConfig.loopEnd + Math.max(offset, 0);
     }
 
+    getPreloadSources(track) {
+        const sources = new Set();
+        const segmentConfig = this.normalizeSegments(track);
+
+        if (track?.src) {
+            sources.add(track.src);
+        }
+
+        if (segmentConfig?.introSrc) {
+            sources.add(segmentConfig.introSrc);
+        }
+
+        if (segmentConfig?.loopSrc) {
+            sources.add(segmentConfig.loopSrc);
+        }
+
+        if (segmentConfig?.outroSrc) {
+            sources.add(segmentConfig.outroSrc);
+        }
+
+        return [...sources];
+    }
+
+    getAbsoluteSourceUrl(src) {
+        return new URL(src, window.location.href).href;
+    }
+
+    preloadSource(src) {
+        const key = this.getAbsoluteSourceUrl(src);
+        const existingEntry = this.preloadEntries.get(key);
+
+        if (existingEntry) {
+            this.preloadEntries.delete(key);
+            this.preloadEntries.set(key, existingEntry);
+            return existingEntry.promise;
+        }
+
+        const preloadAudio = this.createPreloadAudio();
+        preloadAudio.preload = 'auto';
+
+        const promise = new Promise((resolve, reject) => {
+            const onLoaded = () => {
+                cleanup();
+                resolve(preloadAudio);
+            };
+            const onError = () => {
+                cleanup();
+                reject(new Error(`Failed to preload audio source: ${src}`));
+            };
+            const cleanup = () => {
+                preloadAudio.removeEventListener('loadeddata', onLoaded);
+                preloadAudio.removeEventListener('canplaythrough', onLoaded);
+                preloadAudio.removeEventListener('error', onError);
+            };
+
+            preloadAudio.addEventListener('loadeddata', onLoaded, { once: true });
+            preloadAudio.addEventListener('canplaythrough', onLoaded, { once: true });
+            preloadAudio.addEventListener('error', onError, { once: true });
+            preloadAudio.src = src;
+            preloadAudio.load();
+
+            if (preloadAudio.readyState >= 2) {
+                cleanup();
+                resolve(preloadAudio);
+            }
+        });
+
+        this.preloadEntries.set(key, {
+            audio: preloadAudio,
+            promise
+        });
+        this.prunePreloadEntries();
+
+        return promise;
+    }
+
+    prunePreloadEntries(retainKeys = null) {
+        for (const [key, entry] of this.preloadEntries) {
+            if (retainKeys?.has(key)) {
+                continue;
+            }
+
+            if (retainKeys) {
+                this.releasePreloadEntry(entry);
+                this.preloadEntries.delete(key);
+            }
+        }
+
+        while (this.preloadEntries.size > this.maxPreloadedSources) {
+            const oldestKey = this.preloadEntries.keys().next().value;
+            const oldestEntry = this.preloadEntries.get(oldestKey);
+            this.releasePreloadEntry(oldestEntry);
+            this.preloadEntries.delete(oldestKey);
+        }
+    }
+
+    clearPreloadEntries() {
+        for (const entry of this.preloadEntries.values()) {
+            this.releasePreloadEntry(entry);
+        }
+
+        this.preloadEntries.clear();
+    }
+
+    releasePreloadEntry(entry) {
+        entry?.audio?.pause?.();
+        entry?.audio?.removeAttribute?.('src');
+        entry?.audio?.load?.();
+    }
+
     clearPendingPlaybackPositionIfResolved() {
         if (this.pendingPlaybackPosition === null) {
             return;
@@ -402,7 +559,13 @@ export class NativeAudioPlayer {
     }
 
     async handleEnded() {
-        if (await this.handleSegmentTransition()) {
+        try {
+            if (await this.handleSegmentTransition()) {
+                return;
+            }
+        } catch (error) {
+            this.playbackRequested = false;
+            this.setError(error, { emitState: true });
             return;
         }
 
@@ -451,6 +614,7 @@ export class NativeAudioPlayer {
     handlePlaybackEvent() {
         if (!this.audio.paused) {
             this.audioUnlocked = true;
+            this.clearError({ emitState: false });
         }
 
         this.clearPendingPlaybackPositionIfResolved();
@@ -481,6 +645,7 @@ export class NativeAudioPlayer {
     }
 
     handleLoadedMetadata() {
+        this.clearError({ emitState: false });
         this.clearPendingPlaybackPositionIfResolved();
         this.updateMediaSessionMetadata();
         this.updateMediaSessionPosition();
@@ -489,7 +654,8 @@ export class NativeAudioPlayer {
     }
 
     handleError() {
-        this.emitState();
+        this.playbackRequested = false;
+        this.setError(this.createAudioError());
     }
 
     handlePageShow() {
@@ -592,6 +758,34 @@ export class NativeAudioPlayer {
         navigator.mediaSession.playbackState = this.audio.paused ? 'paused' : 'playing';
         this.updateMediaSessionMetadata();
         this.updateMediaSessionPosition();
+    }
+
+    setError(error, { emitState = true } = {}) {
+        this.errorReason = error instanceof Error
+            ? error.message
+            : typeof error === 'string'
+                ? error
+                : 'Audio playback failed';
+
+        if (emitState) {
+            this.emitState();
+        }
+    }
+
+    createAudioError() {
+        const mediaError = this.audio?.error;
+        if (!mediaError?.code) {
+            return new Error('Audio playback failed');
+        }
+
+        const errorMessages = {
+            1: 'Audio playback was aborted',
+            2: 'Audio playback failed due to a network error',
+            3: 'Audio playback failed while decoding the track',
+            4: 'Audio playback failed because the track format is unsupported'
+        };
+
+        return new Error(errorMessages[mediaError.code] ?? 'Audio playback failed');
     }
 
     clamp(value, min, max) {
