@@ -4,6 +4,7 @@ import assert from 'node:assert/strict';
 import { mediaMetadata, secretSong, songs } from '../content/static/player-data.js';
 import {
     getTransportOverrideFromSearch,
+    isMobilePlaybackDevice,
     shouldUseNativeTransport,
     timestampToSeconds
 } from '../content/static/player-shared.js';
@@ -79,6 +80,22 @@ test('shouldUseNativeTransport enables native mode for iPadOS desktop-class safa
 
 test('shouldUseNativeTransport leaves desktop browsers on web-audio by default', () => {
     assert.equal(shouldUseNativeTransport({
+        userAgent: 'Mozilla/5.0 (Macintosh; Intel Mac OS X 14_0)',
+        maxTouchPoints: 0,
+        platform: 'MacIntel'
+    }), false);
+});
+
+test('isMobilePlaybackDevice detects touch-capable iPadOS desktop-class safari', () => {
+    assert.equal(isMobilePlaybackDevice({
+        userAgent: 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15)',
+        maxTouchPoints: 5,
+        platform: 'MacIntel'
+    }), true);
+});
+
+test('isMobilePlaybackDevice excludes non-touch desktop browsers', () => {
+    assert.equal(isMobilePlaybackDevice({
         userAgent: 'Mozilla/5.0 (Macintosh; Intel Mac OS X 14_0)',
         maxTouchPoints: 0,
         platform: 'MacIntel'

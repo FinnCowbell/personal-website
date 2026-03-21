@@ -23,6 +23,19 @@ export function getTransportOverrideFromSearch(search = '') {
     return params.get('transport');
 }
 
+export function isMobilePlaybackDevice({
+    userAgent = '',
+    maxTouchPoints = 0,
+    platform = ''
+} = {}) {
+    const isIOS = /iPad|iPhone|iPod/.test(userAgent)
+        || (platform === 'MacIntel' && maxTouchPoints > 1);
+    const isAndroid = /Android/i.test(userAgent);
+    const isMobile = /Mobi|Mobile/i.test(userAgent);
+
+    return isIOS || isAndroid || (isMobile && maxTouchPoints > 0);
+}
+
 export function shouldUseNativeTransport({
     search = '',
     userAgent = '',
@@ -38,10 +51,5 @@ export function shouldUseNativeTransport({
         return false;
     }
 
-    const isIOS = /iPad|iPhone|iPod/.test(userAgent)
-        || (platform === 'MacIntel' && maxTouchPoints > 1);
-    const isAndroid = /Android/i.test(userAgent);
-    const isMobile = /Mobi|Mobile/i.test(userAgent);
-
-    return isIOS || isAndroid || (isMobile && maxTouchPoints > 0);
+    return isMobilePlaybackDevice({ userAgent, maxTouchPoints, platform });
 }

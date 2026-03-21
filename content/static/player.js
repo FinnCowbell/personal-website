@@ -2,7 +2,7 @@ import { Konami } from '/scripts/Konami.js';
 import { mediaMetadata, secretSong, songs } from './player-data.js';
 import { NativeAudioPlayer } from './native-audio-player.js';
 import { createPlaybackPersistence } from './player-persistence.js';
-import { shouldUseNativeTransport } from './player-shared.js';
+import { isMobilePlaybackDevice, shouldUseNativeTransport } from './player-shared.js';
 import { SegmentPlayer } from './segment-player.js';
 
 let currentIndex = 0;
@@ -228,10 +228,16 @@ const useNativeTransport = shouldUseNativeTransport({
     maxTouchPoints: navigator.maxTouchPoints,
     platform: navigator.platform
 });
+const isMobilePlaybackDeviceContext = isMobilePlaybackDevice({
+    userAgent: navigator.userAgent,
+    maxTouchPoints: navigator.maxTouchPoints,
+    platform: navigator.platform
+});
 
 const player = useNativeTransport
     ? new NativeAudioPlayer({
         audioElement,
+        preferFullTrackWhenRepeatDisabled: isMobilePlaybackDeviceContext,
         volume: 0.8,
         onStateChange: syncPlayerState,
         onProgress: updateProgress,

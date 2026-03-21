@@ -9,6 +9,7 @@ export class NativeAudioPlayer {
         onTrackEnded,
         onPreviousTrack,
         onNextTrack,
+        preferFullTrackWhenRepeatDisabled = false,
         volume = 0.8
     } = {}) {
         if (!audioElement) {
@@ -24,6 +25,7 @@ export class NativeAudioPlayer {
         this.onTrackEnded = onTrackEnded;
         this.onPreviousTrack = onPreviousTrack;
         this.onNextTrack = onNextTrack;
+        this.preferFullTrackWhenRepeatDisabled = Boolean(preferFullTrackWhenRepeatDisabled);
 
         this.currentTrack = null;
         this.repeatEnabled = false;
@@ -131,9 +133,35 @@ export class NativeAudioPlayer {
     }
 
     async setRepeat(enabled) {
-        this.repeatEnabled = Boolean(enabled);
+        const nextRepeatEnabled = Boolean(enabled);
+        const repeatValueChanged = this.repeatEnabled !== nextRepeatEnabled;
+        const wasUsingSegmentedPlayback = this.shouldUseSegmentedPlayback();
+        const wasPlaying = !this.audio.paused;
+        const currentTime = this.getCurrentTime();
+
+        this.repeatEnabled = nextRepeatEnabled;
+
+        if (repeatValueChanged && this.currentTrack) {
+            const shouldUseSegmentedPlayback = this.shouldUseSegmentedPlayback();
+            if (wasUsingSegmentedPlayback !== shouldUseSegmentedPlayback) {
+                const nextState = this.resolvePlaybackState(currentTime);
+                await this.applyPlaybackState(nextState);
+
+                if (wasPlaying) {
+                    await this.play();
+                    return;
+                }
+
+                this.updateMediaSession();
+                this.emitProgress();
+                this.emitState();
+                return;
+            }
+        }
+
         this.audio.loop = this.shouldLoopCurrentMode();
         this.updateMediaSession();
+        this.emitProgress();
         this.emitState();
     }
 
@@ -179,10 +207,14 @@ export class NativeAudioPlayer {
     resolvePlaybackState(targetTime = 0) {
         return resolveSegmentPlaybackState({
             track: this.currentTrack,
-            segmentConfig: this.segmentConfig,
+            segmentConfig: this.getActiveSegmentConfig(),
             audioDuration: this.audio.duration,
             targetTime
         });
+    }
+
+    getActiveSegmentConfig() {
+        return this.shouldUseSegmentedPlayback() ? this.segmentConfig : null;
     }
 
     async applyPlaybackState({ mode, src, offset, position }) {
@@ -242,11 +274,23 @@ export class NativeAudioPlayer {
             return false;
         }
 
-        if (!this.segmentConfig) {
+        if (!this.getActiveSegmentConfig()) {
             return true;
         }
 
         return this.currentMode === 'loop';
+    }
+
+    shouldUseSegmentedPlayback() {
+        if (!this.segmentConfig) {
+            return false;
+        }
+
+        if (!this.preferFullTrackWhenRepeatDisabled) {
+            return true;
+        }
+
+        return this.repeatEnabled;
     }
 
     getCurrentTime() {
@@ -262,7 +306,7 @@ export class NativeAudioPlayer {
             return 0;
         }
 
-        if (!this.segmentConfig) {
+        if (!this.segmentConfig || this.currentMode === 'full') {
             return this.audio.currentTime || 0;
         }
 
@@ -278,7 +322,7 @@ export class NativeAudioPlayer {
     }
 
     getAbsolutePositionForMode(mode, offset) {
-        if (!this.segmentConfig) {
+        if (!this.segmentConfig || mode === 'full') {
             return Math.max(offset, 0);
         }
 
@@ -335,7 +379,7 @@ export class NativeAudioPlayer {
     }
 
     async handleSegmentTransition() {
-        if (!this.segmentConfig || this.transitionInFlight) {
+        if (!this.shouldUseSegmentedPlayback() || this.transitionInFlight) {
             return false;
         }
 
