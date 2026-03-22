@@ -42,6 +42,7 @@ export class NativeAudioPlayer {
         this.currentMode = 'full';
         this.transitionInFlight = null;
         this.pendingPlaybackPosition = null;
+        this._sourceTransitionActive = false;
         this.playbackRequested = false;
         this.errorReason = null;
         this.createPreloadAudio = createPreloadAudio ?? (() => new Audio());
@@ -332,32 +333,37 @@ export class NativeAudioPlayer {
     }
 
     async setSource(src) {
-        await new Promise((resolve, reject) => {
-            const onLoaded = () => {
-                cleanup();
-                resolve();
-            };
-            const onError = () => {
-                cleanup();
-                reject(new Error(`Failed to load audio source: ${src}`));
-            };
-            const cleanup = () => {
-                this.audio.removeEventListener('loadedmetadata', onLoaded);
-                this.audio.removeEventListener('error', onError);
-            };
+        this._sourceTransitionActive = true;
+        try {
+            await new Promise((resolve, reject) => {
+                const onLoaded = () => {
+                    cleanup();
+                    resolve();
+                };
+                const onError = () => {
+                    cleanup();
+                    reject(new Error(`Failed to load audio source: ${src}`));
+                };
+                const cleanup = () => {
+                    this.audio.removeEventListener('loadedmetadata', onLoaded);
+                    this.audio.removeEventListener('error', onError);
+                };
 
-            this.audio.pause();
-            this.audio.loop = false;
-            this.audio.addEventListener('loadedmetadata', onLoaded, { once: true });
-            this.audio.addEventListener('error', onError, { once: true });
-            this.audio.src = src;
-            this.audio.load();
+                this.audio.pause();
+                this.audio.loop = false;
+                this.audio.addEventListener('loadedmetadata', onLoaded, { once: true });
+                this.audio.addEventListener('error', onError, { once: true });
+                this.audio.src = src;
+                this.audio.load();
 
-            if (this.audio.readyState >= 1) {
-                cleanup();
-                resolve();
-            }
-        });
+                if (this.audio.readyState >= 1) {
+                    cleanup();
+                    resolve();
+                }
+            });
+        } finally {
+            this._sourceTransitionActive = false;
+        }
     }
 
     shouldLoopCurrentMode() {
@@ -627,6 +633,10 @@ export class NativeAudioPlayer {
             this.clearError({ emitState: false });
         }
 
+        if (this._sourceTransitionActive) {
+            return;
+        }
+
         this.clearPendingPlaybackPositionIfResolved();
         this.updateMediaSession();
         this.emitProgress();
@@ -657,6 +667,11 @@ export class NativeAudioPlayer {
     handleLoadedMetadata() {
         this.clearError({ emitState: false });
         this.clearPendingPlaybackPositionIfResolved();
+
+        if (this._sourceTransitionActive) {
+            return;
+        }
+
         this.updateMediaSessionMetadata();
         this.updateMediaSessionPosition();
         this.emitProgress();
