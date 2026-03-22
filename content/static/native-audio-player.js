@@ -256,7 +256,7 @@ export class NativeAudioPlayer {
     getState() {
         return {
             currentTrack: this.currentTrack,
-            isPlaying: !this.audio.paused,
+            isPlaying: this.playbackRequested || !this.audio.paused,
             playbackRequested: this.playbackRequested,
             hasError: Boolean(this.errorReason),
             errorReason: this.errorReason,
@@ -349,7 +349,7 @@ export class NativeAudioPlayer {
                     this.audio.removeEventListener('error', onError);
                 };
 
-                // this.audio.pause();
+                this.audio.pause();
                 this.audio.loop = false;
                 this.audio.addEventListener('loadedmetadata', onLoaded, { once: true });
                 this.audio.addEventListener('error', onError, { once: true });
@@ -780,7 +780,8 @@ export class NativeAudioPlayer {
             return;
         }
 
-        navigator.mediaSession.playbackState = this.audio.paused ? 'paused' : 'playing';
+        const isPlaying = this.playbackRequested || !this.audio.paused;
+        navigator.mediaSession.playbackState = isPlaying ? 'playing' : 'paused';
         this.updateMediaSessionMetadata();
         this.updateMediaSessionPosition();
     }
