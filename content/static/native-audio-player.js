@@ -349,7 +349,7 @@ export class NativeAudioPlayer {
                     this.audio.removeEventListener('error', onError);
                 };
 
-                this.audio.pause();
+                // this.audio.pause();
                 this.audio.loop = false;
                 this.audio.addEventListener('loadedmetadata', onLoaded, { once: true });
                 this.audio.addEventListener('error', onError, { once: true });
