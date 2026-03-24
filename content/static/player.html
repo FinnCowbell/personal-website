@@ -2,20 +2,54 @@
 permalink: /music
 ---
 
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <head>
     <meta charset="utf-8" />
     <title>BOSS FIGHTS</title>
     <meta name="viewport" content="width=device-width,initial-scale=1" />
-    <link rel="icon" type="image/png" href="/assets/img/bossfights/Favicon.png" />
+    <link
+      rel="icon"
+      type="image/png"
+      href="/assets/img/bossfights/Favicon.png"
+    />
     <link rel="apple-touch-icon" href="/assets/img/bossfights/Favicon.png" />
-    <link rel="preload" as="image" href="/assets/img/bossfights/walkman_nologo.png" fetchpriority="high" />
-    <link rel="preload" as="image" href="/assets/img/bossfights/note.png" fetchpriority="high" />
-    <link rel="preload" as="image" href="/assets/img/bossfights/mushroom.png" fetchpriority="high" />
-    <link rel="preload" as="image" href="/assets/img/bossfights/pause.png" fetchpriority="high" />
-    <link rel="preload" as="image" href="/assets/img/bossfights/play.png" fetchpriority="high" />
-    <link rel="preload" as="image" href="/assets/img/bossfights/Fman.png" fetchpriority="high" />
+    <link
+      rel="preload"
+      as="image"
+      href="/assets/img/bossfights/walkman_nologo.png"
+      fetchpriority="high"
+    />
+    <link
+      rel="preload"
+      as="image"
+      href="/assets/img/bossfights/note.png"
+      fetchpriority="high"
+    />
+    <link
+      rel="preload"
+      as="image"
+      href="/assets/img/bossfights/mushroom.png"
+      fetchpriority="high"
+    />
+    <link
+      rel="preload"
+      as="image"
+      href="/assets/img/bossfights/pause.png"
+      fetchpriority="high"
+    />
+    <link
+      rel="preload"
+      as="image"
+      href="/assets/img/bossfights/play.png"
+      fetchpriority="high"
+    />
+    <link
+      rel="preload"
+      as="image"
+      href="/assets/img/bossfights/Fman.png"
+      fetchpriority="high"
+    />
     <link rel="preload" as="image" href="/assets/img/bossfights/Favicon.png" />
     <link rel="preload" as="image" href="/assets/img/bossfights/crowd.png" />
     <link rel="preload" as="image" href="/assets/img/bossfights/elevator.png" />
@@ -53,8 +87,8 @@ permalink: /music
         align-items: center;
         justify-content: center;
         background: #f5f5f0;
-        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
-          sans-serif;
+        font-family:
+          -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
         overflow-x: hidden;
       }
 
@@ -75,7 +109,8 @@ permalink: /music
         letter-spacing: 0em;
         line-height: 1em;
         text-align: center;
-        transition: transform 480ms cubic-bezier(0.22, 1, 0, 1.08),
+        transition:
+          transform 480ms cubic-bezier(0.22, 1, 0, 1.08),
           opacity 360ms ease;
         will-change: transform, opacity;
       }
@@ -332,10 +367,10 @@ permalink: /music
       }
 
       .control-btn.prev-btn {
-left: 59.3%;
-    top: 65%;
-    width: 16.8%;
-    height: 26.8%;
+        left: 59.3%;
+        top: 65%;
+        width: 16.8%;
+        height: 26.8%;
         background: url("/assets/img/bossfights/prev.png") no-repeat center
           center;
         background-size: contain;
@@ -352,10 +387,10 @@ left: 59.3%;
       }
 
       .control-btn.next-btn {
-left: 59.5%;
-    top: 9.2%;
-    width: 16.8%;
-    height: 22.9%;
+        left: 59.5%;
+        top: 9.2%;
+        width: 16.8%;
+        height: 22.9%;
         background: url("/assets/img/bossfights/next.png") no-repeat center
           center;
         background-size: contain;
@@ -366,7 +401,9 @@ left: 59.5%;
 
       .control-btn.play-btn.playing {
         border: 1cqi solid #ff333354;
-        box-shadow: 0 0 1cqi #ff333354, 0 0 2cqi #ff333354,
+        box-shadow:
+          0 0 1cqi #ff333354,
+          0 0 2cqi #ff333354,
           inset 0 0 0.8cqi rgba(255, 51, 51, 0.3);
       }
 
@@ -386,7 +423,7 @@ left: 59.5%;
         cursor: default;
         z-index: 2;
         -webkit-tap-highlight-color: transparent;
-        transform: scale(.9) rotate(13deg);
+        transform: scale(0.9) rotate(13deg);
         filter: brightness(0.85);
       }
 
@@ -397,7 +434,8 @@ left: 59.5%;
         left: 24.3%;
         width: 20.6%;
         height: 0.75%;
-        background-image: linear-gradient(90deg, #fff 25%, transparent 25%),
+        background-image:
+          linear-gradient(90deg, #fff 25%, transparent 25%),
           linear-gradient(-90deg, #fff 25%, transparent 25%),
           linear-gradient(90deg, transparent 75%, #fff 75%),
           linear-gradient(-90deg, transparent 75%, #fff 75%);
@@ -473,7 +511,20 @@ left: 59.5%;
       }
     </style>
   </head>
+  <!-- Google tag (gtag.js) -->
+  <script
+    async
+    src="https://www.googletagmanager.com/gtag/js?id=G-3FV415RL0E"
+  ></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() {
+      dataLayer.push(arguments);
+    }
+    gtag("js", new Date());
 
+    gtag("config", "G-3FV415RL0E");
+  </script>
   <body>
     <!-- Loading Overlay -->
     <div class="loading-overlay" id="loadingOverlay"></div>
@@ -497,7 +548,13 @@ left: 59.5%;
         <div class="screen-overlay">
           <div class="song-title-container">
             <div class="song-icon">
-              <img src="/assets/img/bossfights/note.png" alt="Note" loading="eager" fetchpriority="high" decoding="async" />
+              <img
+                src="/assets/img/bossfights/note.png"
+                alt="Note"
+                loading="eager"
+                fetchpriority="high"
+                decoding="async"
+              />
             </div>
             <div class="song-title" id="songTitle">Loading...</div>
           </div>
@@ -536,22 +593,22 @@ left: 59.5%;
                 xmlns="http://www.w3.org/2000/svg"
                 aria-hidden="true"
               >
-                <rect x="7" y="2" width="2" height="1" fill="#3b1610"/>
-                <rect x="6" y="3" width="4" height="1" fill="#3b1610"/>
-                <rect x="5" y="4" width="6" height="2" fill="#3b1610"/>
-                <rect x="4" y="6" width="8" height="2" fill="#3b1610"/>
-                <rect x="3" y="8" width="10" height="2" fill="#3b1610"/>
-                <rect x="2" y="10" width="12" height="2" fill="#3b1610"/>
-                <rect x="1" y="12" width="14" height="2" fill="#3b1610"/>
-                <rect x="0" y="14" width="16" height="1" fill="#3b1610"/>
-                <rect x="7" y="3" width="2" height="1" fill="#ff6a3d"/>
-                <rect x="6" y="4" width="4" height="2" fill="#ff6a3d"/>
-                <rect x="5" y="6" width="6" height="2" fill="#ff6a3d"/>
-                <rect x="4" y="8" width="8" height="2" fill="#ff6a3d"/>
-                <rect x="3" y="10" width="10" height="2" fill="#ff6a3d"/>
-                <rect x="2" y="12" width="12" height="2" fill="#ff6a3d"/>
-                <rect x="7" y="5" width="2" height="4" fill="#fff6cf"/>
-                <rect x="7" y="11" width="2" height="1" fill="#fff6cf"/>
+                <rect x="7" y="2" width="2" height="1" fill="#3b1610" />
+                <rect x="6" y="3" width="4" height="1" fill="#3b1610" />
+                <rect x="5" y="4" width="6" height="2" fill="#3b1610" />
+                <rect x="4" y="6" width="8" height="2" fill="#3b1610" />
+                <rect x="3" y="8" width="10" height="2" fill="#3b1610" />
+                <rect x="2" y="10" width="12" height="2" fill="#3b1610" />
+                <rect x="1" y="12" width="14" height="2" fill="#3b1610" />
+                <rect x="0" y="14" width="16" height="1" fill="#3b1610" />
+                <rect x="7" y="3" width="2" height="1" fill="#ff6a3d" />
+                <rect x="6" y="4" width="4" height="2" fill="#ff6a3d" />
+                <rect x="5" y="6" width="6" height="2" fill="#ff6a3d" />
+                <rect x="4" y="8" width="8" height="2" fill="#ff6a3d" />
+                <rect x="3" y="10" width="10" height="2" fill="#ff6a3d" />
+                <rect x="2" y="12" width="12" height="2" fill="#ff6a3d" />
+                <rect x="7" y="5" width="2" height="4" fill="#fff6cf" />
+                <rect x="7" y="11" width="2" height="1" fill="#fff6cf" />
               </svg>
             </span>
             <span class="repeat-indicator" id="repeatIndicator">RPT</span>
