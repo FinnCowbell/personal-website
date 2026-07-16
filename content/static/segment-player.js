@@ -999,13 +999,24 @@ export class SegmentPlayer {
     startProgressUpdates() {
         this.stopProgressUpdates();
 
-        const tick = () => {
+        // Throttle progress emission: a progress bar only needs a handful of
+        // updates per second, but emitProgress() runs getState() + DOM writes,
+        // so firing it every rAF frame (~60fps) was the main CPU cost. We keep
+        // rAF (auto-pauses on hidden tabs) but only emit ~10x/sec.
+        const minEmitIntervalMs = 100;
+        let lastEmit = 0;
+
+        const tick = (now) => {
             if (!this.isPlaying) {
                 this.progressFrame = null;
                 return;
             }
 
-            this.emitProgress();
+            if (now - lastEmit >= minEmitIntervalMs) {
+                lastEmit = now;
+                this.emitProgress();
+            }
+
             this.progressFrame = window.requestAnimationFrame(tick);
         };
 
